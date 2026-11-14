@@ -18,6 +18,7 @@
     }
   ],
   "rewrites": [
+    { "source": "/gallery", "destination": "/gallery.html" },
     { "source": "/api/locations/:id", "destination": "/api/locations.js?id=:id" },
     { "source": "/api/locations", "destination": "/api/locations.js" }
   ]
