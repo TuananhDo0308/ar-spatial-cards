@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>WebAR - Camera Quét 3 Thẻ AR Không Gian</title>
+  <title>WebAR - Camera Quét Thẻ AR Không Gian</title>
   
   <!-- A-Frame 1.5.0 và MindAR 1.2.5 -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
@@ -86,9 +86,9 @@
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--border);
       border-radius: 999px;
-      padding: 6px 14px;
+      padding: 7px 16px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
-      max-width: 440px;
+      max-width: 420px;
       margin: 0 auto;
       width: 100%;
       transition: all 0.3s ease;
@@ -131,53 +131,6 @@
       color: var(--text);
       font-weight: 600;
       font-size: 0.78rem;
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-pill-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 5px 11px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--border);
-      color: var(--text);
-      text-decoration: none;
-      transition: all 0.15s ease;
-    }
-
-    .btn-pill-link:hover {
-      background: rgba(255, 255, 255, 0.16);
-      border-color: #3f3f46;
-    }
-
-    .btn-icon {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text);
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 12px;
-      flex-shrink: 0;
-      transition: all 0.15s;
-    }
-
-    .btn-icon:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: #3f3f46;
     }
 
     /* Scanning Reticle */
@@ -228,7 +181,7 @@
 
     .reticle-hint {
       position: absolute;
-      bottom: -48px;
+      bottom: -46px;
       left: 50%;
       transform: translateX(-50%);
       font-size: 0.75rem;
@@ -242,10 +195,10 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
 
-    /* Fallback Camera Prompt Toast (chỉ hiện khi Safari/Chrome chặn getUserMedia tự động) */
+    /* Fallback Camera Toast nếu Safari cần user gesture */
     .camera-prompt-toast {
       position: fixed;
-      bottom: 84px;
+      bottom: 80px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(24, 24, 27, 0.95);
@@ -261,109 +214,6 @@
       gap: 8px;
       z-index: 50;
       cursor: pointer;
-      animation: floatPulse 2s infinite ease-in-out;
-    }
-
-    @keyframes floatPulse {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(-4px); }
-    }
-
-    /* Bottom Multi-Card Floating Selector Bar */
-    .bottom-cards-bar {
-      pointer-events: auto;
-      max-width: 440px;
-      margin: 0 auto;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      opacity: 0;
-      transform: translateY(24px) scale(0.96);
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      pointer-events: none;
-    }
-
-    .bottom-cards-bar.visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-      pointer-events: auto;
-    }
-
-    .cards-bar-hint {
-      text-align: center;
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      background: rgba(9, 9, 11, 0.78);
-      padding: 4px 12px;
-      border-radius: 999px;
-      width: fit-content;
-      margin: 0 auto;
-      border: 1px solid var(--border-subtle);
-    }
-
-    .cards-pill-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 6px;
-      background: rgba(24, 24, 27, 0.94);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 6px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
-    }
-
-    .card-chip {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 8px 6px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-      color: var(--text);
-    }
-
-    .card-chip:active {
-      transform: scale(0.93);
-      background: rgba(255, 255, 255, 0.12);
-    }
-
-    .card-chip.accent-amber {
-      border-left: 3px solid var(--amber);
-    }
-    .card-chip.accent-emerald {
-      border-left: 3px solid var(--emerald);
-      background: rgba(16, 185, 129, 0.08);
-    }
-    .card-chip.accent-cyan {
-      border-left: 3px solid var(--cyan);
-    }
-
-    .chip-number {
-      font-size: 0.65rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .chip-title {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #fff;
-      margin-top: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      width: 100%;
     }
 
     /* FULL-SCREEN EXPANDED MODAL (VisionOS Shared-Element Spring Curve) */
@@ -430,16 +280,10 @@
 
     .modal-hero-img {
       width: 100%;
-      height: 210px;
+      height: 220px;
       object-fit: cover;
       background: #000;
       border-bottom: 1px solid var(--border);
-      transform: scale(1);
-      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .fullscreen-card.expanding .modal-hero-img {
-      transform: scale(1.06);
     }
 
     .modal-body {
@@ -449,7 +293,6 @@
       flex: 1;
     }
 
-    /* Staggered Content Animation inside Modal */
     .modal-content-animated {
       opacity: 0;
       transform: translateY(12px);
@@ -489,12 +332,6 @@
       background: rgba(245, 158, 11, 0.1);
       color: var(--amber);
       border-color: rgba(245, 158, 11, 0.25);
-    }
-
-    .badge-cyan {
-      background: rgba(6, 182, 212, 0.1);
-      color: var(--cyan);
-      border-color: rgba(6, 182, 212, 0.25);
     }
 
     .modal-title {
@@ -582,7 +419,7 @@
 </head>
 <body>
 
-  <!-- Floating Toast nếu trình duyệt cần chạm để cấp quyền Camera -->
+  <!-- Floating Toast nếu cần chạm để mở Camera -->
   <div class="camera-prompt-toast" id="camera-toast">
     <span>📷</span>
     <span>Chạm vào màn hình để mở Camera</span>
@@ -596,12 +433,6 @@
         <div class="status-dot" id="status-dot"></div>
         <span class="status-text" id="status-text">Đang kết nối camera...</span>
       </div>
-      <div class="top-actions">
-        <a href="gallery.html" class="btn-pill-link" title="Xem thư viện ảnh quét">
-          <span>🖼️</span> <span>Gallery</span>
-        </a>
-        <button class="btn-icon" id="btn-help" title="Hướng dẫn">❓</button>
-      </div>
     </div>
 
     <!-- Center Reticle -->
@@ -611,27 +442,10 @@
       <div class="reticle-corner bl"></div>
       <div class="reticle-corner br"></div>
       <div class="laser-scan"></div>
-      <div class="reticle-hint">Quét ảnh TP. Hồ Chí Minh để hiện 3 Thẻ AR</div>
+      <div class="reticle-hint">Hướng camera vào ảnh để quét</div>
     </div>
 
-    <!-- Bottom Multi-Card Floating Selector Bar -->
-    <div class="bottom-cards-bar" id="bottom-cards-bar">
-      <div class="cards-bar-hint">✨ Chạm trực tiếp thẻ 3D hoặc chọn nhanh:</div>
-      <div class="cards-pill-container">
-        <div class="card-chip accent-amber" data-card-target="0">
-          <span class="chip-number">Thẻ 1</span>
-          <span class="chip-title">Chợ Bến Thành</span>
-        </div>
-        <div class="card-chip accent-emerald" data-card-target="1">
-          <span class="chip-number">Thẻ 2</span>
-          <span class="chip-title">Dinh Độc Lập</span>
-        </div>
-        <div class="card-chip accent-cyan" data-card-target="2">
-          <span class="chip-number">Thẻ 3</span>
-          <span class="chip-title">Ẩm Thực & Đêm</span>
-        </div>
-      </div>
-    </div>
+    <div></div>
   </div>
 
   <!-- FULL-SCREEN EXPANDED MODAL (VisionOS Shared-Element Spring Curve) -->
@@ -675,10 +489,8 @@
   </div>
 
   <!-- Offscreen Canvases (Render Textures cho Thẻ AR 3D) -->
-  <canvas id="canvas-card-0" class="canvas-buffer" width="800" height="540"></canvas>
-  <canvas id="canvas-card-1" class="canvas-buffer" width="800" height="540"></canvas>
-  <canvas id="canvas-card-2" class="canvas-buffer" width="800" height="540"></canvas>
-  <canvas id="canvas-card-3" class="canvas-buffer" width="800" height="540"></canvas>
+  <canvas id="canvas-card-0" class="canvas-buffer" width="800" height="500"></canvas>
+  <canvas id="canvas-card-1" class="canvas-buffer" width="800" height="500"></canvas>
 
   <!-- AR Scene A-Frame (MindAR Image Tracking - AUTO START ON LOAD) -->
   <div class="ar-viewport">
@@ -699,86 +511,50 @@
         raycaster="near: 0.05; far: 50; objects: .clickable;"
       ></a-camera>
 
-      <!-- ================= TARGET 0: TP. HỒ CHÍ MINH (HIỆN ĐỒNG THỜI 3 THẺ AR 3D) ================= -->
+      <!-- ================= TARGET 0: DINH ĐỘC LẬP (GIỮ 1 THẺ DUY NHẤT) ================= -->
       <a-entity id="target-entity-0" mindar-image-target="targetIndex: 0">
         <!-- Viền định vị ảnh trên mặt ảnh thực -->
         <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #10b981; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
-        
-        <!-- Vòng hào quang chân đế hologram -->
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #10b981; opacity: 0.3; transparent: true"></a-ring>
 
-        <!-- THẺ 1 (BÊN TRÁI): CHỢ BẾN THÀNH (Biểu tượng Sài Gòn) -->
-        <a-entity id="card-anchor-0" position="-0.78 0.65 0.08" rotation="0 14 0" scale="0 0 0"
-                  animation__float="property: position; to: -0.78 0.69 0.08; dir: alternate; dur: 2700; loop: true; easing: easeInOutSine">
+        <!-- THẺ AR 3D DUY NHẤT -->
+        <a-entity id="card-anchor-0" position="0 0.68 0.08" scale="0 0 0"
+                  animation__float="property: position; to: 0 0.72 0.08; dir: alternate; dur: 2800; loop: true; easing: easeInOutSine">
           <a-plane
             id="ar-card-0"
             class="clickable"
             src="#canvas-card-0"
             position="0 0 0"
-            width="0.74"
-            height="0.50"
+            width="1.15"
+            height="0.72"
             material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.3;"
           ></a-plane>
-          <!-- Tia liên kết Hologram -->
-          <a-cylinder position="0 -0.32 -0.01" radius="0.005" height="0.14" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
-          <a-sphere position="0 -0.39 -0.01" radius="0.015" material="color: #fbbf24; emissive: #f59e0b; emissiveIntensity: 0.6"></a-sphere>
+          <!-- Trụ Hologram -->
+          <a-cylinder position="0 -0.42 -0.01" radius="0.006" height="0.14" material="color: #10b981; opacity: 0.8; transparent: true"></a-cylinder>
+          <a-sphere position="0 -0.49 -0.01" radius="0.02" material="color: #34d399; emissive: #10b981; emissiveIntensity: 0.8"></a-sphere>
         </a-entity>
+      </a-entity>
 
-        <!-- THẺ 2 (Ở GIỮA - NỔI BẬT): DINH ĐỘC LẬP (Dấu mốc Thống nhất) -->
-        <a-entity id="card-anchor-1" position="0 0.82 0.16" rotation="0 0 0" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.86 0.16; dir: alternate; dur: 3100; loop: true; easing: easeInOutSine">
+      <!-- ================= TARGET 1: PHỐ CỔ HỘI AN (1 THẺ DUY NHẤT) ================= -->
+      <a-entity id="target-entity-1" mindar-image-target="targetIndex: 1">
+        <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
+        <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #f59e0b; opacity: 0.3; transparent: true"></a-ring>
+
+        <!-- THẺ AR 3D DUY NHẤT -->
+        <a-entity id="card-anchor-1" position="0 0.68 0.08" scale="0 0 0"
+                  animation__float="property: position; to: 0 0.72 0.08; dir: alternate; dur: 2800; loop: true; easing: easeInOutSine">
           <a-plane
             id="ar-card-1"
             class="clickable"
             src="#canvas-card-1"
             position="0 0 0"
-            width="0.84"
-            height="0.57"
-            material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.3;"
-          ></a-plane>
-          <!-- Trụ Hologram trung tâm -->
-          <a-cylinder position="0 -0.36 -0.01" radius="0.006" height="0.16" material="color: #10b981; opacity: 0.8; transparent: true"></a-cylinder>
-          <a-sphere position="0 -0.44 -0.01" radius="0.02" material="color: #34d399; emissive: #10b981; emissiveIntensity: 0.8"></a-sphere>
-        </a-entity>
-
-        <!-- THẺ 3 (BÊN PHẢI): ẨM THỰC & ĐÊM (Nhịp sống Giao thoa) -->
-        <a-entity id="card-anchor-2" position="0.78 0.65 0.08" rotation="0 -14 0" scale="0 0 0"
-                  animation__float="property: position; to: 0.78 0.69 0.08; dir: alternate; dur: 2900; loop: true; easing: easeInOutSine">
-          <a-plane
-            id="ar-card-2"
-            class="clickable"
-            src="#canvas-card-2"
-            position="0 0 0"
-            width="0.74"
-            height="0.50"
-            material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.3;"
-          ></a-plane>
-          <!-- Tia liên kết Hologram -->
-          <a-cylinder position="0 -0.32 -0.01" radius="0.005" height="0.14" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
-          <a-sphere position="0 -0.39 -0.01" radius="0.015" material="color: #38bdf8; emissive: #06b6d4; emissiveIntensity: 0.6"></a-sphere>
-        </a-entity>
-
-        <!-- Trụ đèn chiếu Hologram trung tâm -->
-        <a-entity position="0 0.12 0.05" animation="property: rotation; to: 0 360 0; dur: 8000; loop: true; easing: linear">
-          <a-cone position="0 0 0" radius-bottom="0.035" radius-top="0.002" height="0.10" rotation="180 0 0" material="color: #10b981; metalness: 0.2; roughness: 0.4"></a-cone>
-          <a-sphere position="0 0.06 0" radius="0.03" material="color: #34d399; emissive: #10b981; emissiveIntensity: 0.6"></a-sphere>
-        </a-entity>
-      </a-entity>
-
-      <!-- ================= TARGET 1: PHỐ CỔ HỘI AN ================= -->
-      <a-entity id="target-entity-1" mindar-image-target="targetIndex: 1">
-        <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
-        
-        <a-entity id="card-anchor-3" position="0 0.70 0.10" scale="0 0 0">
-          <a-plane
-            id="ar-card-3"
-            class="clickable"
-            src="#canvas-card-3"
-            position="0 0 0"
             width="1.15"
-            height="0.75"
+            height="0.72"
             material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.3;"
           ></a-plane>
+          <!-- Trụ Hologram -->
+          <a-cylinder position="0 -0.42 -0.01" radius="0.006" height="0.14" material="color: #f59e0b; opacity: 0.8; transparent: true"></a-cylinder>
+          <a-sphere position="0 -0.49 -0.01" radius="0.02" material="color: #fbbf24; emissive: #f59e0b; emissiveIntensity: 0.8"></a-sphere>
         </a-entity>
       </a-entity>
 
@@ -796,7 +572,7 @@
       const canvas = document.getElementById(canvasId);
       if (!canvas) return;
       canvas.width = 800;
-      canvas.height = 540;
+      canvas.height = 500;
       const ctx = canvas.getContext('2d');
       const w = canvas.width;
       const h = canvas.height;
@@ -818,7 +594,7 @@
       const accent = data.badgeColor || data.badge_color || '#10b981';
       ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
       ctx.beginPath();
-      ctx.roundRect(38, 38, 280, 42, 21);
+      ctx.roundRect(38, 38, 290, 42, 21);
       ctx.fill();
       ctx.strokeStyle = '#27272a';
       ctx.lineWidth = 1.5;
@@ -838,33 +614,33 @@
       // 4. Tiêu đề Card (Trắng đậm, lớn)
       ctx.textAlign = 'left';
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 38px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText(data.name || '', 38, 140);
+      ctx.font = 'bold 40px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText(data.name || '', 38, 142);
 
       // 5. Đường kẻ phân cách mảnh
       ctx.strokeStyle = '#27272a';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.moveTo(38, 168);
-      ctx.lineTo(w - 38, 168);
+      ctx.moveTo(38, 172);
+      ctx.lineTo(w - 38, 172);
       ctx.stroke();
 
       // 6. Mô tả tóm tắt (2-3 dòng, dễ đọc)
       ctx.fillStyle = '#d4d4d8';
       ctx.font = '500 23px "Plus Jakarta Sans", sans-serif';
       const textToWrap = data.short_desc || data.shortDesc || data.full_desc || '';
-      wrapText(ctx, textToWrap, 38, 214, w - 76, 36, 3);
+      wrapText(ctx, textToWrap, 38, 218, w - 76, 36, 3);
 
       // 7. Nút Action CTA ở chân Card: "CHẠM ĐỂ MỞ RỘNG FULL TRÊN ĐIỆN THOẠI"
       ctx.fillStyle = '#fafafa';
       ctx.beginPath();
-      ctx.roundRect(38, h - 92, w - 76, 54, 14);
+      ctx.roundRect(38, h - 86, w - 76, 52, 14);
       ctx.fill();
 
       ctx.fillStyle = '#18181b';
       ctx.font = 'bold 21px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('⤢  CHẠM ĐỂ PHÓNG TO FULL', w / 2, h - 58);
+      ctx.fillText('⤢  CHẠM ĐỂ PHÓNG TO FULL', w / 2, h - 53);
     }
 
     function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3) {
@@ -911,20 +687,16 @@
           }
         }
 
-        // Vẽ 3 thẻ cho Target 0
+        // Vẽ thẻ cho Target 0 (Dinh Độc Lập) và Target 1 (Hội An)
         draw3DCard("canvas-card-0", dbLocations[0] || dbLocations["0"]);
         draw3DCard("canvas-card-1", dbLocations[1] || dbLocations["1"]);
-        draw3DCard("canvas-card-2", dbLocations[2] || dbLocations["2"]);
-        
-        // Vẽ thẻ cho Target 1 (Hội An)
-        draw3DCard("canvas-card-3", dbLocations[3] || dbLocations["3"] || dbLocations[1] || dbLocations["1"]);
       }
 
       await initDatabase();
 
       // Cập nhật texture ban đầu
       sceneEl.addEventListener("loaded", () => {
-        ['ar-card-0', 'ar-card-1', 'ar-card-2', 'ar-card-3'].forEach(id => {
+        ['ar-card-0', 'ar-card-1'].forEach(id => {
           const cardEl = document.getElementById(id);
           if (cardEl) {
             cardEl.addEventListener("materialtextureloaded", () => {
@@ -940,7 +712,6 @@
       const statusDot = document.getElementById("status-dot");
       const statusText = document.getElementById("status-text");
       const reticle = document.getElementById("reticle");
-      const bottomCardsBar = document.getElementById("bottom-cards-bar");
       const cameraToast = document.getElementById("camera-toast");
 
       const fullscreenModal = document.getElementById("fullscreen-modal");
@@ -982,7 +753,6 @@
         sceneEl.addEventListener("loaded", startARDirectly);
       }
 
-      // Xử lý trường hợp một số trình duyệt iOS Safari yêu cầu user gesture đầu tiên
       window.addEventListener("touchstart", function handleFirstTouch() {
         if (!arSystemStarted) {
           startARDirectly();
@@ -997,20 +767,18 @@
         });
       }
 
-      // ================= ANIMATION HIỂN THỊ 3 THẺ AR 3D (HOLOGRAPHIC BOOT-UP) =================
-      function animateCardScale(entityId, toScale, duration = 450, delay = 0) {
+      // ================= ANIMATION HIỂN THỊ THẺ AR 3D =================
+      function animateCardScale(entityId, toScale, duration = 450) {
         const el = document.getElementById(entityId);
         if (!el) return;
 
-        setTimeout(() => {
-          el.removeAttribute('animation__boot');
-          el.setAttribute('animation__boot', {
-            property: 'scale',
-            to: `${toScale} ${toScale} ${toScale}`,
-            dur: duration,
-            easing: toScale > 0 ? 'easeOutBack' : 'easeInQuad'
-          });
-        }, delay);
+        el.removeAttribute('animation__boot');
+        el.setAttribute('animation__boot', {
+          property: 'scale',
+          to: `${toScale} ${toScale} ${toScale}`,
+          dur: duration,
+          easing: toScale > 0 ? 'easeOutBack' : 'easeInQuad'
+        });
       }
 
       // LẮNG NGHE SỰ KIỆN QUÉT ẢNH TARGET
@@ -1023,19 +791,11 @@
           statusDot.classList.add("active");
           reticle.classList.add("hidden");
 
-          if (targetIdx === 0) {
-            statusText.textContent = "Đã nhận diện: 3 Thẻ AR TP. Hồ Chí Minh";
-            bottomCardsBar.classList.add("visible");
+          const loc = dbLocations[targetIdx] || dbLocations[String(targetIdx)];
+          const locName = loc ? loc.name : (targetIdx === 0 ? "Dinh Độc Lập" : "Phố Cổ Hội An");
+          statusText.textContent = `Đã nhận diện: ${locName}`;
 
-            // Hiệu ứng Holographic Staggered Boot-Up 3 thẻ
-            animateCardScale('card-anchor-1', 1, 460, 0);   // Thẻ 2 (Giữa) nở trước
-            animateCardScale('card-anchor-0', 1, 500, 130); // Thẻ 1 (Trái) nở kế tiếp
-            animateCardScale('card-anchor-2', 1, 500, 260); // Thẻ 3 (Phải) nở sau
-          } else {
-            statusText.textContent = "Đã nhận diện: Phố Cổ Hội An";
-            bottomCardsBar.classList.remove("visible");
-            animateCardScale('card-anchor-3', 1, 480, 0);
-          }
+          animateCardScale(`card-anchor-${targetIdx}`, 1, 480);
         });
 
         el.addEventListener("targetLost", () => {
@@ -1043,16 +803,7 @@
             statusDot.classList.remove("active");
             statusText.textContent = "Hướng camera vào ảnh trên bảng";
             reticle.classList.remove("hidden");
-            bottomCardsBar.classList.remove("visible");
-
-            // Thu nhỏ mượt mà khi mất dấu
-            if (targetIdx === 0) {
-              animateCardScale('card-anchor-0', 0, 200, 0);
-              animateCardScale('card-anchor-1', 0, 200, 50);
-              animateCardScale('card-anchor-2', 0, 200, 100);
-            } else {
-              animateCardScale('card-anchor-3', 0, 200, 0);
-            }
+            animateCardScale(`card-anchor-${targetIdx}`, 0, 220);
           }
         });
       }
@@ -1060,9 +811,9 @@
       setupTracking(0);
       setupTracking(1);
 
-      // ================= TÍNH TOÁN TOẠ ĐỘ 2D TRÊN MÀN HÌNH ĐIỆN THOẠI CỦA THẺ 3D BẤT KỲ =================
-      function get3DCardScreenRect(cardIdx) {
-        const cardEl = document.getElementById(`ar-card-${cardIdx}`);
+      // ================= TÍNH TOÁN TOẠ ĐỘ 2D TRÊN MÀN HÌNH ĐIỆN THOẠI CỦA THẺ 3D =================
+      function get3DCardScreenRect(targetIdx) {
+        const cardEl = document.getElementById(`ar-card-${targetIdx}`);
         const camera = sceneEl.camera;
         const defaultRect = {
           x: window.innerWidth / 2 - 140,
@@ -1090,11 +841,8 @@
         const visibleHeightAtDist = 2 * Math.tan((fov * Math.PI) / 360) * dist;
         const pixelPerMeter = window.innerHeight / visibleHeightAtDist;
 
-        const cardWidth = cardIdx === 1 ? 0.84 : 0.74;
-        const cardHeight = cardIdx === 1 ? 0.57 : 0.50;
-
-        const width = Math.min(window.innerWidth * 0.85, Math.max(120, cardWidth * pixelPerMeter));
-        const height = Math.min(window.innerHeight * 0.5, Math.max(70, cardHeight * pixelPerMeter));
+        const width = Math.min(window.innerWidth * 0.88, Math.max(140, 1.15 * pixelPerMeter));
+        const height = Math.min(window.innerHeight * 0.52, Math.max(90, 0.72 * pixelPerMeter));
 
         return {
           x: screenX - width / 2,
@@ -1107,34 +855,28 @@
       let isModalOpening = false;
 
       // ================= HÀM PHÓNG TO MORPHING SPRING TỪ ĐÚNG VỊ TRÍ THẺ 3D =================
-      window.openFullView = function(cardIdx) {
+      window.openFullView = function(targetIdx) {
         if (isModalOpening) return;
         isModalOpening = true;
-        activeCardIdx = cardIdx;
+        activeCardIdx = targetIdx;
 
-        // Rung nhẹ phản hồi xúc giác (Haptic Feedback)
+        // Rung nhẹ phản hồi xúc giác
         if (navigator.vibrate) {
           navigator.vibrate([18, 25]);
         }
 
-        const data = dbLocations[cardIdx] || dbLocations[String(cardIdx)] || (typeof LOCATIONS_DATA !== "undefined" ? LOCATIONS_DATA[cardIdx] : null);
+        const data = dbLocations[targetIdx] || dbLocations[String(targetIdx)] || (typeof LOCATIONS_DATA !== "undefined" ? LOCATIONS_DATA[targetIdx] : null);
         if (!data) {
           isModalOpening = false;
           return;
         }
 
-        modalImg.src = data.image_url || data.imageUrl || `assets/target-${data.target_index || 0}.png`;
+        modalImg.src = data.image_url || data.imageUrl || `assets/target-${targetIdx}.png`;
         modalTitle.textContent = data.name;
         modalBadge.textContent = data.tag || 'Di tích';
-        
-        // Badge color class
-        if (cardIdx === 0) modalBadge.className = 'badge-pill badge-amber';
-        else if (cardIdx === 1) modalBadge.className = 'badge-pill badge-emerald';
-        else if (cardIdx === 2) modalBadge.className = 'badge-pill badge-cyan';
-        else modalBadge.className = 'badge-pill badge-amber';
-
+        modalBadge.className = `badge-pill ${targetIdx === 0 ? 'badge-emerald' : 'badge-amber'}`;
         modalRating.textContent = data.rating || '4.8 ★';
-        modalCity.textContent = '📍 ' + (data.city || 'TP. Hồ Chí Minh');
+        modalCity.textContent = '📍 ' + (data.city || '');
         modalDesc.textContent = data.full_desc || data.fullDesc || data.short_desc || data.shortDesc;
         modalHours.textContent = data.hours || '08:00 - 16:30';
         modalTicket.textContent = data.ticket || 'Miễn phí';
@@ -1153,8 +895,8 @@
         const mapQuery = data.map_query || data.mapQuery || data.name;
         btnModalMap.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
 
-        // 1. Tính toán toạ độ xuất phát chính xác của thẻ 3D trên màn hình điện thoại
-        const startRect = get3DCardScreenRect(cardIdx);
+        // 1. Lấy toạ độ xuất phát chính xác của thẻ 3D trên màn hình điện thoại
+        const startRect = get3DCardScreenRect(targetIdx);
 
         // Kích thước đích của Modal
         const finalWidth = Math.min(window.innerWidth - 32, 480);
@@ -1180,7 +922,7 @@
 
         fullscreenCard.offsetHeight; // Force reflow
 
-        // 2. Chạy animation mở rộng mượt mà (Apple Spring Transition)
+        // 2. Chạy animation mở rộng mượt mà
         requestAnimationFrame(() => {
           fullscreenCard.style.transition = 'transform 0.46s cubic-bezier(0.2, 0.9, 0.25, 1), opacity 0.32s ease, border-radius 0.4s ease';
           fullscreenCard.style.transform = 'translate3d(0, 0, 0) scale(1, 1)';
@@ -1194,7 +936,7 @@
         });
       };
 
-      // ================= ĐÓNG FULL VIEW: Thu nhỏ mượt mà ngược về góc của đúng thẻ 3D =================
+      // ================= ĐÓNG FULL VIEW =================
       function closeFullView() {
         if (!fullscreenModal.classList.contains("active")) return;
 
@@ -1230,15 +972,7 @@
         if (e.target === fullscreenModal) closeFullView();
       });
 
-      // Bắt sự kiện khi bấm vào các nút chọn nhanh ở bottom bar
-      document.querySelectorAll(".card-chip").forEach(chip => {
-        chip.addEventListener("click", (e) => {
-          const targetCard = parseInt(chip.getAttribute("data-card-target"), 10);
-          openFullView(targetCard);
-        });
-      });
-
-      // ================= BẮT CHẠM CẢM ỨNG TRỰC TIẾP VÀO 3 THẺ AR TRÊN MÀN HÌNH =================
+      // ================= BẮT CHẠM CẢM ỨNG TRỰC TIẾP VÀO THẺ AR TRÊN MÀN HÌNH =================
       const raycaster = new THREE.Raycaster();
       const pointer = new THREE.Vector2();
 
@@ -1252,7 +986,7 @@
         raycaster.setFromCamera(pointer, sceneEl.camera);
 
         const meshes = [];
-        [0, 1, 2, 3].forEach(idx => {
+        [0, 1].forEach(idx => {
           const cardEl = document.getElementById(`ar-card-${idx}`);
           if (cardEl && cardEl.object3D) {
             cardEl.object3D.traverse((child) => {
@@ -1286,17 +1020,11 @@
         }
       });
 
-      // Hỗ trợ A-Frame native click
-      ['ar-card-0', 'ar-card-1', 'ar-card-2', 'ar-card-3'].forEach((id, idx) => {
+      ['ar-card-0', 'ar-card-1'].forEach((id, idx) => {
         const el = document.getElementById(id);
         if (el) {
           el.addEventListener("click", () => openFullView(idx));
         }
-      });
-
-      // Nút Hướng dẫn
-      document.getElementById("btn-help").addEventListener("click", () => {
-        alert("💡 HƯỚNG DẪN AR 3 THẺ TRÊN 1 ẢNH:\n\n1. Mở trang Gallery trên máy tính hoặc quét vào ảnh TP. Hồ Chí Minh.\n2. Cùng lúc 3 thẻ AR 3D sẽ xuất hiện nổi cố định trong không gian.\n3. CHẠM TRỰC TIẾP VÀO THẺ BẤT KỲ: Thẻ sẽ bung nở từ đúng vị trí không gian 3D ra toàn màn hình cực mượt!\n4. Bạn cũng có thể bấm chọn nhanh 3 thẻ ở thanh điều hướng phía dưới.\n5. Bấm ✕ để thu nhỏ trở lại đúng vị trí 3D ban đầu.");
       });
     });
   </script>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thư Viện Ảnh Quét AR - WebAR Spatial Targets Gallery</title>
+  <title>Gallery Ảnh Quét AR</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,16 +11,10 @@
     :root {
       --bg: #09090b;
       --card: #18181b;
-      --card-muted: #121215;
       --border: #27272a;
-      --border-subtle: #1f1f23;
       --text: #f4f4f5;
       --text-muted: #a1a1aa;
-      --primary: #fafafa;
-      --primary-foreground: #18181b;
       --emerald: #10b981;
-      --amber: #f59e0b;
-      --cyan: #06b6d4;
     }
 
     * {
@@ -38,370 +32,119 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 32px 20px 80px 20px;
+      padding: 32px 20px 60px 20px;
     }
 
-    /* Top Navigation */
-    .top-nav {
-      width: 100%;
-      max-width: 1200px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 32px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--border);
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .brand-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 12px;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--emerald);
-    }
-
-    .brand-title {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: var(--text);
-      letter-spacing: -0.02em;
-    }
-
-    .nav-actions {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      padding: 9px 18px;
-      border-radius: 10px;
-      transition: all 0.15s ease;
-      cursor: pointer;
-      text-decoration: none;
-      border: none;
-    }
-
-    .btn-default {
-      background: var(--primary);
-      color: var(--primary-foreground);
-    }
-
-    .btn-default:hover {
-      background: #e4e4e7;
-      transform: translateY(-1px);
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .btn-outline:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: #3f3f46;
-    }
-
-    /* Hero Banner */
-    .hero-banner {
+    /* Minimal Header - No links */
+    .gallery-header {
       width: 100%;
       max-width: 1200px;
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 28px;
     }
 
-    .hero-title {
-      font-size: 2.2rem;
+    .gallery-title {
+      font-size: 1.8rem;
       font-weight: 800;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.02em;
       color: #fff;
-      margin-bottom: 12px;
     }
 
-    .hero-subtitle {
-      font-size: 0.95rem;
+    .gallery-subtitle {
+      font-size: 0.88rem;
       color: var(--text-muted);
-      max-width: 680px;
-      margin: 0 auto 24px auto;
-      line-height: 1.6;
+      margin-top: 6px;
     }
 
-    /* Filter Tabs */
-    .filter-tabs {
-      display: inline-flex;
-      padding: 4px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      gap: 4px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .tab-btn {
-      padding: 8px 16px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      border-radius: 8px;
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .tab-btn:hover {
-      color: var(--text);
-    }
-
-    .tab-btn.active {
-      background: var(--bg);
-      color: #fff;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-      border: 1px solid var(--border);
-    }
-
-    /* Gallery Grid */
-    .gallery-grid {
+    /* Pure Photo Grid */
+    .photo-grid {
       width: 100%;
       max-width: 1200px;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: 28px;
-      margin-top: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
     }
 
-    /* Gallery Card */
-    .gallery-card {
+    /* Photo Item */
+    .photo-item {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 20px;
+      border-radius: 16px;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
       position: relative;
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     }
 
-    .gallery-card:hover {
+    .photo-item:hover {
       transform: translateY(-4px);
       border-color: #3f3f46;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
     }
 
-    .gallery-card.featured {
-      grid-column: 1 / -1;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      padding: 12px;
-      border: 1px solid rgba(16, 185, 129, 0.35);
-      background: linear-gradient(135deg, rgba(24, 24, 27, 0.98), rgba(16, 185, 129, 0.04));
-    }
-
-    @media (max-width: 860px) {
-      .gallery-card.featured {
-        grid-template-columns: 1fr;
-        padding: 0;
-      }
-      .gallery-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .card-media {
-      position: relative;
+    .photo-wrapper {
       width: 100%;
-      aspect-ratio: 1 / 1;
+      aspect-ratio: 4 / 3;
       overflow: hidden;
       background: #000;
-      cursor: pointer;
+      position: relative;
     }
 
-    .gallery-card.featured .card-media {
-      border-radius: 16px;
-      aspect-ratio: 16 / 11;
-      max-height: 400px;
-    }
-
-    .card-media img {
+    .photo-wrapper img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.4s ease;
+      transition: transform 0.35s ease;
     }
 
-    .card-media:hover img {
-      transform: scale(1.03);
+    .photo-item:hover .photo-wrapper img {
+      transform: scale(1.04);
     }
 
-    .media-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-
-    .card-media:hover .media-overlay {
-      opacity: 1;
-    }
-
-    .media-zoom-pill {
-      background: rgba(24, 24, 27, 0.88);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(8px);
-      padding: 8px 16px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .card-content {
-      padding: 22px;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .card-top-tags {
+    .photo-info {
+      padding: 14px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-      gap: 8px;
+      background: var(--card);
+      border-top: 1px solid var(--border);
     }
 
-    .badge-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.72rem;
+    .photo-name {
+      font-size: 0.95rem;
       font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 999px;
-      border: 1px solid;
-    }
-
-    .badge-emerald {
-      background: rgba(16, 185, 129, 0.1);
-      color: var(--emerald);
-      border-color: rgba(16, 185, 129, 0.3);
-    }
-
-    .badge-amber {
-      background: rgba(245, 158, 11, 0.1);
-      color: var(--amber);
-      border-color: rgba(245, 158, 11, 0.3);
-    }
-
-    .badge-cyan {
-      background: rgba(6, 182, 212, 0.1);
-      color: var(--cyan);
-      border-color: rgba(6, 182, 212, 0.3);
-    }
-
-    .badge-purple {
-      background: rgba(168, 85, 247, 0.1);
-      color: #c084fc;
-      border-color: rgba(168, 85, 247, 0.3);
-    }
-
-    .card-title {
-      font-size: 1.35rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
       color: #fff;
-      margin-bottom: 8px;
     }
 
-    .card-desc {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      line-height: 1.55;
-      margin-bottom: 18px;
-    }
-
-    /* Multi-Card Hologram List */
-    .hologram-chips {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 20px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px dashed var(--border);
-      border-radius: 12px;
-      padding: 12px;
-    }
-
-    .hologram-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .photo-location {
       font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .photo-badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.06);
       color: #d4d4d8;
+      border: 1px solid var(--border);
     }
 
-    .hologram-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    .card-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: auto;
-    }
-
-    .card-actions .btn {
-      flex: 1;
-    }
-
-    /* FULLSCREEN LIGHTBOX MODAL (Cho phép phóng to ảnh cực lớn để quét camera) */
+    /* FULLSCREEN LIGHTBOX (Phóng to ảnh trên máy tính để điện thoại quét) */
     .lightbox-modal {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      backdrop-filter: blur(16px);
+      background: rgba(0, 0, 0, 0.96);
+      backdrop-filter: blur(20px);
       z-index: 500;
       display: none;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 24px;
@@ -412,54 +155,12 @@
     }
 
     .lightbox-box {
-      max-width: 900px;
+      max-width: 960px;
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       position: relative;
-    }
-
-    .lightbox-img-wrapper {
-      position: relative;
-      background: #000;
-      border: 2px solid #27272a;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 1px 1px rgba(255, 255, 255, 0.1);
-      max-height: 70vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .lightbox-img-wrapper img {
-      max-width: 100%;
-      max-height: 70vh;
-      object-fit: contain;
-      display: block;
-    }
-
-    .lightbox-meta {
-      margin-top: 18px;
-      text-align: center;
-      max-width: 600px;
-    }
-
-    .lightbox-title {
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 6px;
-    }
-
-    .lightbox-hint {
-      font-size: 0.82rem;
-      color: var(--emerald);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
     }
 
     .btn-close-lightbox {
@@ -483,284 +184,192 @@
     .btn-close-lightbox:hover {
       background: rgba(255, 255, 255, 0.25);
     }
+
+    .lightbox-img-wrapper {
+      position: relative;
+      background: #000;
+      border: 2px solid #27272a;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 60px rgba(0, 0, 0, 0.9);
+      max-height: 75vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lightbox-img-wrapper img {
+      max-width: 100%;
+      max-height: 75vh;
+      object-fit: contain;
+      display: block;
+    }
+
+    .lightbox-caption {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Top Navigation -->
-  <header class="top-nav">
-    <div class="brand">
-      <div class="brand-badge">
-        <span>●</span> WebAR Gallery
-      </div>
-      <span class="brand-title">Thư Viện Ảnh Quét Mục Tiêu AR</span>
-    </div>
-
-    <div class="nav-actions">
-      <a href="index.html" class="btn btn-default">
-        <span>📱</span> Mở Camera Quét AR
-      </a>
-      <a href="admin.html" class="btn btn-outline">
-        <span>🗄️</span> CMS Data
-      </a>
-    </div>
+  <header class="gallery-header">
+    <h1 class="gallery-title">Thư Viện Ảnh</h1>
+    <p class="gallery-subtitle">Chạm vào ảnh bất kỳ để phóng to toàn màn hình</p>
   </header>
 
-  <!-- Hero Banner -->
-  <section class="hero-banner">
-    <h1 class="hero-title">Kho Ảnh Mục Tiêu Quét AR</h1>
-    <p class="hero-subtitle">
-      Hiển thị trên màn hình máy tính hoặc iPad, sau đó dùng điện thoại quét vào ảnh để chiêm ngưỡng các thẻ thông tin AR 3D nổi trong không gian!
-    </p>
+  <main class="photo-grid">
 
-    <!-- Filter Tabs -->
-    <div class="filter-tabs">
-      <button class="tab-btn active" onclick="filterGallery('all')">Tất Cả Ảnh</button>
-      <button class="tab-btn" onclick="filterGallery('active')">🎯 Ảnh Kích Hoạt AR</button>
-      <button class="tab-btn" onclick="filterGallery('heritage')">🏛️ Di Tích Lịch Sử</button>
-      <button class="tab-btn" onclick="filterGallery('lifestyle')">🍜 Ẩm Thực & Phố Đêm</button>
+    <!-- 1. Dinh Độc Lập -->
+    <div class="photo-item" onclick="openLightbox('assets/target-0.png', 'Dinh Độc Lập - TP. Hồ Chí Minh')">
+      <div class="photo-wrapper">
+        <img src="assets/target-0.png" alt="Dinh Độc Lập">
+      </div>
+      <div class="photo-info">
+        <div>
+          <div class="photo-name">Dinh Độc Lập</div>
+          <div class="photo-location">TP. Hồ Chí Minh</div>
+        </div>
+        <span class="photo-badge">Target #0</span>
+      </div>
     </div>
-  </section>
 
-  <!-- Gallery Grid -->
-  <main class="gallery-grid" id="gallery-grid">
-
-    <!-- 1. FEATURED CARD: TARGET #0 (KÍCH HOẠT 3 THẺ AR CÙNG LÚC) -->
-    <article class="gallery-card featured" data-category="active heritage">
-      <div class="card-media" onclick="openLightbox('assets/target-0.png', 'TP. Hồ Chí Minh - Dinh Độc Lập', 'Quét ảnh này để hiện đồng thời 3 THẺ AR 3D trong không gian!')">
-        <img src="assets/target-0.png" alt="Dinh Độc Lập - TP. Hồ Chí Minh">
-        <div class="media-overlay">
-          <div class="media-zoom-pill">🔍 Phóng Toàn Màn Hình Để Quét</div>
-        </div>
-      </div>
-
-      <div class="card-content">
-        <div class="card-top-tags">
-          <span class="badge-pill badge-emerald">● Target #0 • Kích Hoạt 3 Thẻ AR</span>
-          <span style="font-size:0.75rem; color:var(--text-muted); font-family:monospace;">targetIndex: 0</span>
-        </div>
-
-        <h2 class="card-title">TP. Hồ Chí Minh - Di Sản & Nhịp Sống</h2>
-        <p class="card-desc">
-          Bức ảnh mục tiêu chính. Khi camera quét trúng ảnh này, hệ thống sẽ kích hoạt <strong>đồng thời 3 thẻ AR 3D lơ lửng</strong> cố định ngay trên mặt ảnh:
-        </p>
-
-        <div class="hologram-chips">
-          <div class="hologram-item">
-            <span class="hologram-dot" style="background:var(--amber);"></span>
-            <span><strong>Thẻ 1 (Trái):</strong> “Biểu tượng Sài Gòn” – Chợ Bến Thành 100 năm</span>
-          </div>
-          <div class="hologram-item">
-            <span class="hologram-dot" style="background:var(--emerald);"></span>
-            <span><strong>Thẻ 2 (Giữa):</strong> “Dấu mốc Thống nhất” – Dinh Độc Lập 30/4/1975</span>
-          </div>
-          <div class="hologram-item">
-            <span class="hologram-dot" style="background:var(--cyan);"></span>
-            <span><strong>Thẻ 3 (Phải):</strong> “Nhịp sống Giao thoa” – Cà phê bệt & phố đêm</span>
-          </div>
-        </div>
-
-        <div class="card-actions">
-          <button class="btn btn-default" onclick="openLightbox('assets/target-0.png', 'TP. Hồ Chí Minh - Dinh Độc Lập', 'Quét ảnh này để hiện đồng thời 3 THẺ AR 3D trong không gian!')">
-            <span>🔍</span> Phóng To Quét
-          </button>
-          <a href="index.html" class="btn btn-outline">
-            <span>📱</span> Quét Camera
-          </a>
-        </div>
-      </div>
-    </article>
-
-    <!-- 2. CARD: TARGET #1 (PHỐ CỔ HỘI AN) -->
-    <article class="gallery-card" data-category="active heritage">
-      <div class="card-media" onclick="openLightbox('assets/target-1.png', 'Phố Cổ Hội An', 'Quét ảnh này để hiện Thẻ AR 3D Phố Cổ Hội An UNESCO!')">
+    <!-- 2. Phố Cổ Hội An -->
+    <div class="photo-item" onclick="openLightbox('assets/target-1.png', 'Phố Cổ Hội An - Quảng Nam')">
+      <div class="photo-wrapper">
         <img src="assets/target-1.png" alt="Phố Cổ Hội An">
-        <div class="media-overlay">
-          <div class="media-zoom-pill">🔍 Phóng To Để Quét</div>
-        </div>
       </div>
-
-      <div class="card-content">
-        <div class="card-top-tags">
-          <span class="badge-pill badge-amber">● Target #1 • Di Sản Thế Giới</span>
-          <span style="font-size:0.75rem; color:var(--text-muted); font-family:monospace;">targetIndex: 1</span>
+      <div class="photo-info">
+        <div>
+          <div class="photo-name">Phố Cổ Hội An</div>
+          <div class="photo-location">Quảng Nam</div>
         </div>
-
-        <h3 class="card-title">Phố Cổ Hội An</h3>
-        <p class="card-desc">
-          Đô thị cổ thương cảng thế kỷ 16-17 với những mái ngói rêu phong, đèn lồng rực rỡ và Chùa Cầu 400 năm tuổi soi bóng bên dòng sông Hoài.
-        </p>
-
-        <div class="card-actions">
-          <button class="btn btn-default" onclick="openLightbox('assets/target-1.png', 'Phố Cổ Hội An', 'Quét ảnh này để hiện Thẻ AR 3D Phố Cổ Hội An UNESCO!')">
-            <span>🔍</span> Phóng To Quét
-          </button>
-          <a href="index.html" class="btn btn-outline">
-            <span>📱</span> Quét AR
-          </a>
-        </div>
+        <span class="photo-badge">Target #1</span>
       </div>
-    </article>
+    </div>
 
-    <!-- 3. CARD: CHỢ BẾN THÀNH -->
-    <article class="gallery-card" data-category="heritage">
-      <div class="card-media" onclick="openLightbox('assets/card-benthanh.jpg', 'Chợ Bến Thành - Cửa Nam', 'Biểu tượng lịch sử hơn 100 năm tuổi của đô thị phương Nam.')">
+    <!-- 3. Chợ Bến Thành -->
+    <div class="photo-item" onclick="openLightbox('assets/card-benthanh.jpg', 'Chợ Bến Thành - Cửa Nam')">
+      <div class="photo-wrapper">
         <img src="assets/card-benthanh.jpg" alt="Chợ Bến Thành">
-        <div class="media-overlay">
-          <div class="media-zoom-pill">🔍 Xem Chi Tiết</div>
-        </div>
       </div>
-
-      <div class="card-content">
-        <div class="card-top-tags">
-          <span class="badge-pill badge-amber">Biểu Tượng Sài Gòn</span>
-          <span style="font-size:0.75rem; color:#fbbf24; font-weight:700;">4.7 ★</span>
+      <div class="photo-info">
+        <div>
+          <div class="photo-name">Chợ Bến Thành</div>
+          <div class="photo-location">TP. Hồ Chí Minh</div>
         </div>
-
-        <h3 class="card-title">Chợ Bến Thành (Cửa Nam)</h3>
-        <p class="card-desc">
-          Công trình kiến trúc tháp đồng hồ 4 mặt hoàn thành năm 1914, là trung tâm giao thương sầm uất và biểu tượng văn hóa đặc trưng nhất của TP.HCM.
-        </p>
-
-        <div class="card-actions">
-          <button class="btn btn-outline" style="width:100%;" onclick="openLightbox('assets/card-benthanh.jpg', 'Chợ Bến Thành - Cửa Nam', 'Biểu tượng lịch sử hơn 100 năm tuổi của đô thị phương Nam.')">
-            <span>🔍</span> Xem Ảnh Chi Tiết
-          </button>
-        </div>
+        <span class="photo-badge">Di tích</span>
       </div>
-    </article>
+    </div>
 
-    <!-- 4. CARD: NHỊP SỐNG & ẨM THỰC ĐÊM -->
-    <article class="gallery-card" data-category="lifestyle">
-      <div class="card-media" onclick="openLightbox('assets/card-saigon-life.jpg', 'Ẩm Thực & Nhịp Sống Đêm Sài Gòn', 'Thiên đường ẩm thực đường phố và các con phố không ngủ.')">
-        <img src="assets/card-saigon-life.jpg" alt="Ẩm thực Sài Gòn">
-        <div class="media-overlay">
-          <div class="media-zoom-pill">🔍 Xem Chi Tiết</div>
-        </div>
+    <!-- 4. Hồ Hoàn Kiếm Hà Nội -->
+    <div class="photo-item" onclick="openLightbox('assets/card-hanoi.jpg', 'Hồ Hoàn Kiếm & Tháp Rùa - Hà Nội')">
+      <div class="photo-wrapper">
+        <img src="assets/card-hanoi.jpg" alt="Hồ Hoàn Kiếm">
       </div>
-
-      <div class="card-content">
-        <div class="card-top-tags">
-          <span class="badge-pill badge-cyan">Nhịp Sống Giao Thoa</span>
-          <span style="font-size:0.75rem; color:#fbbf24; font-weight:700;">4.9 ★</span>
+      <div class="photo-info">
+        <div>
+          <div class="photo-name">Hồ Hoàn Kiếm</div>
+          <div class="photo-location">Hà Nội</div>
         </div>
-
-        <h3 class="card-title">Ẩm Thực & Phố Đêm Không Ngủ</h3>
-        <p class="card-desc">
-          Từ ly cà phê sữa đá bệt vỉa hè, hủ tiếu gõ thơm phức trong ngõ nhỏ đến những tuyến phố đi bộ Nguyễn Huệ, Bùi Viện tràn đầy năng lượng về đêm.
-        </p>
-
-        <div class="card-actions">
-          <button class="btn btn-outline" style="width:100%;" onclick="openLightbox('assets/card-saigon-life.jpg', 'Ẩm Thực & Nhịp Sống Đêm Sài Gòn', 'Thiên đường ẩm thực đường phố và các con phố không ngủ.')">
-            <span>🔍</span> Xem Ảnh Chi Tiết
-          </button>
-        </div>
+        <span class="photo-badge">Thủ đô</span>
       </div>
-    </article>
+    </div>
 
-    <!-- 5. CARD: VỊNH HẠ LONG -->
-    <article class="gallery-card" data-category="heritage">
-      <div class="card-media" onclick="openLightbox('assets/gallery-halong.jpg', 'Vịnh Hạ Long - Quảng Ninh', 'Kỳ quan Thiên nhiên Thế giới UNESCO với hàng ngàn đảo đá vôi kỳ vĩ.')">
+    <!-- 5. Cầu Vàng Bà Nà Hills -->
+    <div class="photo-item" onclick="openLightbox('assets/gallery-danang.jpg', 'Cầu Vàng Bà Nà Hills - Đà Nẵng')">
+      <div class="photo-wrapper">
+        <img src="assets/gallery-danang.jpg" alt="Cầu Vàng Bà Nà Hills">
+      </div>
+      <div class="photo-info">
+        <div>
+          <div class="photo-name">Cầu Vàng Bà Nà</div>
+          <div class="photo-location">Đà Nẵng</div>
+        </div>
+        <span class="photo-badge">Kiến trúc</span>
+      </div>
+    </div>
+
+    <!-- 6. Vịnh Hạ Long -->
+    <div class="photo-item" onclick="openLightbox('assets/gallery-halong.jpg', 'Vịnh Hạ Long - Quảng Ninh')">
+      <div class="photo-wrapper">
         <img src="assets/gallery-halong.jpg" alt="Vịnh Hạ Long">
-        <div class="media-overlay">
-          <div class="media-zoom-pill">🔍 Xem Chi Tiết</div>
-        </div>
       </div>
-
-      <div class="card-content">
-        <div class="card-top-tags">
-          <span class="badge-pill badge-purple">Kỳ Quan Thế Giới</span>
-          <span style="font-size:0.75rem; color:#fbbf24; font-weight:700;">4.9 ★</span>
+      <div class="photo-info">
+        <div>
+          <div class="photo-name">Vịnh Hạ Long</div>
+          <div class="photo-location">Quảng Ninh</div>
         </div>
-
-        <h3 class="card-title">Vịnh Hạ Long (Quảng Ninh)</h3>
-        <p class="card-desc">
-          Kỳ quan thiên nhiên thế giới nổi danh với làn nước màu ngọc bích và hàng nghìn hòn đảo đá vôi nhô lên sừng sững giữa biển trời bao la.
-        </p>
-
-        <div class="card-actions">
-          <button class="btn btn-outline" style="width:100%;" onclick="openLightbox('assets/gallery-halong.jpg', 'Vịnh Hạ Long - Quảng Ninh', 'Kỳ quan Thiên nhiên Thế giới UNESCO với hàng ngàn đảo đá vôi kỳ vĩ.')">
-            <span>🔍</span> Xem Ảnh Chi Tiết
-          </button>
-        </div>
+        <span class="photo-badge">UNESCO</span>
       </div>
-    </article>
+    </div>
 
-    <!-- 6. CARD: CẦU VÀNG BÀ NÀ -->
-    <article class="gallery-card" data-category="heritage">
-      <div class="card-media" onclick="openLightbox('assets/gallery-danang.jpg', 'Cầu Vàng Bà Nà Hills - Đà Nẵng', 'Kiến trúc bàn tay khổng lồ nâng đỡ dải lụa vàng giữa sương mù.')">
-        <img src="assets/gallery-danang.jpg" alt="Cầu Vàng Đà Nẵng">
-        <div class="media-overlay">
-          <div class="media-zoom-pill">🔍 Xem Chi Tiết</div>
-        </div>
+    <!-- 7. Đại Nội Huế -->
+    <div class="photo-item" onclick="openLightbox('assets/card-hue.jpg', 'Đại Nội Kinh Thành Huế - Thừa Thiên Huế')">
+      <div class="photo-wrapper">
+        <img src="assets/card-hue.jpg" alt="Đại Nội Huế">
       </div>
-
-      <div class="card-content">
-        <div class="card-top-tags">
-          <span class="badge-pill badge-amber">Kiến Trúc Độc Đáo</span>
-          <span style="font-size:0.75rem; color:#fbbf24; font-weight:700;">4.8 ★</span>
+      <div class="photo-info">
+        <div>
+          <div class="photo-name">Đại Nội Huế</div>
+          <div class="photo-location">Thừa Thiên Huế</div>
         </div>
-
-        <h3 class="card-title">Cầu Vàng (Đà Nẵng)</h3>
-        <p class="card-desc">
-          Kiến trúc đôi bàn tay khổng lồ phủ rêu phong nâng đỡ cây cầu vàng uốn lượn giữa mây trời Bà Nà, biểu tượng du lịch hiện đại của Việt Nam.
-        </p>
-
-        <div class="card-actions">
-          <button class="btn btn-outline" style="width:100%;" onclick="openLightbox('assets/gallery-danang.jpg', 'Cầu Vàng Bà Nà Hills - Đà Nẵng', 'Kiến trúc bàn tay khổng lồ nâng đỡ dải lụa vàng giữa sương mù.')">
-            <span>🔍</span> Xem Ảnh Chi Tiết
-          </button>
-        </div>
+        <span class="photo-badge">Cố đô</span>
       </div>
-    </article>
+    </div>
+
+    <!-- 8. Đảo Ngọc Phú Quốc -->
+    <div class="photo-item" onclick="openLightbox('assets/card-phuquoc.jpg', 'Đảo Ngọc Phú Quốc - Kiên Giang')">
+      <div class="photo-wrapper">
+        <img src="assets/card-phuquoc.jpg" alt="Đảo Phú Quốc">
+      </div>
+      <div class="photo-info">
+        <div>
+          <div class="photo-name">Đảo Phú Quốc</div>
+          <div class="photo-location">Kiên Giang</div>
+        </div>
+        <span class="photo-badge">Biển đảo</span>
+      </div>
+    </div>
+
+    <!-- 9. Ẩm Thực Sài Gòn -->
+    <div class="photo-item" onclick="openLightbox('assets/card-saigon-life.jpg', 'Ẩm Thực & Nhịp Sống Đêm Sài Gòn')">
+      <div class="photo-wrapper">
+        <img src="assets/card-saigon-life.jpg" alt="Ẩm Thực Sài Gòn">
+      </div>
+      <div class="photo-info">
+        <div>
+          <div class="photo-name">Ẩm Thực & Phố Đêm</div>
+          <div class="photo-location">TP. Hồ Chí Minh</div>
+        </div>
+        <span class="photo-badge">Đời sống</span>
+      </div>
+    </div>
 
   </main>
 
-  <!-- LIGHTBOX MODAL (Phóng to để đưa camera vào quét) -->
+  <!-- LIGHTBOX MODAL -->
   <div class="lightbox-modal" id="lightbox-modal" onclick="closeLightbox(event)">
     <div class="lightbox-box" onclick="event.stopPropagation()">
       <button class="btn-close-lightbox" onclick="closeLightbox()">✕</button>
       <div class="lightbox-img-wrapper">
-        <img id="lightbox-img" src="" alt="Mục tiêu quét">
+        <img id="lightbox-img" src="" alt="Ảnh phóng to">
       </div>
-      <div class="lightbox-meta">
-        <div class="lightbox-title" id="lightbox-title">Tiêu đề ảnh</div>
-        <div class="lightbox-hint" id="lightbox-hint">
-          <span>📷</span> <span>Hướng camera điện thoại vào ảnh để nhận diện AR tức thì!</span>
-        </div>
-      </div>
+      <div class="lightbox-caption" id="lightbox-caption">Tiêu đề ảnh</div>
     </div>
   </div>
 
   <script>
-    function filterGallery(category) {
-      const cards = document.querySelectorAll('.gallery-card');
-      const tabs = document.querySelectorAll('.tab-btn');
-
-      tabs.forEach(tab => tab.classList.remove('active'));
-      event.target.classList.add('active');
-
-      cards.forEach(card => {
-        const cats = card.getAttribute('data-category') || '';
-        if (category === 'all' || cats.includes(category)) {
-          card.style.display = card.classList.contains('featured') ? 'grid' : 'flex';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    }
-
     const modal = document.getElementById('lightbox-modal');
     const modalImg = document.getElementById('lightbox-img');
-    const modalTitle = document.getElementById('lightbox-title');
-    const modalHint = document.getElementById('lightbox-hint');
+    const modalCaption = document.getElementById('lightbox-caption');
 
-    function openLightbox(src, title, hint) {
+    function openLightbox(src, caption) {
       modalImg.src = src;
-      modalTitle.textContent = title;
-      if (hint) {
-        modalHint.innerHTML = `<span>📷</span> <span>${hint}</span>`;
-      }
+      modalCaption.textContent = caption;
       modal.classList.add('active');
     }
 
