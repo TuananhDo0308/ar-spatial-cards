@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bảng Quét AR - Dinh Độc Lập & Phố Cổ Hội An</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #09090b;
+      --card: #18181b;
+      --card-muted: #121215;
+      --border: #27272a;
+      --border-subtle: #1f1f23;
+      --text: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --primary: #fafafa;
+      --primary-foreground: #18181b;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 24px;
+    }
+
+    /* Minimalist Shadcn Header Navigation */
+    .top-nav {
+      width: 100%;
+      max-width: 1300px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--emerald);
+    }
+
+    .brand-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* Shadcn Minimal Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+    }
+
+    .btn-default {
+      background: var(--primary);
+      color: var(--primary-foreground);
+    }
+
+    .btn-default:hover {
+      background: #e4e4e7;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: #3f3f46;
+    }
+
+    .btn-outline.active {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #52525b;
+      color: #fff;
+    }
+
+    /* View Switcher Tabs */
+    .view-tabs {
+      display: inline-flex;
+      padding: 4px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 32px;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+    }
+
+    .tab-btn.active {
+      background: var(--bg);
+      color: #fff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border);
+    }
+
+    /* Large Spaced Board Container */
+    .board-container {
+      width: 100%;
+      max-width: 1300px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 90px; /* Cách xa nhau theo yêu cầu */
+      padding: 40px 20px;
+      transition: all 0.3s ease;
+    }
+
+    @media (max-width: 1024px) {
+      .board-container {
+        gap: 50px;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+    /* Minimal Card for Target */
+    .target-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      width: 100%;
+      max-width: 460px;
+      box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+      position: relative;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .target-card:hover {
+      border-color: #3f3f46;
+      transform: translateY(-2px);
+    }
+
+    .target-card.hidden {
+      display: none;
+    }
+
+    .target-card.focused {
+      max-width: 580px;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 999px;
+      border: 1px solid;
+    }
+
+    .pill-dinh {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--emerald);
+      border-color: rgba(16, 185, 129, 0.25);
+    }
+
+    .pill-hoian {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--amber);
+      border-color: rgba(245, 158, 11, 0.25);
+    }
+
+    .target-index {
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Target Image Frame */
+    .image-frame {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #000;
+      position: relative;
+    }
+
+    .image-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-footer {
+      margin-top: 18px;
+    }
+
+    .location-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .location-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .card-hint {
+      margin-top: 14px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Minimal Helper Footer */
+    .bottom-hint {
+      max-width: 760px;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        color: #000;
+        padding: 0;
+      }
+      .top-nav, .view-tabs, .bottom-hint {
+        display: none;
+      }
+      .board-container {
+        gap: 40px;
+        padding: 0;
+      }
+      .target-card {
+        background: #fff;
+        border: 2px solid #000;
+        box-shadow: none;
+      }
+      .location-name { color: #000; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation (Shadcn style) -->
+  <header class="top-nav">
+    <div class="brand">
+      <div class="brand-badge">
+        <span class="status-dot"></span>
+        <span>WebAR Targets</span>
+      </div>
+      <span class="brand-title">Bảng Nhận Diện AR 2 Điểm Cố Định</span>
+    </div>
+
+    <div class="nav-actions">
+      <button class="btn btn-outline" onclick="window.print()">🖨️ In Khổ A4</button>
+      <a href="index.html" class="btn btn-default">📱 Mở Quét Camera</a>
+      <a href="admin.html" class="btn btn-outline">🗄️ Database CMS</a>
+    </div>
+  </header>
+
+  <!-- View Switcher (Giúp chuyển chế độ để quét dễ dàng) -->
+  <div class="view-tabs">
+    <button class="tab-btn active" id="tab-both" onclick="switchView('both')">Song Song Cách Xa (Khoảng cách rộng)</button>
+    <button class="tab-btn" id="tab-0" onclick="switchView('0')">Chỉ Hiện Dinh Độc Lập</button>
+    <button class="tab-btn" id="tab-1" onclick="switchView('1')">Chỉ Hiện Phố Cổ Hội An</button>
+  </div>
+
+  <!-- Board Container: 2 ảnh cách xa nhau rộng rãi -->
+  <main class="board-container" id="board-container">
+    
+    <!-- Mục Tiêu 0: Dinh Độc Lập -->
+    <article class="target-card" id="card-target-0">
+      <div class="card-top">
+        <span class="pill-badge pill-dinh">
+          <span style="font-size:10px;">●</span> Target #0 • TP.HCM
+        </span>
+        <span class="target-index">targetIndex: 0</span>
+      </div>
+
+      <div class="image-frame">
+        <img src="assets/target-0.png" alt="Dinh Độc Lập">
+      </div>
+
+      <div class="card-footer">
+        <h2 class="location-name">Dinh Độc Lập</h2>
+        <p class="location-sub">Di tích Lịch sử Quốc gia Đặc biệt • Nam Kỳ Khởi Nghĩa, Quận 1</p>
+        
+        <div class="card-hint">
+          <span>📷</span>
+          <span>Hướng camera vào ảnh để cố định (Lock) toạ độ AR</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- Mục Tiêu 1: Phố Cổ Hội An -->
+    <article class="target-card" id="card-target-1">
+      <div class="card-top">
+        <span class="pill-badge pill-hoian">
+          <span style="font-size:10px;">●</span> Target #1 • Quảng Nam
+        </span>
+        <span class="target-index">targetIndex: 1</span>
+      </div>
+
+      <div class="image-frame">
+        <img src="assets/target-1.png" alt="Phố Cổ Hội An">
+      </div>
+
+      <div class="card-footer">
+        <h2 class="location-name">Phố Cổ Hội An</h2>
+        <p class="location-sub">Di sản Văn hóa Thế giới UNESCO • Ven sông Hoài thơ mộng</p>
+
+        <div class="card-hint">
+          <span>📷</span>
+          <span>Hướng camera vào ảnh để cố định (Lock) toạ độ AR</span>
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <footer class="bottom-hint">
+    💡 <strong>Mẹo quét:</strong> Hai bức ảnh đã được bố trí cách xa nhau rộng rãi. Bạn có thể mở web này trên màn hình máy tính, lấy điện thoại quét một bức ảnh trước. Sau khi nhận diện, hệ thống sẽ <strong>khóa (fix) toạ độ và ghi nhớ luôn</strong>, không cần phải render lại!
+  </footer>
+
+  <script>
+    function switchView(mode) {
+      const card0 = document.getElementById('card-target-0');
+      const card1 = document.getElementById('card-target-1');
+      const tabBoth = document.getElementById('tab-both');
+      const tab0 = document.getElementById('tab-0');
+      const tab1 = document.getElementById('tab-1');
+
+      [tabBoth, tab0, tab1].forEach(t => t.classList.remove('active'));
+
+      if (mode === 'both') {
+        tabBoth.classList.add('active');
+        card0.classList.remove('hidden', 'focused');
+        card1.classList.remove('hidden', 'focused');
+      } else if (mode === '0') {
+        tab0.classList.add('active');
+        card0.classList.remove('hidden');
+        card0.classList.add('focused');
+        card1.classList.add('hidden');
+      } else if (mode === '1') {
+        tab1.classList.add('active');
+        card1.classList.remove('hidden');
+        card1.classList.add('focused');
+        card0.classList.add('hidden');
+      }
+    }
+  </script>
+</body>
+</html>

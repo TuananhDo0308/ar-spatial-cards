@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>WebAR - Dinh Độc Lập & Phố Cổ Hội An</title>
+  
+  <!-- A-Frame 1.5.0 và MindAR 1.2.5 -->
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  
+  <!-- Plus Jakarta Sans Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Dữ liệu địa điểm fallback -->
+  <script src="data/locations.js"></script>
+
+  <style>
+    :root {
+      --bg: #09090b;
+      --card: #18181b;
+      --border: #27272a;
+      --border-subtle: #1f1f23;
+      --text: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --primary: #fafafa;
+      --primary-foreground: #18181b;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    /* A-Frame container */
+    .ar-viewport {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* Minimalist Shadcn Floating UI Layer */
+    .ui-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 20px) 16px;
+    }
+
+    /* Top HUD Pill (Shadcn style) */
+    .top-bar {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(24, 24, 27, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      max-width: 420px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #71717a;
+      transition: background 0.3s;
+    }
+
+    .status-dot.active {
+      background: var(--emerald);
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    }
+
+    .status-text {
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .btn-icon {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.15s;
+    }
+
+    .btn-icon:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    /* Minimalist Center Viewfinder */
+    .scanning-reticle {
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 220px;
+      height: 220px;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .scanning-reticle.hidden {
+      opacity: 0;
+    }
+
+    .reticle-corner {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-color: #52525b;
+      border-style: solid;
+    }
+
+    .reticle-corner.tl { top: 0; left: 0; border-width: 2px 0 0 2px; border-top-left-radius: 6px; }
+    .reticle-corner.tr { top: 0; right: 0; border-width: 2px 2px 0 0; border-top-right-radius: 6px; }
+    .reticle-corner.bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; border-bottom-left-radius: 6px; }
+    .reticle-corner.br { bottom: 0; right: 0; border-width: 0 2px 2px 0; border-bottom-right-radius: 6px; }
+
+    .laser-scan {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #fafafa, transparent);
+      animation: scanAnim 2.2s infinite ease-in-out;
+    }
+
+    @keyframes scanAnim {
+      0% { top: 5%; opacity: 0; }
+      20% { opacity: 0.8; }
+      80% { opacity: 0.8; }
+      100% { top: 95%; opacity: 0; }
+    }
+
+    .reticle-hint {
+      position: absolute;
+      bottom: -32px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+    }
+
+    /* Floating Pill Trigger */
+    .floating-expand-trigger {
+      pointer-events: auto;
+      align-self: center;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(24, 24, 27, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 10px 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #fff;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .floating-expand-trigger.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .floating-expand-trigger:active {
+      transform: scale(0.96);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 10px var(--emerald);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.9); opacity: 0.8; }
+      50% { transform: scale(1.4); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.8; }
+    }
+
+    /* FLUID SHARED-ELEMENT FULLSCREEN MODAL (Morphing từ toạ độ 3D của thẻ) */
+    .fullscreen-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(9, 9, 11, 0);
+      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(0px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: env(safe-area-inset-top, 20px) 16px env(safe-area-inset-bottom, 20px) 16px;
+      transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), backdrop-filter 0.4s ease;
+    }
+
+    .fullscreen-modal.active {
+      display: flex;
+      background: rgba(9, 9, 11, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .fullscreen-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 480px;
+      max-height: 88vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      will-change: transform, opacity, border-radius;
+      transform-origin: center center;
+    }
+
+    .modal-hero-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      background: #000;
+      border-top-left-radius: 23px;
+      border-top-right-radius: 23px;
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .modal-top-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid;
+    }
+
+    .badge-emerald {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--emerald);
+      border-color: rgba(16, 185, 129, 0.25);
+    }
+
+    .badge-amber {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--amber);
+      border-color: rgba(245, 158, 11, 0.25);
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .modal-city {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .modal-desc {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #d4d4d8;
+      margin-bottom: 20px;
+    }
+
+    .highlight-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 0.82rem;
+      color: #d4d4d8;
+    }
+
+    .meta-box {
+      margin-top: 16px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .meta-box div {
+      margin-bottom: 6px;
+    }
+    .meta-box div:last-child {
+      margin-bottom: 0;
+    }
+
+    .meta-box strong {
+      color: #fff;
+    }
+
+    /* Modal Action Buttons */
+    .modal-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 11px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      border: none;
+    }
+
+    .btn-default {
+      background: var(--primary);
+      color: var(--primary-foreground);
+    }
+
+    .btn-default:hover {
+      background: #e4e4e7;
+    }
+
+    .btn-close-modal {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      z-index: 10;
+      font-size: 14px;
+      transition: transform 0.15s;
+    }
+
+    .btn-close-modal:active {
+      transform: scale(0.9);
+    }
+
+    /* Start Screen Dialog (Shadcn style) */
+    .start-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .start-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px 24px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .start-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .start-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .start-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .canvas-buffer {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Start Dialog (Minimalist Shadcn) -->
+  <div class="start-screen" id="start-screen">
+    <div class="start-card">
+      <div class="start-badge">
+        <span style="color:var(--emerald);">●</span> Spatial Hologram AR
+      </div>
+      <h1 class="start-title">Khám Phá Địa Điểm AR</h1>
+      <p class="start-desc">
+        Thẻ AR 3D được <strong>cố định ngay trên bức ảnh thực tế</strong>. Khi camera nhận diện được, bạn có thể <strong>chạm thẳng vào thẻ trên màn hình</strong> để phóng to toàn màn hình với hiệu ứng chuyển động mượt mà!
+      </p>
+
+      <button class="btn btn-default" style="width:100%; padding:13px;" id="btn-start-ar">
+        Bắt Đầu Quét Camera
+      </button>
+
+      <div style="margin-top:16px;">
+        <a href="board_sample.html" target="_blank" style="font-size:0.8rem; color:var(--text-muted); text-decoration:none;">
+          🖼️ Mở Bảng 2 Ảnh Mẫu Trên Máy Tính ↗
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Minimalist Floating Overlay -->
+  <div class="ui-layer">
+    <!-- Top HUD Bar -->
+    <div class="top-bar">
+      <div class="status-badge">
+        <div class="status-dot" id="status-dot"></div>
+        <span class="status-text" id="status-text">Hướng camera vào ảnh trên bảng</span>
+      </div>
+      <div class="top-actions">
+        <button class="btn-icon" id="btn-help" title="Hướng dẫn">❓</button>
+      </div>
+    </div>
+
+    <!-- Center Reticle -->
+    <div class="scanning-reticle" id="reticle">
+      <div class="reticle-corner tl"></div>
+      <div class="reticle-corner tr"></div>
+      <div class="reticle-corner bl"></div>
+      <div class="reticle-corner br"></div>
+      <div class="laser-scan"></div>
+      <div class="reticle-hint">Quét Dinh Độc Lập hoặc Phố Cổ Hội An</div>
+    </div>
+
+    <!-- Floating Action Pill Trigger -->
+    <div class="floating-expand-trigger" id="floating-trigger">
+      <span class="pulse-dot"></span>
+      <span id="trigger-label">Chạm thẻ AR hoặc bấm để Phóng Full</span>
+      <span>⤢</span>
+    </div>
+  </div>
+
+  <!-- FULL-SCREEN EXPANDED MODAL (Phóng to Morphing từ góc thẻ 3D) -->
+  <div class="fullscreen-modal" id="fullscreen-modal">
+    <div class="fullscreen-card" id="fullscreen-card">
+      <button class="btn-close-modal" id="btn-close-modal">✕</button>
+      <img src="assets/target-0.png" class="modal-hero-img" id="modal-img" alt="Địa điểm">
+      
+      <div class="modal-body">
+        <div class="modal-top-meta">
+          <span class="badge-pill badge-emerald" id="modal-badge">
+            <span style="font-size:9px;">●</span> Di tích Lịch sử
+          </span>
+          <span style="font-size:0.85rem; color:#fbbf24; font-weight:700;" id="modal-rating">4.8 ★</span>
+        </div>
+
+        <h2 class="modal-title" id="modal-title">Dinh Độc Lập</h2>
+        <div class="modal-city" id="modal-city">📍 TP. Hồ Chí Minh</div>
+
+        <p class="modal-desc" id="modal-desc">
+          Mô tả chi tiết địa điểm...
+        </p>
+
+        <div style="font-size:0.85rem; font-weight:700; color:#fff; margin-bottom:8px;">Điểm nổi bật:</div>
+        <div id="modal-highlights"></div>
+
+        <div class="meta-box">
+          <div>⏰ <strong>Giờ mở cửa:</strong> <span id="modal-hours">08:00 - 16:30</span></div>
+          <div>🎟️ <strong>Giá vé:</strong> <span id="modal-ticket">65.000 VNĐ</span></div>
+        </div>
+
+        <div class="modal-actions">
+          <a class="btn btn-default" id="btn-modal-map" target="_blank">
+            <span>🗺️</span> <span>Chỉ Đường Google Maps</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Offscreen Canvases (Render Textures cho Thẻ AR 3D) -->
+  <canvas id="canvas-target-0" class="canvas-buffer" width="1024" height="600"></canvas>
+  <canvas id="canvas-target-1" class="canvas-buffer" width="1024" height="600"></canvas>
+
+  <!-- AR Scene A-Frame (MindAR Image Tracking) -->
+  <div class="ar-viewport">
+    <a-scene
+      mindar-image="imageTargetSrc: ./assets/targets.mind; maxTrack: 2; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 5; missTolerance: 8; uiScanning: no; uiLoading: no; autoStart: false"
+      color-space="sRGB"
+      renderer="colorManagement: true, physicallyCorrectLights"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false"
+      embedded
+    >
+      <!-- Camera -->
+      <a-camera
+        id="main-camera"
+        position="0 0 0"
+        look-controls="enabled: false"
+        cursor="fuse: false; rayOrigin: mouse;"
+        raycaster="near: 0.05; far: 50; objects: .clickable;"
+      ></a-camera>
+
+      <!-- Target 0: Dinh Độc Lập -->
+      <a-entity id="target-entity-0" mindar-image-target="targetIndex: 0">
+        <!-- Viền chân thực trên mặt ảnh -->
+        <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #10b981; wireframe: true; wireframeLinewidth: 2; opacity: 0.5"></a-plane>
+
+        <!-- Thẻ AR 3D Hologram -->
+        <a-entity id="card-anchor-0" position="0 0.65 0.06">
+          <a-plane
+            id="ar-card-0"
+            class="clickable"
+            src="#canvas-target-0"
+            position="0 0 0"
+            width="1.25"
+            height="0.73"
+            material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.3;"
+          ></a-plane>
+        </a-entity>
+
+        <!-- Icon 3D Pin xoay -->
+        <a-entity position="0 0.18 0.06" animation="property: rotation; to: 0 360 0; dur: 6000; loop: true; easing: linear">
+          <a-cone position="0 0 0" radius-bottom="0.04" radius-top="0.001" height="0.12" rotation="180 0 0" material="color: #10b981; metalness: 0.3; roughness: 0.4;"></a-cone>
+          <a-sphere position="0 0.07 0" radius="0.04" material="color: #34d399; emissive: #10b981; emissiveIntensity: 0.4"></a-sphere>
+        </a-entity>
+      </a-entity>
+
+      <!-- Target 1: Phố Cổ Hội An -->
+      <a-entity id="target-entity-1" mindar-image-target="targetIndex: 1">
+        <!-- Viền chân thực trên mặt ảnh -->
+        <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.5"></a-plane>
+
+        <!-- Thẻ AR 3D Hologram -->
+        <a-entity id="card-anchor-1" position="0 0.65 0.06">
+          <a-plane
+            id="ar-card-1"
+            class="clickable"
+            src="#canvas-target-1"
+            position="0 0 0"
+            width="1.25"
+            height="0.73"
+            material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.3;"
+          ></a-plane>
+        </a-entity>
+
+        <!-- Icon 3D Pin xoay -->
+        <a-entity position="0 0.18 0.06" animation="property: rotation; to: 0 360 0; dur: 6000; loop: true; easing: linear">
+          <a-cone position="0 0 0" radius-bottom="0.04" radius-top="0.001" height="0.12" rotation="180 0 0" material="color: #f59e0b; metalness: 0.3; roughness: 0.4;"></a-cone>
+          <a-sphere position="0 0.07 0" radius="0.04" material="color: #fbbf24; emissive: #f59e0b; emissiveIntensity: 0.4"></a-sphere>
+        </a-entity>
+      </a-entity>
+
+    </a-scene>
+  </div>
+
+  <script>
+    let dbLocations = {};
+    let currentDetectedId = null;
+
+    // Vẽ Thẻ AR 3D Texture Chuẩn Shadcn Minimalism
+    function draw3DCard(canvasId, data) {
+      if (!data) return;
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      canvas.width = 1024;
+      canvas.height = 600;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Nền Zinc Dark (#18181b)
+      ctx.fillStyle = '#18181b';
+      ctx.beginPath();
+      ctx.roundRect(16, 16, w - 32, h - 32, 28);
+      ctx.fill();
+
+      // Viền Zinc Subtle (#27272a)
+      ctx.strokeStyle = '#27272a';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      // Badge danh mục
+      const accent = data.target_index === 0 ? '#10b981' : '#f59e0b';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+      ctx.beginPath();
+      ctx.roundRect(48, 48, 300, 48, 24);
+      ctx.fill();
+      ctx.strokeStyle = '#27272a';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.fillStyle = accent;
+      ctx.font = 'bold 22px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('● ' + (data.tag || 'Di tích'), 198, 80);
+
+      // Thành phố
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#a1a1aa';
+      ctx.font = '600 24px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText(data.city || '', w - 52, 80);
+
+      // Tiêu đề địa điểm
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 48px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText(data.name || '', 48, 175);
+
+      // Đánh giá sao
+      ctx.fillStyle = '#fbbf24';
+      ctx.font = 'bold 24px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText(data.rating || '4.8 ★', 48, 222);
+
+      // Đường kẻ mảnh
+      ctx.strokeStyle = '#27272a';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(48, 250);
+      ctx.lineTo(w - 48, 250);
+      ctx.stroke();
+
+      // Mô tả ngắn
+      ctx.fillStyle = '#d4d4d8';
+      ctx.font = '26px "Plus Jakarta Sans", sans-serif';
+      wrapText(ctx, data.short_desc || data.shortDesc || '', 48, 305, w - 96, 42);
+
+      // Nút Expand trên thẻ 3D
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.roundRect(48, h - 110, w - 96, 64, 16);
+      ctx.fill();
+
+      ctx.fillStyle = '#18181b';
+      ctx.font = 'bold 26px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('⤢  Chạm để MỞ RỘNG FULL TRÊN ĐIỆN THOẠI', w / 2, h - 68);
+    }
+
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(' ');
+      let line = '';
+      for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + ' ';
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+          ctx.fillText(line, x, y);
+          line = words[n] + ' ';
+          y += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, x, y);
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const sceneEl = document.querySelector('a-scene');
+
+      // Nạp dữ liệu từ Database
+      async function initDatabase() {
+        try {
+          const res = await fetch('/api/locations');
+          if (res.ok) {
+            dbLocations = await res.json();
+          }
+        } catch (e) {
+          if (typeof LOCATIONS_DATA !== "undefined") {
+            dbLocations = LOCATIONS_DATA;
+          }
+        }
+
+        draw3DCard("canvas-target-0", dbLocations[0] || dbLocations["0"]);
+        draw3DCard("canvas-target-1", dbLocations[1] || dbLocations["1"]);
+      }
+
+      await initDatabase();
+
+      // Cập nhật texture ban đầu
+      sceneEl.addEventListener("loaded", () => {
+        ['ar-card-0', 'ar-card-1'].forEach(id => {
+          const cardEl = document.getElementById(id);
+          if (cardEl) {
+            cardEl.addEventListener("materialtextureloaded", () => {
+              const mesh = cardEl.getObject3D('mesh');
+              if (mesh && mesh.material && mesh.material.map) {
+                mesh.material.map.needsUpdate = true;
+              }
+            });
+          }
+        });
+      });
+
+      let arSystem = null;
+      const startScreen = document.getElementById("start-screen");
+      const btnStartAR = document.getElementById("btn-start-ar");
+      const statusDot = document.getElementById("status-dot");
+      const statusText = document.getElementById("status-text");
+      const reticle = document.getElementById("reticle");
+      const floatingTrigger = document.getElementById("floating-trigger");
+      const triggerLabel = document.getElementById("trigger-label");
+
+      const fullscreenModal = document.getElementById("fullscreen-modal");
+      const fullscreenCard = document.getElementById("fullscreen-card");
+      const btnCloseModal = document.getElementById("btn-close-modal");
+      const modalImg = document.getElementById("modal-img");
+      const modalTitle = document.getElementById("modal-title");
+      const modalBadge = document.getElementById("modal-badge");
+      const modalRating = document.getElementById("modal-rating");
+      const modalCity = document.getElementById("modal-city");
+      const modalDesc = document.getElementById("modal-desc");
+      const modalHighlights = document.getElementById("modal-highlights");
+      const modalHours = document.getElementById("modal-hours");
+      const modalTicket = document.getElementById("modal-ticket");
+      const btnModalMap = document.getElementById("btn-modal-map");
+
+      // Bật camera
+      btnStartAR.addEventListener("click", () => {
+        startScreen.style.display = "none";
+        arSystem = sceneEl.systems["mindar-image-system"];
+        if (arSystem) {
+          arSystem.start();
+        }
+      });
+
+      // Lắng nghe theo dõi ảnh
+      function setupTracking(targetIdx) {
+        const el = document.getElementById(`target-entity-${targetIdx}`);
+        if (!el) return;
+
+        el.addEventListener("targetFound", () => {
+          currentDetectedId = targetIdx;
+          const data = dbLocations[targetIdx] || dbLocations[String(targetIdx)] || (typeof LOCATIONS_DATA !== "undefined" ? LOCATIONS_DATA[targetIdx] : null);
+          if (!data) return;
+
+          statusDot.classList.add("active");
+          statusText.textContent = `Đã cố định: ${data.name}`;
+          reticle.classList.add("hidden");
+
+          triggerLabel.textContent = `Chạm vào thẻ hoặc bấm để Phóng Full ${data.name}`;
+          floatingTrigger.classList.add("visible");
+        });
+
+        el.addEventListener("targetLost", () => {
+          if (currentDetectedId === targetIdx) {
+            statusDot.classList.remove("active");
+            statusText.textContent = "Hướng camera vào ảnh trên bảng";
+            reticle.classList.remove("hidden");
+            floatingTrigger.classList.remove("visible");
+          }
+        });
+      }
+
+      setupTracking(0);
+      setupTracking(1);
+
+      // TÍNH TOÁN TOẠ ĐỘ 2D TRÊN MÀN HÌNH ĐIỆN THOẠI CỦA THẺ 3D ĐANG HIỆN
+      function get3DCardScreenRect(targetIdx) {
+        const cardEl = document.getElementById(`ar-card-${targetIdx}`);
+        const camera = sceneEl.camera;
+        const defaultRect = {
+          x: window.innerWidth / 2 - 140,
+          y: window.innerHeight / 2 - 80,
+          width: 280,
+          height: 160
+        };
+
+        if (!cardEl || !camera) return defaultRect;
+
+        const pos = new THREE.Vector3();
+        cardEl.object3D.getWorldPosition(pos);
+        pos.project(camera);
+
+        const screenX = (pos.x * 0.5 + 0.5) * window.innerWidth;
+        const screenY = (-(pos.y * 0.5) + 0.5) * window.innerHeight;
+
+        const camPos = new THREE.Vector3();
+        camera.getWorldPosition(camPos);
+        const cardPos = new THREE.Vector3();
+        cardEl.object3D.getWorldPosition(cardPos);
+        const dist = Math.max(0.2, camPos.distanceTo(cardPos));
+
+        const fov = camera.fov || 60;
+        const visibleHeightAtDist = 2 * Math.tan((fov * Math.PI) / 360) * dist;
+        const pixelPerMeter = window.innerHeight / visibleHeightAtDist;
+
+        const width = Math.min(window.innerWidth * 0.85, Math.max(140, 1.25 * pixelPerMeter));
+        const height = Math.min(window.innerHeight * 0.5, Math.max(80, 0.73 * pixelPerMeter));
+
+        return {
+          x: screenX - width / 2,
+          y: screenY - height / 2,
+          width: width,
+          height: height
+        };
+      }
+
+      let isModalOpening = false;
+
+      // HÀM PHÓNG TO MORPHING TỪ GÓC THẺ 3D ĐẾN FULL MÀN HÌNH CỰC KỲ MƯỢT
+      window.openFullView = function(targetIdx) {
+        if (isModalOpening) return;
+        isModalOpening = true;
+
+        const data = dbLocations[targetIdx] || dbLocations[String(targetIdx)] || (typeof LOCATIONS_DATA !== "undefined" ? LOCATIONS_DATA[targetIdx] : null);
+        if (!data) {
+          isModalOpening = false;
+          return;
+        }
+
+        modalImg.src = data.image_url || `assets/target-${targetIdx}.png`;
+        modalTitle.textContent = data.name;
+        modalBadge.textContent = data.tag || 'Di tích';
+        modalBadge.className = `badge-pill ${targetIdx === 0 ? 'badge-emerald' : 'badge-amber'}`;
+        modalRating.textContent = data.rating || '4.8 ★';
+        modalCity.textContent = '📍 ' + (data.city || '');
+        modalDesc.textContent = data.full_desc || data.fullDesc || data.short_desc || data.shortDesc;
+        modalHours.textContent = data.hours || '08:00 - 16:30';
+        modalTicket.textContent = data.ticket || 'Miễn phí';
+
+        modalHighlights.innerHTML = "";
+        const highlights = data.highlights || [];
+        if (Array.isArray(highlights)) {
+          highlights.forEach(item => {
+            const div = document.createElement("div");
+            div.className = "highlight-card";
+            div.textContent = "• " + item;
+            modalHighlights.appendChild(div);
+          });
+        }
+
+        const mapQuery = data.map_query || data.mapQuery || data.name;
+        btnModalMap.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
+
+        // 1. Tính toán toạ độ gốc từ thẻ 3D trên màn hình điện thoại
+        const startRect = get3DCardScreenRect(targetIdx);
+
+        // Kích thước cuối cùng khi full màn hình
+        const finalWidth = Math.min(window.innerWidth - 32, 480);
+        const finalHeight = Math.min(window.innerHeight * 0.88, 700);
+        const finalLeft = (window.innerWidth - finalWidth) / 2;
+        const finalTop = (window.innerHeight - finalHeight) / 2;
+
+        const scaleX = Math.max(0.2, startRect.width / finalWidth);
+        const scaleY = Math.max(0.2, startRect.height / finalHeight);
+        const deltaX = (startRect.x + startRect.width / 2) - (finalLeft + finalWidth / 2);
+        const deltaY = (startRect.y + startRect.height / 2) - (finalTop + finalHeight / 2);
+
+        // Đặt trạng thái ban đầu ở đúng góc thẻ 3D
+        fullscreenCard.style.transition = 'none';
+        fullscreenCard.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0) scale(${scaleX}, ${scaleY})`;
+        fullscreenCard.style.opacity = '0.3';
+        fullscreenCard.style.borderRadius = '32px';
+
+        fullscreenModal.classList.add("active");
+        fullscreenModal.style.backgroundColor = 'rgba(9, 9, 11, 0)';
+        fullscreenModal.style.backdropFilter = 'blur(0px)';
+
+        // Force reflow
+        fullscreenCard.offsetHeight;
+
+        // 2. Chạy animation phóng to mượt mà (Fluid Spring Curve)
+        requestAnimationFrame(() => {
+          fullscreenCard.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, border-radius 0.4s ease';
+          fullscreenCard.style.transform = 'translate3d(0, 0, 0) scale(1, 1)';
+          fullscreenCard.style.opacity = '1';
+          fullscreenCard.style.borderRadius = '24px';
+
+          fullscreenModal.style.backgroundColor = 'rgba(9, 9, 11, 0.88)';
+          fullscreenModal.style.backdropFilter = 'blur(20px)';
+          isModalOpening = false;
+        });
+      };
+
+      // ĐÓNG FULL VIEW: Thu nhỏ mượt mà ngược về góc của thẻ 3D
+      function closeFullView() {
+        if (!fullscreenModal.classList.contains("active")) return;
+
+        const targetIdx = currentDetectedId !== null ? currentDetectedId : 0;
+        const endRect = get3DCardScreenRect(targetIdx);
+
+        const finalWidth = Math.min(window.innerWidth - 32, 480);
+        const finalHeight = Math.min(window.innerHeight * 0.88, 700);
+        const finalLeft = (window.innerWidth - finalWidth) / 2;
+        const finalTop = (window.innerHeight - finalHeight) / 2;
+
+        const scaleX = Math.max(0.2, endRect.width / finalWidth);
+        const scaleY = Math.max(0.2, endRect.height / finalHeight);
+        const deltaX = (endRect.x + endRect.width / 2) - (finalLeft + finalWidth / 2);
+        const deltaY = (endRect.y + endRect.height / 2) - (finalTop + finalHeight / 2);
+
+        fullscreenCard.style.transition = 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease, border-radius 0.3s ease';
+        fullscreenCard.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0) scale(${scaleX}, ${scaleY})`;
+        fullscreenCard.style.opacity = '0';
+        fullscreenCard.style.borderRadius = '32px';
+
+        fullscreenModal.style.backgroundColor = 'rgba(9, 9, 11, 0)';
+        fullscreenModal.style.backdropFilter = 'blur(0px)';
+
+        setTimeout(() => {
+          fullscreenModal.classList.remove("active");
+          fullscreenCard.style.transform = 'none';
+        }, 380);
+      }
+
+      btnCloseModal.addEventListener("click", closeFullView);
+      fullscreenModal.addEventListener("click", (e) => {
+        if (e.target === fullscreenModal) closeFullView();
+      });
+
+      // Bấm vào floating pill cũng phóng full với hiệu ứng từ thẻ 3D
+      floatingTrigger.addEventListener("click", () => {
+        if (currentDetectedId !== null) {
+          openFullView(currentDetectedId);
+        }
+      });
+
+      // BẮT CHẠM CẢM ỨNG TRỰC TIẾP TRÊN MÀN HÌNH ĐIỆN THOẠI
+      const raycaster = new THREE.Raycaster();
+      const pointer = new THREE.Vector2();
+
+      function handleScreenTouch(clientX, clientY) {
+        if (fullscreenModal.classList.contains("active")) return;
+        if (!sceneEl.camera) return;
+
+        pointer.x = (clientX / window.innerWidth) * 2 - 1;
+        pointer.y = -(clientY / window.innerHeight) * 2 + 1;
+
+        raycaster.setFromCamera(pointer, sceneEl.camera);
+
+        const meshes = [];
+        [0, 1].forEach(idx => {
+          const cardEl = document.getElementById(`ar-card-${idx}`);
+          if (cardEl && cardEl.object3D) {
+            cardEl.object3D.traverse((child) => {
+              if (child.isMesh) {
+                child.userData.targetIdx = idx;
+                meshes.push(child);
+              }
+            });
+          }
+        });
+
+        const intersects = raycaster.intersectObjects(meshes, true);
+        if (intersects.length > 0) {
+          const hitIdx = intersects[0].object.userData.targetIdx;
+          openFullView(hitIdx);
+        }
+      }
+
+      window.addEventListener("touchend", (e) => {
+        if (e.changedTouches && e.changedTouches.length > 0) {
+          const t = e.changedTouches[0];
+          handleScreenTouch(t.clientX, t.clientY);
+        }
+      }, { passive: true });
+
+      window.addEventListener("pointerup", (e) => {
+        if (e.pointerType !== "touch") {
+          handleScreenTouch(e.clientX, e.clientY);
+        }
+      });
+
+      document.getElementById("ar-card-0").addEventListener("click", () => openFullView(0));
+      document.getElementById("ar-card-1").addEventListener("click", () => openFullView(1));
+
+      document.getElementById("btn-help").addEventListener("click", () => {
+        alert("💡 HƯỚNG DẪN QUÉT AR:\n\n1. Hướng camera vào ảnh Dinh Độc Lập hoặc Phố Cổ Hội An trên máy tính.\n2. Thẻ AR 3D sẽ xuất hiện cố định trên bức ảnh.\n3. CHẠM TRỰC TIẾP VÀO THẺ TRÊN MÀN HÌNH: Thẻ sẽ bung nở phóng to từ đúng vị trí 3D ra toàn màn hình cực mượt!\n4. Bấm ✕ để thu nhỏ trở lại đúng góc của thẻ 3D.");
+      });
+    });
+  </script>
+</body>
+</html>

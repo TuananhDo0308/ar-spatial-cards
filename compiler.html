@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trình biên dịch Ảnh Mục Tiêu AR (MindAR Targets Compiler)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #06b6d4;
+      --success: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 30px 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #a5b4fc, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      background: rgba(79, 70, 229, 0.2);
+      color: #818cf8;
+      border: 1px solid rgba(129, 140, 248, 0.3);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    /* Dropzone custom styling */
+    .dropzone-area {
+      border: 2px dashed #475569;
+      border-radius: 12px;
+      padding: 40px 20px;
+      text-align: center;
+      background: rgba(15, 23, 42, 0.6);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .dropzone-area:hover, .dropzone-area.dragover {
+      border-color: var(--accent);
+      background: rgba(6, 182, 212, 0.05);
+    }
+
+    .dropzone-icon {
+      font-size: 48px;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .image-preview-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .preview-card {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .preview-card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      background: #000;
+    }
+
+    .preview-info {
+      padding: 10px;
+      font-size: 0.85rem;
+    }
+
+    .preview-index {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      color: var(--accent);
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      border: 1px solid rgba(6, 182, 212, 0.4);
+    }
+
+    .btn-remove {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(239, 68, 68, 0.8);
+      color: white;
+      border: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .actions-bar {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: #334155;
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: #475569;
+    }
+
+    .progress-box {
+      margin-top: 20px;
+      display: none;
+    }
+
+    .progress-bar-bg {
+      width: 100%;
+      height: 12px;
+      background: #334155;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 0.2s ease;
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-top: 6px;
+      color: var(--text-muted);
+    }
+
+    .tips-list {
+      padding-left: 20px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .tips-list li {
+      margin-bottom: 8px;
+    }
+
+    .tips-list strong {
+      color: #e2e8f0;
+    }
+
+    #debug-canvases {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    #debug-canvases canvas {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #000;
+    }
+
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+      font-size: 0.9rem;
+    }
+
+    .nav-links a {
+      color: var(--accent);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Biên Dịch Ảnh Mục Tiêu WebAR</h1>
+      <p>Tải lên các bức ảnh dán trên bảng của bạn để xuất ra file <code>targets.mind</code>. Trình duyệt tự động trích xuất các điểm đặc trưng (feature points) mà không cần cài đặt phần mềm nào.</p>
+    </header>
+
+    <!-- Upload Card -->
+    <div class="card">
+      <div class="card-title">
+        <span>📸 Danh Sách Ảnh Cần Nhận Diện</span>
+        <span class="badge" id="image-count-badge">0 ảnh</span>
+      </div>
+
+      <div class="dropzone-area" id="dropzone">
+        <div class="dropzone-icon">📥</div>
+        <p><strong>Kéo thả các bức ảnh vào đây</strong> hoặc bấm để chọn tệp</p>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Hỗ trợ định dạng .PNG, .JPG, .JPEG (Khuyên dùng độ phân giải từ 800x800 đến 1600x1600)</p>
+        <input type="file" id="file-input" class="file-input" accept="image/png, image/jpeg" multiple>
+      </div>
+
+      <div class="image-preview-list" id="preview-list"></div>
+
+      <div class="progress-box" id="progress-box">
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-text">
+          <span id="progress-status">Đang phân tích điểm đặc trưng...</span>
+          <span id="progress-percent">0%</span>
+        </div>
+      </div>
+
+      <div class="actions-bar">
+        <button class="btn btn-primary" id="btn-compile" disabled>
+          ⚡ Bắt Đầu Biên Dịch
+        </button>
+        <button class="btn btn-secondary" id="btn-download" style="display: none; background: #059669;">
+          💾 Tải targets.mind Về Máy
+        </button>
+        <button class="btn btn-secondary" id="btn-clear">
+          🗑️ Xóa danh sách
+        </button>
+      </div>
+    </div>
+
+    <!-- Hướng dẫn & Tiêu chuẩn chọn ảnh -->
+    <div class="card">
+      <div class="card-title">
+        <span>💡 Lưu Ý Để Camera Nhận Diện Bảng Ảnh Nhanh Nhất</span>
+      </div>
+      <ul class="tips-list">
+        <li><strong>Thứ tự ảnh (targetIndex):</strong> Ảnh đầu tiên sẽ là <code>targetIndex: 0</code>, ảnh thứ hai là <code>targetIndex: 1</code>... Khớp đúng với thứ tự bạn khai báo trong file <code>data/locations.js</code>.</li>
+        <li><strong>Độ tương phản và chi tiết:</strong> Chọn các bức ảnh có phong cảnh, toà nhà, hoa văn sắc nét, nhiều góc cạnh và màu sắc. Camera nhận diện các điểm góc (corners & edges) cực kỳ nhạy.</li>
+        <li><strong>Tránh ảnh đơn sắc:</strong> Không nên dùng logo quá tối giản chỉ có 1 nét, ảnh bầu trời trống trơn, hoặc hoa văn lặp đều như bàn cờ.</li>
+        <li><strong>Sau khi tải file:</strong> Hãy đổi tên thành <code>targets.mind</code> và đặt vào thư mục <code>assets/</code> của dự án AR này.</li>
+      </ul>
+    </div>
+
+    <!-- Feature Points Visualizer -->
+    <div class="card" id="debug-section" style="display: none;">
+      <div class="card-title">
+        <span>🔍 Điểm Nhận Diện Đặc Trưng (Feature Points Visualizer)</span>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">Các điểm màu xanh lá biểu thị vị trí thuật toán thị giác bám vào tấm ảnh khi camera quét qua bảng:</p>
+      <div id="debug-canvases"></div>
+    </div>
+
+    <div class="nav-links">
+      <a href="index.html">⬅️ Mở Trang WebAR Quét Camera</a>
+      <a href="board_sample.html">🖼️ Mở Bảng Ảnh Mẫu Để Test</a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { Compiler } from "https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js";
+
+    const dropzone = document.getElementById("dropzone");
+    const fileInput = document.getElementById("file-input");
+    const previewList = document.getElementById("preview-list");
+    const imageCountBadge = document.getElementById("image-count-badge");
+    const btnCompile = document.getElementById("btn-compile");
+    const btnDownload = document.getElementById("btn-download");
+    const btnClear = document.getElementById("btn-clear");
+    const progressBox = document.getElementById("progress-box");
+    const progressFill = document.getElementById("progress-fill");
+    const progressPercent = document.getElementById("progress-percent");
+    const progressStatus = document.getElementById("progress-status");
+    const debugSection = document.getElementById("debug-section");
+    const debugCanvases = document.getElementById("debug-canvases");
+
+    let uploadedFiles = [];
+    let exportedBuffer = null;
+
+    dropzone.addEventListener("click", () => fileInput.click());
+
+    dropzone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropzone.classList.add("dragover");
+    });
+
+    dropzone.addEventListener("dragleave", () => {
+      dropzone.classList.remove("dragover");
+    });
+
+    dropzone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropzone.classList.remove("dragover");
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        addFiles(Array.from(e.dataTransfer.files));
+      }
+    });
+
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        addFiles(Array.from(e.target.files));
+      }
+    });
+
+    function addFiles(files) {
+      const validImages = files.filter(f => f.type.startsWith("image/"));
+      uploadedFiles.push(...validImages);
+      renderPreviews();
+    }
+
+    function renderPreviews() {
+      previewList.innerHTML = "";
+      imageCountBadge.textContent = `${uploadedFiles.length} ảnh`;
+      btnCompile.disabled = uploadedFiles.length === 0;
+
+      uploadedFiles.forEach((file, index) => {
+        const card = document.createElement("div");
+        card.className = "preview-card";
+
+        const badge = document.createElement("div");
+        badge.className = "preview-index";
+        badge.textContent = `targetIndex: ${index}`;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.className = "btn-remove";
+        removeBtn.innerHTML = "×";
+        removeBtn.title = "Xóa ảnh này";
+        removeBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          uploadedFiles.splice(index, 1);
+          renderPreviews();
+        });
+
+        const img = document.createElement("img");
+        img.src = URL.createObjectURL(file);
+
+        const info = document.createElement("div");
+        info.className = "preview-info";
+        info.innerHTML = `<strong>${file.name}</strong><br><span style="color:var(--text-muted);font-size:0.75rem;">${(file.size / 1024).toFixed(1)} KB</span>`;
+
+        card.appendChild(badge);
+        card.appendChild(removeBtn);
+        card.appendChild(img);
+        card.appendChild(info);
+        previewList.appendChild(card);
+      });
+    }
+
+    btnClear.addEventListener("click", () => {
+      uploadedFiles = [];
+      exportedBuffer = null;
+      btnDownload.style.display = "none";
+      debugSection.style.display = "none";
+      debugCanvases.innerHTML = "";
+      progressBox.style.display = "none";
+      renderPreviews();
+    });
+
+    const loadImage = (file) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = URL.createObjectURL(file);
+      });
+    };
+
+    btnCompile.addEventListener("click", async () => {
+      if (uploadedFiles.length === 0) return;
+
+      btnCompile.disabled = true;
+      btnDownload.style.display = "none";
+      progressBox.style.display = "block";
+      progressFill.style.width = "0%";
+      progressPercent.textContent = "0%";
+      progressStatus.textContent = "Đang nạp ảnh vào bộ nhớ...";
+      debugSection.style.display = "none";
+      debugCanvases.innerHTML = "";
+
+      try {
+        const images = [];
+        for (let i = 0; i < uploadedFiles.length; i++) {
+          progressStatus.textContent = `Đang xử lý ảnh ${i + 1}/${uploadedFiles.length}...`;
+          images.push(await loadImage(uploadedFiles[i]));
+        }
+
+        const compiler = new Compiler();
+        progressStatus.textContent = "Đang tính toán các điểm đặc trưng AR...";
+
+        const dataList = await compiler.compileImageTargets(images, (progress) => {
+          const p = Math.min(100, progress.toFixed(1));
+          progressFill.style.width = `${p}%`;
+          progressPercent.textContent = `${p}%`;
+          progressStatus.textContent = `Đang biên dịch: ${p}%`;
+        });
+
+        exportedBuffer = await compiler.exportData();
+
+        progressStatus.textContent = "✅ Biên dịch thành công 100%!";
+        progressFill.style.background = "#10b981";
+        btnDownload.style.display = "inline-flex";
+        btnCompile.disabled = false;
+
+        // Hiển thị visualizer điểm đặc trưng
+        debugSection.style.display = "block";
+        dataList.forEach((data, idx) => {
+          renderFeaturePoints(data, idx);
+        });
+
+      } catch (err) {
+        console.error("Lỗi khi biên dịch:", err);
+        progressStatus.textContent = "❌ Lỗi: " + err.message;
+        btnCompile.disabled = false;
+      }
+    });
+
+    btnDownload.addEventListener("click", () => {
+      if (!exportedBuffer) return;
+      const blob = new Blob([exportedBuffer]);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.download = "targets.mind";
+      a.href = url;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    function renderFeaturePoints(data, targetIdx) {
+      if (!data.imageList || !data.matchingData) return;
+      const image = data.imageList[0];
+      const kpmPoints = [...data.matchingData[0].maximaPoints, ...data.matchingData[0].minimaPoints];
+
+      const canvas = document.createElement("canvas");
+      canvas.width = image.width;
+      canvas.height = image.height;
+      const ctx = canvas.getContext("2d");
+
+      // Vẽ ảnh xám
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const pixels = new Uint32Array(imageData.data.buffer);
+      const alpha = (0xff << 24);
+
+      for (let c = 0; c < image.width; c++) {
+        for (let r = 0; r < image.height; r++) {
+          const pix = image.data[r * image.width + c];
+          pixels[r * canvas.width + c] = alpha | (pix << 16) | (pix << 8) | pix;
+        }
+      }
+
+      // Điểm xanh lá cho các feature points
+      const greenPix = (0xff << 24) | (0x00 << 16) | (0xff << 8) | 0x00;
+      kpmPoints.forEach(pt => {
+        const x = Math.round(pt.x);
+        const y = Math.round(pt.y);
+        const offset = x + y * canvas.width;
+        pixels[offset] = greenPix;
+        for (let s = 1; s <= 3; s++) {
+          if (offset - s >= 0) pixels[offset - s] = greenPix;
+          if (offset + s < pixels.length) pixels[offset + s] = greenPix;
+          if (offset - s * canvas.width >= 0) pixels[offset - s * canvas.width] = greenPix;
+          if (offset + s * canvas.width < pixels.length) pixels[offset + s * canvas.width] = greenPix;
+        }
+      });
+
+      ctx.putImageData(imageData, 0, 0);
+
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = `<div style="font-size:0.8rem;font-weight:700;color:var(--accent);margin-bottom:4px;">Target ${targetIdx} (${kpmPoints.length} điểm đặc trưng)</div>`;
+      wrapper.appendChild(canvas);
+      debugCanvases.appendChild(wrapper);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database CMS - Dinh Độc Lập & Phố Cổ Hội An</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #09090b;
+      --card: #18181b;
+      --border: #27272a;
+      --text: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --primary: #fafafa;
+      --primary-foreground: #18181b;
+      --emerald: #10b981;
+      --danger: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 32px 24px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* Shadcn Top Nav */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    header h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      border: none;
+    }
+
+    .btn-default {
+      background: var(--primary);
+      color: var(--primary-foreground);
+    }
+
+    .btn-default:hover {
+      background: #e4e4e7;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.1);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .grid-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .location-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .location-item {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      transition: border-color 0.15s;
+    }
+
+    .location-item:hover {
+      border-color: #3f3f46;
+    }
+
+    .location-thumb {
+      width: 90px;
+      height: 90px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #000;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .location-info {
+      flex: 1;
+    }
+
+    .pill-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .location-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .location-city {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .location-desc {
+      font-size: 0.82rem;
+      color: #d4d4d8;
+      margin-top: 6px;
+      line-height: 1.45;
+    }
+
+    .location-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+
+    input, textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: var(--text);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #52525b;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    .status-box {
+      margin-top: 20px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div>
+        <h1>Database Quản Lý 2 Điểm AR Cố Định</h1>
+        <p>Cơ sở dữ liệu SQLite: <code>database.sqlite</code> kết nối với camera WebAR</p>
+      </div>
+      <div class="header-actions">
+        <a href="index.html" class="btn btn-default">📱 Mở Quét Camera</a>
+        <a href="board_sample.html" class="btn btn-outline">🖼️ Bảng 2 Ảnh Mẫu</a>
+      </div>
+    </header>
+
+    <div class="grid-layout">
+      <!-- Cột Trái -->
+      <div>
+        <div class="card">
+          <div class="card-title">
+            <span>📚 Danh Sách Địa Điểm (Dinh Độc Lập & Hội An)</span>
+            <span style="font-size: 0.8rem; color: var(--emerald);" id="count-badge">2 bản ghi</span>
+          </div>
+          
+          <div class="location-list" id="location-list">
+            <div style="text-align: center; padding: 30px; color: var(--text-muted);">Đang nạp dữ liệu...</div>
+          </div>
+        </div>
+
+        <div class="status-box">
+          <span style="color:var(--emerald);">●</span>
+          <span>Khi camera WebAR nhận diện được bức ảnh nào, hệ thống sẽ tự động gọi API <code>/api/locations/{id}</code>, sau đó <strong>khóa cố định toạ độ AR</strong> tại đó.</span>
+        </div>
+      </div>
+
+      <!-- Cột Phải: Form Sửa -->
+      <div>
+        <div class="card">
+          <div class="card-title">
+            <span id="form-title">✏️ Chỉnh Sửa Thông Tin Địa Điểm</span>
+          </div>
+
+          <form id="location-form">
+            <div class="form-group">
+              <label>Thứ tự mục tiêu (target_index)</label>
+              <input type="number" id="field-index" readonly style="opacity:0.6; cursor:not-allowed;">
+            </div>
+
+            <div class="form-group">
+              <label>Tên địa điểm *</label>
+              <input type="text" id="field-name" required>
+            </div>
+
+            <div class="form-group">
+              <label>Phân loại (Tag)</label>
+              <input type="text" id="field-tag">
+            </div>
+
+            <div class="form-group">
+              <label>Thành phố</label>
+              <input type="text" id="field-city">
+            </div>
+
+            <div class="form-group">
+              <label>Mô tả ngắn (Hiển thị thẻ AR 3D) *</label>
+              <textarea id="field-short-desc" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Mô tả chi tiết</label>
+              <textarea id="field-full-desc" rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Bài thuyết minh giọng nói</label>
+              <textarea id="field-audio"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Từ khóa bản đồ (Google Maps)</label>
+              <input type="text" id="field-map">
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-top: 16px;">
+              <button type="submit" class="btn btn-default" style="flex: 1;">💾 Cập Nhật Vào Database</button>
+              <button type="button" class="btn btn-outline" id="btn-reset-form">Hủy</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const locationList = document.getElementById("location-list");
+    const countBadge = document.getElementById("count-badge");
+    const locationForm = document.getElementById("location-form");
+    const formTitle = document.getElementById("form-title");
+    const btnResetForm = document.getElementById("btn-reset-form");
+
+    let locationsData = {};
+
+    async function loadLocations() {
+      try {
+        const res = await fetch("/api/locations");
+        if (!res.ok) throw new Error("Không thể nạp dữ liệu");
+        locationsData = await res.json();
+        renderList();
+      } catch (err) {
+        locationList.innerHTML = `<div style="color:var(--danger);padding:20px;text-align:center;">Lỗi kết nối: ${err.message}</div>`;
+      }
+    }
+
+    function renderList() {
+      const keys = Object.keys(locationsData).sort((a, b) => Number(a) - Number(b));
+      countBadge.textContent = `${keys.length} bản ghi`;
+
+      locationList.innerHTML = "";
+      keys.forEach(key => {
+        const item = locationsData[key];
+        const div = document.createElement("div");
+        div.className = "location-item";
+        const imgUrl = item.image_url || `assets/target-${item.target_index}.png`;
+
+        div.innerHTML = `
+          <img src="${imgUrl}" class="location-thumb">
+          <div class="location-info">
+            <span class="pill-badge">targetIndex: ${item.target_index}</span>
+            <div class="location-title">${item.name}</div>
+            <div class="location-city">📍 ${item.city} • ${item.tag}</div>
+            <div class="location-desc">${item.short_desc}</div>
+            <div class="location-actions">
+              <button class="btn btn-outline" style="padding:4px 10px;font-size:0.75rem;" onclick="editLocation(${item.target_index})">✏️ Chỉnh sửa</button>
+            </div>
+          </div>
+        `;
+        locationList.appendChild(div);
+      });
+
+      // Mặc định chọn mục tiêu 0 để chỉnh sửa
+      if (keys.length > 0 && !document.getElementById("field-name").value) {
+        editLocation(0);
+      }
+    }
+
+    window.editLocation = function(index) {
+      const item = locationsData[String(index)];
+      if (!item) return;
+
+      formTitle.textContent = `✏️ Chỉnh Sửa: ${item.name}`;
+      document.getElementById("field-index").value = item.target_index;
+      document.getElementById("field-name").value = item.name || '';
+      document.getElementById("field-tag").value = item.tag || '';
+      document.getElementById("field-city").value = item.city || '';
+      document.getElementById("field-short-desc").value = item.short_desc || '';
+      document.getElementById("field-full-desc").value = item.full_desc || '';
+      document.getElementById("field-audio").value = item.audio_text || '';
+      document.getElementById("field-map").value = item.map_query || '';
+    };
+
+    function resetForm() {
+      if (locationsData["0"]) editLocation(0);
+    }
+
+    btnResetForm.addEventListener("click", resetForm);
+
+    locationForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const targetIdx = parseInt(document.getElementById("field-index").value);
+      const payload = {
+        target_index: targetIdx,
+        name: document.getElementById("field-name").value,
+        tag: document.getElementById("field-tag").value,
+        city: document.getElementById("field-city").value,
+        image_url: `assets/target-${targetIdx}.png`,
+        short_desc: document.getElementById("field-short-desc").value,
+        full_desc: document.getElementById("field-full-desc").value,
+        audio_text: document.getElementById("field-audio").value,
+        map_query: document.getElementById("field-map").value,
+        badge_color: targetIdx === 0 ? "#10b981" : "#f59e0b"
+      };
+
+      try {
+        const res = await fetch("/api/locations", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error("Không thể lưu");
+        alert("✅ Đã cập nhật thành công!");
+        await loadLocations();
+      } catch (err) {
+        alert("Lỗi khi lưu: " + err.message);
+      }
+    });
+
+    loadLocations();
+  </script>
+</body>
+</html>
