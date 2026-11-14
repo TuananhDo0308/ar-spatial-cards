@@ -389,12 +389,12 @@
         div.innerHTML = `
           <img src="${imgUrl}" class="location-thumb">
           <div class="location-info">
-            <span class="pill-badge">targetIndex: ${item.target_index}</span>
+            <span class="pill-badge">Card ID: ${item.id} • Target #${item.target_index}</span>
             <div class="location-title">${item.name}</div>
             <div class="location-city">📍 ${item.city} • ${item.tag}</div>
             <div class="location-desc">${item.short_desc}</div>
             <div class="location-actions">
-              <button class="btn btn-outline" style="padding:4px 10px;font-size:0.75rem;" onclick="editLocation(${item.target_index})">✏️ Chỉnh sửa</button>
+              <button class="btn btn-outline" style="padding:4px 10px;font-size:0.75rem;" onclick="editLocation(${item.id})">✏️ Chỉnh sửa</button>
             </div>
           </div>
         `;
@@ -407,12 +407,12 @@
       }
     }
 
-    window.editLocation = function(index) {
-      const item = locationsData[String(index)];
+    window.editLocation = function(id) {
+      const item = locationsData[String(id)];
       if (!item) return;
 
       formTitle.textContent = `✏️ Chỉnh Sửa: ${item.name}`;
-      document.getElementById("field-index").value = item.target_index;
+      document.getElementById("field-index").value = item.id;
       document.getElementById("field-name").value = item.name || '';
       document.getElementById("field-tag").value = item.tag || '';
       document.getElementById("field-city").value = item.city || '';
