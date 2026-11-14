@@ -9,7 +9,7 @@ CARDS_SEED = [
         0, 0, "Dinh Độc Lập", "Di tích Lịch sử Quốc gia Đặc biệt", "TP. Hồ Chí Minh",
         "#10b981", "4.8 ★ (35.2K đánh giá)", "08:00 - 16:30 hàng ngày", "65.000 VNĐ / người lớn",
         "Chứng nhân lịch sử thiêng liêng gắn liền với mốc son thống nhất đất nước ngày 30/4/1975, mang kiến trúc hiện đại hài hòa triết lý phương Đông.",
-        "Dinh Độc Lập (còn gọi là Dinh Thống Nhất) tọa lạc tại trung tâm Quận 1, TP.HCM, được thiết kế bởi kiến trúc sư tài hoa Ngô Viết Thụ. Công trình kết hợp hài hòa giữa triết lý kiến trúc phương Đông (chữ Cát, Khẩu, Trung, Chủ) và kiến trúc hiện đại phương Tây trên khuôn viên rợp bóng cây cổ thụ rộng 12 hecta, là chứng nhân cho ngày non sông thống nhất 30/4/1975.",
+        "Dinh Độc Lập (còn gọi là Dinh Thống Nhất) tọa lạc tại trung tâm Quận 1, TP.HCM, được thiết kế bởi kiến trúc sư tài hoa Ngô Viết Thụ. Công trình kết hợp hài hòa giữa triết lý phong thủy phương Đông (chữ Cát, Khẩu, Trung, Chủ) và kiến trúc hiện đại phương Tây trên khuôn viên rợp bóng cây cổ thụ rộng 12 hecta, là chứng nhân cho ngày non sông thống nhất 30/4/1975.",
         json.dumps(["Chứng nhân lịch sử ngày toàn thắng 30/4/1975", "Kiến trúc phong thủy phương Đông độc đáo của KTS Ngô Viết Thụ", "Hệ thống phòng khánh tiết nguy nga và hầm tác chiến ngầm kiên cố"], ensure_ascii=False),
         "", "Dinh Độc Lập, Nam Kỳ Khởi Nghĩa, Phường Bến Thành, Quận 1, TP Hồ Chí Minh", "assets/target-0.png"
     ),
@@ -46,9 +46,9 @@ CARDS_SEED = [
         "", "Cầu Vàng, Bà Nà Hills, Hòa Vang, Đà Nẵng", "assets/gallery-danang.jpg"
     ),
     (
-        5, 5, "Vịnh Hạ Long", "Di sản Thiên nhiên Thế giới", "Quảng Ninh",
+        5, 5, "Vịnh Hạ Long", "Di sản Thiên nhiên Thế giới UNESCO", "Quảng Ninh",
         "#10b981", "4.9 ★ (78.9K đánh giá)", "Mở cửa các tuyến tàu du lịch cả ngày", "290.000 VNĐ / vé tham quan vịnh",
-        "Kỳ quan thiên nhiên thế giới UNESCO với hàng ngàn đảo đá vôi tráng lệ nhô lên từ làn nước ngọc bích.",
+        "Kỳ quan thiên nhiên thế giới với gần 2.000 hòn đảo đá vôi tráng lệ nhô lên từ làn nước màu ngọc bích.",
         "Vịnh Hạ Long sở hữu gần 2.000 hòn đảo đá vôi lớn nhỏ kiến tạo qua hàng triệu năm phong hóa. Du khách đến đây được trải nghiệm du thuyền len lỏi qua những hang động thạch nhũ huyền ảo như Hang Sửng Sốt, Động Thiên Cung, chiêm ngưỡng làng chài nổi và ngắm hoàng hôn rực rỡ buông xuống mặt biển bao la.",
         json.dumps(["Hàng ngàn hòn đảo đá vôi kỳ vĩ muôn hình vạn trạng", "Hệ thống hang động thạch nhũ lung linh huyền bí", "Trải nghiệm du thuyền ngắm hoàng hôn vịnh biển tráng lệ"], ensure_ascii=False),
         "", "Vịnh Hạ Long, Thành phố Hạ Long, Quảng Ninh", "assets/gallery-halong.jpg"
@@ -62,20 +62,28 @@ CARDS_SEED = [
         "", "Đại Nội Huế, Phú Hậu, Thành phố Huế, Thừa Thiên Huế", "assets/card-hue.jpg"
     ),
     (
-        7, 7, "Đảo Ngọc Phú Quốc", "Thiên đường Nghỉ dưỡng Biển Đảo", "Kiên Giang",
-        "#06b6d4", "4.8 ★ (67.4K đánh giá)", "Mở cửa tự do quanh năm", "Tự do trải nghiệm",
-        "Hòn đảo lớn nhất Việt Nam với những bãi cát trắng mịn màng, làn nước pha lê và hoàng hôn lộng lẫy bậc nhất.",
-        "Phú Quốc được mệnh danh là Đảo Ngọc nhờ cảnh sắc thiên nhiên hoang sơ tuyệt mỹ: từ Bãi Sao với bãi cát trắng như kem, Bãi Dài hoang sơ đến làng chài Hàm Ninh mộc mạc. Nơi đây là điểm đến nghỉ dưỡng cao cấp với những khu bảo tồn san hô rực rỡ và thiên đường ẩm thực hải sản phong phú.",
-        json.dumps(["Bãi cát trắng mịn nước xanh pha lê ngắm hoàng hôn", "Lặn ngắm rạn san hô tự nhiên rực rỡ sắc màu", "Thiên đường hải sản tươi sống và chợ đêm sôi động"], ensure_ascii=False),
-        "", "Đảo Phú Quốc, Kiên Giang", "assets/card-phuquoc.jpg"
+        7, 7, "Quần Thể Danh Thắng Tràng An", "Di sản Kép Văn hóa & Thiên nhiên UNESCO", "Ninh Bình",
+        "#10b981", "4.9 ★ (46.8K đánh giá)", "07:00 - 17:00 hàng ngày", "250.000 VNĐ / vé thuyền tham quan",
+        "Hạ Long trên cạn với hệ thống thung lũng nước ngập quanh co xuyên qua những hang động đá vôi kỳ ảo.",
+        "Tràng An là Di sản Văn hóa và Thiên nhiên Thế giới kép đầu tiên của Đông Nam Á. Du khách ngồi trên những chiếc thuyền nan mộc mạc len lỏi qua các hang động ngập nước dài hàng trăm mét như Hang Tối, Hang Sáng, ngắm nhìn làn nước trong vắt in bóng vách núi đá vôi dựng đứng và các đền phủ cổ kính trầm mặc.",
+        json.dumps(["Di sản thế giới kép duy nhất tại Việt Nam", "Hành trình ngồi thuyền nan khám phá hang động ngập nước kỳ vĩ", "Cảnh sắc núi non trùng điệp thanh bình giữa cõi thần tiên"], ensure_ascii=False),
+        "", "Khu du lịch sinh thái Tràng An, Ninh Xuân, Hoa Lư, Ninh Bình", "assets/card-trangan.jpg"
     ),
     (
-        8, 8, "Ẩm Thực & Nhịp Sống Đêm", "Nhịp sống Đô thị Phương Nam", "TP. Hồ Chí Minh",
-        "#06b6d4", "4.9 ★ (51.8K đánh giá)", "Hoạt động 24/7 cả ngày lẫn đêm", "Tự do trải nghiệm",
-        "Nơi hội tụ tinh hoa ẩm thực khắp mọi miền đất nước, từ ly cà phê sữa đá vỉa hè đến những khu phố đêm không ngủ.",
-        "Sài Gòn là đô thị không bao giờ ngủ, nơi văn hóa ẩm thực từ Bắc, Trung, Nam và quốc tế hội tụ tạo nên bản sắc độc nhất vô nhị. Từ trải nghiệm ngồi bệt thưởng thức ly cà phê sữa đá ngắm hoàng hôn, chén hủ tiếu gõ thơm lừng trong ngõ hẻm, đến bầu không khí rộn rã tại phố đi bộ Nguyễn Huệ hay phố đêm Bùi Viện, tất cả khắc họa nên một thành phố hào sảng, phóng khoáng và tràn đầy năng lượng sống.",
-        json.dumps(["Văn hóa cà phê bệt và cà phê vợt đặc trưng người Sài Gòn", "Thiên đường ẩm thực đường phố: cơm tấm, hủ tiếu, bánh mì", "Những tuyến phố đêm sôi động, náo nhiệt không bao giờ ngủ"], ensure_ascii=False),
-        "", "Phố đi bộ Nguyễn Huệ, Bến Nghé, Quận 1, TP Hồ Chí Minh", "assets/card-saigon-life.jpg"
+        8, 8, "Nhà Thờ Đức Bà Sài Gòn", "Kiến trúc Cổ điển La Mã & Gothic", "TP. Hồ Chí Minh",
+        "#f59e0b", "4.7 ★ (31.2K đánh giá)", "08:30 - 11:30 & 14:30 - 17:30", "Miễn phí tham quan",
+        "Tuyệt tác kiến trúc bằng gạch ngói đỏ Marseille nhập từ Pháp, biểu tượng tôn giáo và lịch sử giữa lòng trung tâm thành phố.",
+        "Vương cung thánh đường Chính tòa Đức Bà Sài Gòn được khánh thành năm 1880, mang phong cách kiến trúc Romanesque kết hợp Gothic tráng lệ với hai tháp chuông cao hơn 60 mét và bức tượng Đức Mẹ Hòa Bình bằng đá cẩm thạch trắng Carrara đặt uy nghiêm trước tiền đường.",
+        json.dumps(["Toàn bộ gạch xây đỏ au nguyên bản vận chuyển trực tiếp từ Marseille, Pháp", "Cặp tháp chuông đôi sừng sững cao 60,5m giữa lòng Sài Gòn", "Tượng Đức Mẹ Hòa Bình cẩm thạch Ý linh thiêng trước công viên"], ensure_ascii=False),
+        "", "01 Công xã Paris, Bến Nghé, Quận 1, TP Hồ Chí Minh", "assets/card-notredame.jpg"
+    ),
+    (
+        9, 9, "Đảo Ngọc Phú Quốc", "Thiên đường Nghỉ dưỡng Biển Đảo", "Kiên Giang",
+        "#06b6d4", "4.8 ★ (67.4K đánh giá)", "Mở cửa tự do quanh năm", "Tự do trải nghiệm",
+        "Hòn đảo lớn nhất Việt Nam với bãi cát trắng mịn màng, làn nước biển xanh pha lê và những buổi hoàng hôn lộng lẫy.",
+        "Phú Quốc nổi danh thế giới với những bãi biển nguyên sơ như Bãi Sao, Bãi Khem, Bãi Dài, những rạn san hô tự nhiên rực rỡ sắc màu quanh quần đảo An Thới, cùng đặc sản hồ tiêu thơm lừng, ngọc trai quý phái và nước mắm truyền thống trứ danh.",
+        json.dumps(["Bãi cát trắng mịn nước xanh pha lê ngắm hoàng hôn", "Lặn ngắm rạn san hô tự nhiên rực rỡ sắc màu", "Thiên đường hải sản tươi sống và chợ đêm sôi động"], ensure_ascii=False),
+        "", "Đảo Phú Quốc, Tỉnh Kiên Giang", "assets/card-phuquoc.jpg"
     )
 ]
 
