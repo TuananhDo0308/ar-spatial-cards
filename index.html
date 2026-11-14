@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>WebAR - Camera Quét Thẻ AR Không Gian</title>
+  <link rel="icon" href="data:,">
   
   <!-- A-Frame 1.5.0 và MindAR 1.2.5 -->
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
@@ -488,17 +489,49 @@
     </div>
   </div>
 
-  <!-- Offscreen Canvases (Render Textures cho Thẻ AR 3D - Đầy đủ 10 địa danh) -->
-  <canvas id="canvas-card-0" class="canvas-buffer" width="800" height="500"></canvas>
-  <canvas id="canvas-card-1" class="canvas-buffer" width="800" height="500"></canvas>
-  <canvas id="canvas-card-2" class="canvas-buffer" width="800" height="500"></canvas>
-  <canvas id="canvas-card-3" class="canvas-buffer" width="800" height="500"></canvas>
-  <canvas id="canvas-card-4" class="canvas-buffer" width="800" height="500"></canvas>
-  <canvas id="canvas-card-5" class="canvas-buffer" width="800" height="500"></canvas>
-  <canvas id="canvas-card-6" class="canvas-buffer" width="800" height="500"></canvas>
-  <canvas id="canvas-card-7" class="canvas-buffer" width="800" height="500"></canvas>
-  <canvas id="canvas-card-8" class="canvas-buffer" width="800" height="500"></canvas>
-  <canvas id="canvas-card-9" class="canvas-buffer" width="800" height="500"></canvas>
+  <!-- Offscreen Canvases (Render Textures cho Cụm Thẻ AR 3D: Thanh trên + 2 Card hai bên) -->
+  <div style="display:none;">
+    <!-- Target 0 -->
+    <canvas id="canvas-top-0" width="900" height="180"></canvas>
+    <canvas id="canvas-left-0" width="520" height="760"></canvas>
+    <canvas id="canvas-right-0" width="520" height="760"></canvas>
+    <!-- Target 1 -->
+    <canvas id="canvas-top-1" width="900" height="180"></canvas>
+    <canvas id="canvas-left-1" width="520" height="760"></canvas>
+    <canvas id="canvas-right-1" width="520" height="760"></canvas>
+    <!-- Target 2 -->
+    <canvas id="canvas-top-2" width="900" height="180"></canvas>
+    <canvas id="canvas-left-2" width="520" height="760"></canvas>
+    <canvas id="canvas-right-2" width="520" height="760"></canvas>
+    <!-- Target 3 -->
+    <canvas id="canvas-top-3" width="900" height="180"></canvas>
+    <canvas id="canvas-left-3" width="520" height="760"></canvas>
+    <canvas id="canvas-right-3" width="520" height="760"></canvas>
+    <!-- Target 4 -->
+    <canvas id="canvas-top-4" width="900" height="180"></canvas>
+    <canvas id="canvas-left-4" width="520" height="760"></canvas>
+    <canvas id="canvas-right-4" width="520" height="760"></canvas>
+    <!-- Target 5 -->
+    <canvas id="canvas-top-5" width="900" height="180"></canvas>
+    <canvas id="canvas-left-5" width="520" height="760"></canvas>
+    <canvas id="canvas-right-5" width="520" height="760"></canvas>
+    <!-- Target 6 -->
+    <canvas id="canvas-top-6" width="900" height="180"></canvas>
+    <canvas id="canvas-left-6" width="520" height="760"></canvas>
+    <canvas id="canvas-right-6" width="520" height="760"></canvas>
+    <!-- Target 7 -->
+    <canvas id="canvas-top-7" width="900" height="180"></canvas>
+    <canvas id="canvas-left-7" width="520" height="760"></canvas>
+    <canvas id="canvas-right-7" width="520" height="760"></canvas>
+    <!-- Target 8 -->
+    <canvas id="canvas-top-8" width="900" height="180"></canvas>
+    <canvas id="canvas-left-8" width="520" height="760"></canvas>
+    <canvas id="canvas-right-8" width="520" height="760"></canvas>
+    <!-- Target 9 -->
+    <canvas id="canvas-top-9" width="900" height="180"></canvas>
+    <canvas id="canvas-left-9" width="520" height="760"></canvas>
+    <canvas id="canvas-right-9" width="520" height="760"></canvas>
+  </div>
 
   <!-- AR Scene A-Frame (MindAR Image Tracking - AUTO START ON LOAD) -->
   <div class="ar-viewport">
@@ -523,11 +556,17 @@
       <a-entity id="target-entity-0" mindar-image-target="targetIndex: 0">
         <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #10b981; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #10b981; opacity: 0.3; transparent: true"></a-ring>
-        <a-entity id="card-anchor-0" position="0 0.68 0.08" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.72 0.08; dir: alternate; dur: 2800; loop: true; easing: easeInOutSine">
-          <a-plane id="ar-card-0" class="clickable" src="#canvas-card-0" position="0 0 0" width="1.15" height="0.72" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.3;"></a-plane>
-          <a-cylinder position="0 -0.42 -0.01" radius="0.006" height="0.14" material="color: #10b981; opacity: 0.8; transparent: true"></a-cylinder>
-          <a-sphere position="0 -0.49 -0.01" radius="0.02" material="color: #34d399; emissive: #10b981; emissiveIntensity: 0.8"></a-sphere>
+
+        <a-entity id="spatial-group-0" position="0 0 0.06" scale="0 0 0"
+                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-0" class="clickable" src="#canvas-top-0" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-left-0" class="clickable" src="#canvas-left-0" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-right-0" class="clickable" src="#canvas-right-0" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -535,11 +574,17 @@
       <a-entity id="target-entity-1" mindar-image-target="targetIndex: 1">
         <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #f59e0b; opacity: 0.3; transparent: true"></a-ring>
-        <a-entity id="card-anchor-1" position="0 0.68 0.08" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.72 0.08; dir: alternate; dur: 2800; loop: true; easing: easeInOutSine">
-          <a-plane id="ar-card-1" class="clickable" src="#canvas-card-1" position="0 0 0" width="1.15" height="0.72" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.3;"></a-plane>
-          <a-cylinder position="0 -0.42 -0.01" radius="0.006" height="0.14" material="color: #f59e0b; opacity: 0.8; transparent: true"></a-cylinder>
-          <a-sphere position="0 -0.49 -0.01" radius="0.02" material="color: #fbbf24; emissive: #f59e0b; emissiveIntensity: 0.8"></a-sphere>
+
+        <a-entity id="spatial-group-1" position="0 0 0.06" scale="0 0 0"
+                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-1" class="clickable" src="#canvas-top-1" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-left-1" class="clickable" src="#canvas-left-1" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-right-1" class="clickable" src="#canvas-right-1" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -547,11 +592,17 @@
       <a-entity id="target-entity-2" mindar-image-target="targetIndex: 2">
         <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #f59e0b; opacity: 0.3; transparent: true"></a-ring>
-        <a-entity id="card-anchor-2" position="0 0.68 0.08" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.72 0.08; dir: alternate; dur: 2800; loop: true; easing: easeInOutSine">
-          <a-plane id="ar-card-2" class="clickable" src="#canvas-card-2" position="0 0 0" width="1.15" height="0.72" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.3;"></a-plane>
-          <a-cylinder position="0 -0.42 -0.01" radius="0.006" height="0.14" material="color: #f59e0b; opacity: 0.8; transparent: true"></a-cylinder>
-          <a-sphere position="0 -0.49 -0.01" radius="0.02" material="color: #fbbf24; emissive: #f59e0b; emissiveIntensity: 0.8"></a-sphere>
+
+        <a-entity id="spatial-group-2" position="0 0 0.06" scale="0 0 0"
+                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-2" class="clickable" src="#canvas-top-2" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-left-2" class="clickable" src="#canvas-left-2" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-right-2" class="clickable" src="#canvas-right-2" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -559,11 +610,17 @@
       <a-entity id="target-entity-3" mindar-image-target="targetIndex: 3">
         <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #06b6d4; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #06b6d4; opacity: 0.3; transparent: true"></a-ring>
-        <a-entity id="card-anchor-3" position="0 0.68 0.08" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.72 0.08; dir: alternate; dur: 2800; loop: true; easing: easeInOutSine">
-          <a-plane id="ar-card-3" class="clickable" src="#canvas-card-3" position="0 0 0" width="1.15" height="0.72" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.3;"></a-plane>
-          <a-cylinder position="0 -0.42 -0.01" radius="0.006" height="0.14" material="color: #06b6d4; opacity: 0.8; transparent: true"></a-cylinder>
-          <a-sphere position="0 -0.49 -0.01" radius="0.02" material="color: #67e8f9; emissive: #06b6d4; emissiveIntensity: 0.8"></a-sphere>
+
+        <a-entity id="spatial-group-3" position="0 0 0.06" scale="0 0 0"
+                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-3" class="clickable" src="#canvas-top-3" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-left-3" class="clickable" src="#canvas-left-3" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-right-3" class="clickable" src="#canvas-right-3" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -571,11 +628,17 @@
       <a-entity id="target-entity-4" mindar-image-target="targetIndex: 4">
         <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #f59e0b; opacity: 0.3; transparent: true"></a-ring>
-        <a-entity id="card-anchor-4" position="0 0.68 0.08" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.72 0.08; dir: alternate; dur: 2800; loop: true; easing: easeInOutSine">
-          <a-plane id="ar-card-4" class="clickable" src="#canvas-card-4" position="0 0 0" width="1.15" height="0.72" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.3;"></a-plane>
-          <a-cylinder position="0 -0.42 -0.01" radius="0.006" height="0.14" material="color: #f59e0b; opacity: 0.8; transparent: true"></a-cylinder>
-          <a-sphere position="0 -0.49 -0.01" radius="0.02" material="color: #fbbf24; emissive: #f59e0b; emissiveIntensity: 0.8"></a-sphere>
+
+        <a-entity id="spatial-group-4" position="0 0 0.06" scale="0 0 0"
+                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-4" class="clickable" src="#canvas-top-4" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-left-4" class="clickable" src="#canvas-left-4" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-right-4" class="clickable" src="#canvas-right-4" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -583,11 +646,17 @@
       <a-entity id="target-entity-5" mindar-image-target="targetIndex: 5">
         <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #10b981; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #10b981; opacity: 0.3; transparent: true"></a-ring>
-        <a-entity id="card-anchor-5" position="0 0.68 0.08" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.72 0.08; dir: alternate; dur: 2800; loop: true; easing: easeInOutSine">
-          <a-plane id="ar-card-5" class="clickable" src="#canvas-card-5" position="0 0 0" width="1.15" height="0.72" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.3;"></a-plane>
-          <a-cylinder position="0 -0.42 -0.01" radius="0.006" height="0.14" material="color: #10b981; opacity: 0.8; transparent: true"></a-cylinder>
-          <a-sphere position="0 -0.49 -0.01" radius="0.02" material="color: #34d399; emissive: #10b981; emissiveIntensity: 0.8"></a-sphere>
+
+        <a-entity id="spatial-group-5" position="0 0 0.06" scale="0 0 0"
+                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-5" class="clickable" src="#canvas-top-5" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-left-5" class="clickable" src="#canvas-left-5" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-right-5" class="clickable" src="#canvas-right-5" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -595,11 +664,17 @@
       <a-entity id="target-entity-6" mindar-image-target="targetIndex: 6">
         <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #f59e0b; opacity: 0.3; transparent: true"></a-ring>
-        <a-entity id="card-anchor-6" position="0 0.68 0.08" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.72 0.08; dir: alternate; dur: 2800; loop: true; easing: easeInOutSine">
-          <a-plane id="ar-card-6" class="clickable" src="#canvas-card-6" position="0 0 0" width="1.15" height="0.72" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.3;"></a-plane>
-          <a-cylinder position="0 -0.42 -0.01" radius="0.006" height="0.14" material="color: #f59e0b; opacity: 0.8; transparent: true"></a-cylinder>
-          <a-sphere position="0 -0.49 -0.01" radius="0.02" material="color: #fbbf24; emissive: #f59e0b; emissiveIntensity: 0.8"></a-sphere>
+
+        <a-entity id="spatial-group-6" position="0 0 0.06" scale="0 0 0"
+                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-6" class="clickable" src="#canvas-top-6" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-left-6" class="clickable" src="#canvas-left-6" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-right-6" class="clickable" src="#canvas-right-6" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -607,11 +682,17 @@
       <a-entity id="target-entity-7" mindar-image-target="targetIndex: 7">
         <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #10b981; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #10b981; opacity: 0.3; transparent: true"></a-ring>
-        <a-entity id="card-anchor-7" position="0 0.68 0.08" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.72 0.08; dir: alternate; dur: 2800; loop: true; easing: easeInOutSine">
-          <a-plane id="ar-card-7" class="clickable" src="#canvas-card-7" position="0 0 0" width="1.15" height="0.72" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.3;"></a-plane>
-          <a-cylinder position="0 -0.42 -0.01" radius="0.006" height="0.14" material="color: #10b981; opacity: 0.8; transparent: true"></a-cylinder>
-          <a-sphere position="0 -0.49 -0.01" radius="0.02" material="color: #34d399; emissive: #10b981; emissiveIntensity: 0.8"></a-sphere>
+
+        <a-entity id="spatial-group-7" position="0 0 0.06" scale="0 0 0"
+                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-7" class="clickable" src="#canvas-top-7" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-left-7" class="clickable" src="#canvas-left-7" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-right-7" class="clickable" src="#canvas-right-7" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -619,11 +700,17 @@
       <a-entity id="target-entity-8" mindar-image-target="targetIndex: 8">
         <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #f59e0b; opacity: 0.3; transparent: true"></a-ring>
-        <a-entity id="card-anchor-8" position="0 0.68 0.08" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.72 0.08; dir: alternate; dur: 2800; loop: true; easing: easeInOutSine">
-          <a-plane id="ar-card-8" class="clickable" src="#canvas-card-8" position="0 0 0" width="1.15" height="0.72" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.3;"></a-plane>
-          <a-cylinder position="0 -0.42 -0.01" radius="0.006" height="0.14" material="color: #f59e0b; opacity: 0.8; transparent: true"></a-cylinder>
-          <a-sphere position="0 -0.49 -0.01" radius="0.02" material="color: #fbbf24; emissive: #f59e0b; emissiveIntensity: 0.8"></a-sphere>
+
+        <a-entity id="spatial-group-8" position="0 0 0.06" scale="0 0 0"
+                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-8" class="clickable" src="#canvas-top-8" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-left-8" class="clickable" src="#canvas-left-8" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-right-8" class="clickable" src="#canvas-right-8" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -631,11 +718,17 @@
       <a-entity id="target-entity-9" mindar-image-target="targetIndex: 9">
         <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #06b6d4; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #06b6d4; opacity: 0.3; transparent: true"></a-ring>
-        <a-entity id="card-anchor-9" position="0 0.68 0.08" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.72 0.08; dir: alternate; dur: 2800; loop: true; easing: easeInOutSine">
-          <a-plane id="ar-card-9" class="clickable" src="#canvas-card-9" position="0 0 0" width="1.15" height="0.72" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.3;"></a-plane>
-          <a-cylinder position="0 -0.42 -0.01" radius="0.006" height="0.14" material="color: #06b6d4; opacity: 0.8; transparent: true"></a-cylinder>
-          <a-sphere position="0 -0.49 -0.01" radius="0.02" material="color: #67e8f9; emissive: #06b6d4; emissiveIntensity: 0.8"></a-sphere>
+
+        <a-entity id="spatial-group-9" position="0 0 0.06" scale="0 0 0"
+                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-9" class="clickable" src="#canvas-top-9" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-left-9" class="clickable" src="#canvas-left-9" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
+
+          <a-plane id="card-right-9" class="clickable" src="#canvas-right-9" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -646,36 +739,110 @@
     let dbLocations = {};
     let currentDetectedTarget = null;
     let activeCardIdx = 0;
+    let activeSourceElementId = null;
 
-    // VẼ THẺ AR 3D CHUẨN MINIMALIST SHADCN ZINC DARK
-    function draw3DCard(canvasId, data) {
+    // 1. VẼ THANH NHỎ NẰM NGANG BÊN TRÊN GHI ĐỊA DANH
+    function drawTopBar(canvasId, data) {
       if (!data) return;
       const canvas = document.getElementById(canvasId);
       if (!canvas) return;
-      canvas.width = 800;
-      canvas.height = 500;
+      canvas.width = 900;
+      canvas.height = 180;
       const ctx = canvas.getContext('2d');
       const w = canvas.width;
       const h = canvas.height;
+      const accent = data.badgeColor || data.badge_color || '#10b981';
 
       ctx.clearRect(0, 0, w, h);
 
-      // 1. Thân Card: Nền Zinc Dark (#18181b)
+      // Thân thanh: Nền Dark Zinc sang trọng
       ctx.fillStyle = '#18181b';
       ctx.beginPath();
-      ctx.roundRect(14, 14, w - 28, h - 28, 24);
+      ctx.roundRect(10, 10, w - 20, h - 20, 36);
       ctx.fill();
 
-      // 2. Viền Subtle (#27272a)
+      // Viền thanh
       ctx.strokeStyle = '#27272a';
       ctx.lineWidth = 3.5;
       ctx.stroke();
 
-      // 3. Category Badge Pill (Góc trên trái)
+      // Dải màu phát sáng ở mép trên
+      ctx.strokeStyle = accent;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.roundRect(40, 10, w - 80, 2, 2);
+      ctx.stroke();
+
+      // Tag Pill danh hiệu (Bên trái)
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+      ctx.beginPath();
+      ctx.roundRect(32, 38, 250, 48, 24);
+      ctx.fill();
+      ctx.strokeStyle = '#27272a';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.fillStyle = accent;
+      ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('● ' + (data.tag || 'Di tích'), 157, 69);
+
+      // Đánh giá Rating (Bên phải)
+      ctx.fillStyle = 'rgba(251, 191, 36, 0.12)';
+      ctx.beginPath();
+      ctx.roundRect(w - 180, 38, 148, 48, 24);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.3)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.fillStyle = '#fbbf24';
+      ctx.font = 'bold 22px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'center';
+      const ratingText = data.rating ? data.rating.split(' ')[0] + ' ★' : '4.8 ★';
+      ctx.fillText(ratingText, w - 106, 70);
+
+      // Tên Địa Danh (In hoa, Trắng đậm, lớn)
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '800 38px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(data.name || '', 36, 138);
+
+      // Thành phố / Tỉnh thành (Bên phải tên)
+      ctx.fillStyle = '#a1a1aa';
+      ctx.font = '600 22px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText('📍 ' + (data.city || ''), w - 36, 138);
+    }
+
+    // 2. VẼ CARD DETAIL BÊN TRÁI: TỔNG QUAN, LỊCH SỬ & ĐIỂM NỔI BẬT
+    function drawLeftCard(canvasId, data) {
+      if (!data) return;
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      canvas.width = 520;
+      canvas.height = 760;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
       const accent = data.badgeColor || data.badge_color || '#10b981';
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Thân Card
+      ctx.fillStyle = '#18181b';
+      ctx.beginPath();
+      ctx.roundRect(10, 10, w - 20, h - 20, 28);
+      ctx.fill();
+
+      ctx.strokeStyle = '#27272a';
+      ctx.lineWidth = 3.5;
+      ctx.stroke();
+
+      // Header Tag
       ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
       ctx.beginPath();
-      ctx.roundRect(38, 38, 290, 42, 21);
+      ctx.roundRect(28, 28, w - 56, 46, 23);
       ctx.fill();
       ctx.strokeStyle = '#27272a';
       ctx.lineWidth = 1.5;
@@ -684,44 +851,142 @@
       ctx.fillStyle = accent;
       ctx.font = 'bold 18px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'left';
-      ctx.fillText('● ' + (data.tag || 'Di sản'), 54, 65);
+      ctx.fillText('🏛️  TỔNG QUAN & LỊCH SỬ', 46, 58);
 
-      // Đánh giá / Thành phố góc phải
-      ctx.textAlign = 'right';
-      ctx.fillStyle = '#fbbf24';
-      ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText(data.rating ? data.rating.split(' ')[0] + ' ★' : '4.8 ★', w - 42, 65);
-
-      // 4. Tiêu đề Card (Trắng đậm, lớn)
-      ctx.textAlign = 'left';
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 40px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText(data.name || '', 38, 142);
-
-      // 5. Đường kẻ phân cách mảnh
+      // Đường phân cách
       ctx.strokeStyle = '#27272a';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
-      ctx.moveTo(38, 172);
-      ctx.lineTo(w - 38, 172);
+      ctx.moveTo(28, 96);
+      ctx.lineTo(w - 28, 96);
       ctx.stroke();
 
-      // 6. Mô tả tóm tắt (2-3 dòng, dễ đọc)
+      // Mô tả lịch sử tóm tắt (Wrap 3-4 dòng)
       ctx.fillStyle = '#d4d4d8';
-      ctx.font = '500 23px "Plus Jakarta Sans", sans-serif';
-      const textToWrap = data.short_desc || data.shortDesc || data.full_desc || '';
-      wrapText(ctx, textToWrap, 38, 218, w - 76, 36, 3);
+      ctx.font = '500 21px "Plus Jakarta Sans", sans-serif';
+      const desc = data.short_desc || data.shortDesc || data.full_desc || '';
+      wrapText(ctx, desc, 28, 136, w - 56, 32, 4);
 
-      // 7. Nút Action CTA ở chân Card: "CHẠM ĐỂ MỞ RỘNG FULL TRÊN ĐIỆN THOẠI"
+      // Tiêu đề Điểm nổi bật
+      ctx.fillStyle = '#a1a1aa';
+      ctx.font = 'bold 16px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('✦ ĐẶC ĐIỂM NỔI BẬT', 28, 305);
+
+      // 2 Khối điểm nổi bật
+      const highlights = data.highlights || [];
+      let yPos = 345;
+      for (let i = 0; i < Math.min(2, highlights.length); i++) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+        ctx.beginPath();
+        ctx.roundRect(28, yPos - 22, w - 56, 78, 14);
+        ctx.fill();
+        ctx.strokeStyle = '#27272a';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.fillStyle = '#f4f4f5';
+        ctx.font = '500 18px "Plus Jakarta Sans", sans-serif';
+        wrapText(ctx, '• ' + highlights[i], 42, yPos + 6, w - 84, 26, 2);
+        yPos += 96;
+      }
+
+      // Nút Action ở chân Card
       ctx.fillStyle = '#fafafa';
       ctx.beginPath();
-      ctx.roundRect(38, h - 86, w - 76, 52, 14);
+      ctx.roundRect(28, h - 80, w - 56, 52, 14);
       ctx.fill();
 
       ctx.fillStyle = '#18181b';
-      ctx.font = 'bold 21px "Plus Jakarta Sans", sans-serif';
+      ctx.font = 'bold 19px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('⤢  CHẠM ĐỂ PHÓNG TO FULL', w / 2, h - 53);
+      ctx.fillText('⤢  CHẠM ĐỂ MỞ RỘNG', w / 2, h - 48);
+    }
+
+    // 3. VẼ CARD DETAIL BÊN PHẢI: THÔNG TIN THAM QUAN, GIỜ MỞ CỬA & GIÁ VÉ
+    function drawRightCard(canvasId, data) {
+      if (!data) return;
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      canvas.width = 520;
+      canvas.height = 760;
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+      const accent = data.badgeColor || data.badge_color || '#10b981';
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Thân Card
+      ctx.fillStyle = '#18181b';
+      ctx.beginPath();
+      ctx.roundRect(10, 10, w - 20, h - 20, 28);
+      ctx.fill();
+
+      ctx.strokeStyle = '#27272a';
+      ctx.lineWidth = 3.5;
+      ctx.stroke();
+
+      // Header Tag
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+      ctx.beginPath();
+      ctx.roundRect(28, 28, w - 56, 46, 23);
+      ctx.fill();
+      ctx.strokeStyle = '#27272a';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.fillStyle = accent;
+      ctx.font = 'bold 18px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('ℹ️  THÔNG TIN THAM QUAN', 46, 58);
+
+      // Đường phân cách
+      ctx.strokeStyle = '#27272a';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(28, 96);
+      ctx.lineTo(w - 28, 96);
+      ctx.stroke();
+
+      // 4 Box thông tin chi tiết
+      drawInfoBox(ctx, 28, 120, w - 56, 88, '⏰ GIỜ MỞ CỬA', data.hours || 'Mở cửa cả ngày', '#ffffff');
+      drawInfoBox(ctx, 28, 226, w - 56, 88, '🎟️ GIÁ VÉ THAM QUAN', data.ticket || 'Miễn phí', '#34d399');
+      drawInfoBox(ctx, 28, 332, w - 56, 88, '📍 VỊ TRÍ / TỈNH THÀNH', data.city || 'Việt Nam', '#ffffff');
+      drawInfoBox(ctx, 28, 438, w - 56, 88, '⭐️ ĐÁNH GIÁ DU KHÁCH', data.rating || '4.8 ★', '#fbbf24');
+
+      // Nút Action ở chân Card: Chỉ đường Google Maps
+      ctx.fillStyle = '#27272a';
+      ctx.beginPath();
+      ctx.roundRect(28, h - 80, w - 56, 52, 14);
+      ctx.fill();
+      ctx.strokeStyle = accent;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 19px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('🗺️  CHỈ ĐƯỜNG & CHI TIẾT', w / 2, h - 48);
+    }
+
+    function drawInfoBox(ctx, x, y, w, h, label, val, valColor) {
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+      ctx.beginPath();
+      ctx.roundRect(x, y, w, h, 14);
+      ctx.fill();
+      ctx.strokeStyle = '#27272a';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.fillStyle = '#a1a1aa';
+      ctx.font = 'bold 14px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(label, x + 16, y + 28);
+
+      ctx.fillStyle = valColor || '#ffffff';
+      ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText(val, x + 16, y + 62);
     }
 
     function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3) {
@@ -768,27 +1033,31 @@
           }
         }
 
-        // Vẽ thẻ cho toàn bộ 10 targets
+        // Vẽ cụm 3 thẻ (Thanh trên + 2 Card hai bên) cho toàn bộ 10 targets
         for (let i = 0; i < 10; i++) {
           const loc = dbLocations[i] || dbLocations[String(i)] || (typeof LOCATIONS_DATA !== "undefined" ? LOCATIONS_DATA[i] : null);
-          draw3DCard(`canvas-card-${i}`, loc);
+          drawTopBar(`canvas-top-${i}`, loc);
+          drawLeftCard(`canvas-left-${i}`, loc);
+          drawRightCard(`canvas-right-${i}`, loc);
         }
       }
 
       await initDatabase();
 
-      // Cập nhật texture ban đầu cho cả 10 thẻ
+      // Cập nhật texture ban đầu cho tất cả các thẻ
       sceneEl.addEventListener("loaded", () => {
         for (let i = 0; i < 10; i++) {
-          const cardEl = document.getElementById(`ar-card-${i}`);
-          if (cardEl) {
-            cardEl.addEventListener("materialtextureloaded", () => {
-              const mesh = cardEl.getObject3D('mesh');
-              if (mesh && mesh.material && mesh.material.map) {
-                mesh.material.map.needsUpdate = true;
-              }
-            });
-          }
+          ['bar-top-', 'card-left-', 'card-right-'].forEach(prefix => {
+            const cardEl = document.getElementById(prefix + i);
+            if (cardEl) {
+              cardEl.addEventListener("materialtextureloaded", () => {
+                const mesh = cardEl.getObject3D('mesh');
+                if (mesh && mesh.material && mesh.material.map) {
+                  mesh.material.map.needsUpdate = true;
+                }
+              });
+            }
+          });
         }
       });
 
@@ -850,7 +1119,7 @@
         });
       }
 
-      // ================= ANIMATION HIỂN THỊ THẺ AR 3D =================
+      // ================= ANIMATION HIỂN THỊ CỤM THẺ AR 3D =================
       function animateCardScale(entityId, toScale, duration = 450) {
         const el = document.getElementById(entityId);
         if (!el) return;
@@ -886,12 +1155,12 @@
             statusText.textContent = `Đang quét: ${activeTargets.size} địa danh`;
           }
 
-          animateCardScale(`card-anchor-${targetIdx}`, 1, 480);
+          animateCardScale(`spatial-group-${targetIdx}`, 1, 480);
         });
 
         el.addEventListener("targetLost", () => {
           activeTargets.delete(targetIdx);
-          animateCardScale(`card-anchor-${targetIdx}`, 0, 220);
+          animateCardScale(`spatial-group-${targetIdx}`, 0, 220);
 
           if (activeTargets.size === 0) {
             statusDot.classList.remove("active");
@@ -909,8 +1178,15 @@
       }
 
       // ================= TÍNH TOÁN TOẠ ĐỘ 2D TRÊN MÀN HÌNH ĐIỆN THOẠI CỦA THẺ 3D =================
-      function get3DCardScreenRect(targetIdx) {
-        const cardEl = document.getElementById(`ar-card-${targetIdx}`);
+      function get3DCardScreenRect(targetIdx, sourceElementId) {
+        let cardEl = null;
+        if (sourceElementId) {
+          cardEl = document.getElementById(sourceElementId);
+        }
+        if (!cardEl) {
+          cardEl = document.getElementById(`bar-top-${targetIdx}`) || document.getElementById(`card-left-${targetIdx}`);
+        }
+
         const camera = sceneEl.camera;
         const defaultRect = {
           x: window.innerWidth / 2 - 140,
@@ -938,8 +1214,8 @@
         const visibleHeightAtDist = 2 * Math.tan((fov * Math.PI) / 360) * dist;
         const pixelPerMeter = window.innerHeight / visibleHeightAtDist;
 
-        const width = Math.min(window.innerWidth * 0.88, Math.max(140, 1.15 * pixelPerMeter));
-        const height = Math.min(window.innerHeight * 0.52, Math.max(90, 0.72 * pixelPerMeter));
+        const width = Math.min(window.innerWidth * 0.88, Math.max(140, 0.56 * pixelPerMeter));
+        const height = Math.min(window.innerHeight * 0.52, Math.max(90, 0.80 * pixelPerMeter));
 
         return {
           x: screenX - width / 2,
@@ -952,10 +1228,11 @@
       let isModalOpening = false;
 
       // ================= HÀM PHÓNG TO MORPHING SPRING TỪ ĐÚNG VỊ TRÍ THẺ 3D =================
-      window.openFullView = function(targetIdx) {
+      window.openFullView = function(targetIdx, sourceElementId) {
         if (isModalOpening) return;
         isModalOpening = true;
         activeCardIdx = targetIdx;
+        activeSourceElementId = sourceElementId;
 
         // Rung nhẹ phản hồi xúc giác
         if (navigator.vibrate) {
@@ -971,7 +1248,8 @@
         modalImg.src = data.image_url || data.imageUrl || `assets/target-${targetIdx}.png`;
         modalTitle.textContent = data.name;
         modalBadge.textContent = data.tag || 'Di tích';
-        modalBadge.className = `badge-pill ${targetIdx === 0 ? 'badge-emerald' : 'badge-amber'}`;
+        const accent = data.badgeColor || data.badge_color || '#10b981';
+        modalBadge.className = `badge-pill ${accent === '#f59e0b' ? 'badge-amber' : (accent === '#06b6d4' ? 'badge-cyan' : 'badge-emerald')}`;
         modalRating.textContent = data.rating || '4.8 ★';
         modalCity.textContent = '📍 ' + (data.city || '');
         modalDesc.textContent = data.full_desc || data.fullDesc || data.short_desc || data.shortDesc;
@@ -993,7 +1271,7 @@
         btnModalMap.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
 
         // 1. Lấy toạ độ xuất phát chính xác của thẻ 3D trên màn hình điện thoại
-        const startRect = get3DCardScreenRect(targetIdx);
+        const startRect = get3DCardScreenRect(targetIdx, sourceElementId);
 
         // Kích thước đích của Modal
         const finalWidth = Math.min(window.innerWidth - 32, 480);
@@ -1037,7 +1315,7 @@
       function closeFullView() {
         if (!fullscreenModal.classList.contains("active")) return;
 
-        const endRect = get3DCardScreenRect(activeCardIdx);
+        const endRect = get3DCardScreenRect(activeCardIdx, activeSourceElementId);
 
         const finalWidth = Math.min(window.innerWidth - 32, 480);
         const finalHeight = Math.min(window.innerHeight * 0.88, 720);
@@ -1069,7 +1347,7 @@
         if (e.target === fullscreenModal) closeFullView();
       });
 
-      // ================= BẮT CHẠM CẢM ỨNG TRỰC TIẾP VÀO THẺ AR TRÊN MÀN HÌNH =================
+      // ================= BẮT CHẠM CẢM ỨNG TRỰC TIẾP VÀO CỤM THẺ AR TRÊN MÀN HÌNH =================
       const raycaster = new THREE.Raycaster();
       const pointer = new THREE.Vector2();
 
@@ -1084,22 +1362,25 @@
 
         const meshes = [];
         for (let idx = 0; idx < 10; idx++) {
-          const cardEl = document.getElementById(`ar-card-${idx}`);
-          if (cardEl && cardEl.object3D) {
-            cardEl.object3D.traverse((child) => {
-              if (child.isMesh) {
-                child.userData.cardIdx = idx;
-                meshes.push(child);
-              }
-            });
-          }
+          ['bar-top-', 'card-left-', 'card-right-'].forEach(prefix => {
+            const el = document.getElementById(prefix + idx);
+            if (el && el.object3D) {
+              el.object3D.traverse((child) => {
+                if (child.isMesh) {
+                  child.userData.cardIdx = idx;
+                  child.userData.elementId = el.id;
+                  meshes.push(child);
+                }
+              });
+            }
+          });
         }
 
         const intersects = raycaster.intersectObjects(meshes, true);
         if (intersects.length > 0) {
-          const hitIdx = intersects[0].object.userData.cardIdx;
-          if (hitIdx !== undefined) {
-            openFullView(hitIdx);
+          const hit = intersects[0].object.userData;
+          if (hit && hit.cardIdx !== undefined) {
+            openFullView(hit.cardIdx, hit.elementId);
           }
         }
       }
@@ -1118,10 +1399,12 @@
       });
 
       for (let i = 0; i < 10; i++) {
-        const el = document.getElementById(`ar-card-${i}`);
-        if (el) {
-          el.addEventListener("click", () => openFullView(i));
-        }
+        ['bar-top-', 'card-left-', 'card-right-'].forEach(prefix => {
+          const el = document.getElementById(prefix + i);
+          if (el) {
+            el.addEventListener("click", () => openFullView(i, el.id));
+          }
+        });
       }
     });
   </script>
