@@ -492,43 +492,43 @@
   <!-- Offscreen Canvases (Render Textures cho Cụm Thẻ AR 3D: Thanh trên + 2 Card hai bên) -->
   <div style="display:none;">
     <!-- Target 0 -->
-    <canvas id="canvas-top-0" width="900" height="180"></canvas>
+    <canvas id="canvas-top-0" width="960" height="220"></canvas>
     <canvas id="canvas-left-0" width="520" height="760"></canvas>
     <canvas id="canvas-right-0" width="520" height="760"></canvas>
     <!-- Target 1 -->
-    <canvas id="canvas-top-1" width="900" height="180"></canvas>
+    <canvas id="canvas-top-1" width="960" height="220"></canvas>
     <canvas id="canvas-left-1" width="520" height="760"></canvas>
     <canvas id="canvas-right-1" width="520" height="760"></canvas>
     <!-- Target 2 -->
-    <canvas id="canvas-top-2" width="900" height="180"></canvas>
+    <canvas id="canvas-top-2" width="960" height="220"></canvas>
     <canvas id="canvas-left-2" width="520" height="760"></canvas>
     <canvas id="canvas-right-2" width="520" height="760"></canvas>
     <!-- Target 3 -->
-    <canvas id="canvas-top-3" width="900" height="180"></canvas>
+    <canvas id="canvas-top-3" width="960" height="220"></canvas>
     <canvas id="canvas-left-3" width="520" height="760"></canvas>
     <canvas id="canvas-right-3" width="520" height="760"></canvas>
     <!-- Target 4 -->
-    <canvas id="canvas-top-4" width="900" height="180"></canvas>
+    <canvas id="canvas-top-4" width="960" height="220"></canvas>
     <canvas id="canvas-left-4" width="520" height="760"></canvas>
     <canvas id="canvas-right-4" width="520" height="760"></canvas>
     <!-- Target 5 -->
-    <canvas id="canvas-top-5" width="900" height="180"></canvas>
+    <canvas id="canvas-top-5" width="960" height="220"></canvas>
     <canvas id="canvas-left-5" width="520" height="760"></canvas>
     <canvas id="canvas-right-5" width="520" height="760"></canvas>
     <!-- Target 6 -->
-    <canvas id="canvas-top-6" width="900" height="180"></canvas>
+    <canvas id="canvas-top-6" width="960" height="220"></canvas>
     <canvas id="canvas-left-6" width="520" height="760"></canvas>
     <canvas id="canvas-right-6" width="520" height="760"></canvas>
     <!-- Target 7 -->
-    <canvas id="canvas-top-7" width="900" height="180"></canvas>
+    <canvas id="canvas-top-7" width="960" height="220"></canvas>
     <canvas id="canvas-left-7" width="520" height="760"></canvas>
     <canvas id="canvas-right-7" width="520" height="760"></canvas>
     <!-- Target 8 -->
-    <canvas id="canvas-top-8" width="900" height="180"></canvas>
+    <canvas id="canvas-top-8" width="960" height="220"></canvas>
     <canvas id="canvas-left-8" width="520" height="760"></canvas>
     <canvas id="canvas-right-8" width="520" height="760"></canvas>
     <!-- Target 9 -->
-    <canvas id="canvas-top-9" width="900" height="180"></canvas>
+    <canvas id="canvas-top-9" width="960" height="220"></canvas>
     <canvas id="canvas-left-9" width="520" height="760"></canvas>
     <canvas id="canvas-right-9" width="520" height="760"></canvas>
   </div>
@@ -558,15 +558,15 @@
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #10b981; opacity: 0.3; transparent: true"></a-ring>
 
         <a-entity id="spatial-group-0" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-0" class="clickable" src="#canvas-top-0" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-0" class="clickable" src="#canvas-top-0" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-left-0" class="clickable" src="#canvas-left-0" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-left-0" class="clickable" src="#canvas-left-0" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-right-0" class="clickable" src="#canvas-right-0" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-right-0" class="clickable" src="#canvas-right-0" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -576,15 +576,15 @@
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #f59e0b; opacity: 0.3; transparent: true"></a-ring>
 
         <a-entity id="spatial-group-1" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-1" class="clickable" src="#canvas-top-1" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-1" class="clickable" src="#canvas-top-1" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-left-1" class="clickable" src="#canvas-left-1" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-left-1" class="clickable" src="#canvas-left-1" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-right-1" class="clickable" src="#canvas-right-1" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-right-1" class="clickable" src="#canvas-right-1" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -594,15 +594,15 @@
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #f59e0b; opacity: 0.3; transparent: true"></a-ring>
 
         <a-entity id="spatial-group-2" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-2" class="clickable" src="#canvas-top-2" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-2" class="clickable" src="#canvas-top-2" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-left-2" class="clickable" src="#canvas-left-2" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-left-2" class="clickable" src="#canvas-left-2" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-right-2" class="clickable" src="#canvas-right-2" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-right-2" class="clickable" src="#canvas-right-2" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -612,15 +612,15 @@
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #06b6d4; opacity: 0.3; transparent: true"></a-ring>
 
         <a-entity id="spatial-group-3" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-3" class="clickable" src="#canvas-top-3" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
+                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-3" class="clickable" src="#canvas-top-3" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-left-3" class="clickable" src="#canvas-left-3" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-left-3" class="clickable" src="#canvas-left-3" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-right-3" class="clickable" src="#canvas-right-3" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-right-3" class="clickable" src="#canvas-right-3" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -630,15 +630,15 @@
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #f59e0b; opacity: 0.3; transparent: true"></a-ring>
 
         <a-entity id="spatial-group-4" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-4" class="clickable" src="#canvas-top-4" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-4" class="clickable" src="#canvas-top-4" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-left-4" class="clickable" src="#canvas-left-4" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-left-4" class="clickable" src="#canvas-left-4" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-right-4" class="clickable" src="#canvas-right-4" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-right-4" class="clickable" src="#canvas-right-4" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -648,15 +648,15 @@
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #10b981; opacity: 0.3; transparent: true"></a-ring>
 
         <a-entity id="spatial-group-5" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-5" class="clickable" src="#canvas-top-5" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-5" class="clickable" src="#canvas-top-5" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-left-5" class="clickable" src="#canvas-left-5" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-left-5" class="clickable" src="#canvas-left-5" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-right-5" class="clickable" src="#canvas-right-5" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-right-5" class="clickable" src="#canvas-right-5" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -666,15 +666,15 @@
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #f59e0b; opacity: 0.3; transparent: true"></a-ring>
 
         <a-entity id="spatial-group-6" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-6" class="clickable" src="#canvas-top-6" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-6" class="clickable" src="#canvas-top-6" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-left-6" class="clickable" src="#canvas-left-6" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-left-6" class="clickable" src="#canvas-left-6" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-right-6" class="clickable" src="#canvas-right-6" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-right-6" class="clickable" src="#canvas-right-6" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -684,15 +684,15 @@
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #10b981; opacity: 0.3; transparent: true"></a-ring>
 
         <a-entity id="spatial-group-7" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-7" class="clickable" src="#canvas-top-7" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-7" class="clickable" src="#canvas-top-7" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-left-7" class="clickable" src="#canvas-left-7" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-left-7" class="clickable" src="#canvas-left-7" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-right-7" class="clickable" src="#canvas-right-7" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-right-7" class="clickable" src="#canvas-right-7" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -702,15 +702,15 @@
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #f59e0b; opacity: 0.3; transparent: true"></a-ring>
 
         <a-entity id="spatial-group-8" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-8" class="clickable" src="#canvas-top-8" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-8" class="clickable" src="#canvas-top-8" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-left-8" class="clickable" src="#canvas-left-8" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-left-8" class="clickable" src="#canvas-left-8" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-right-8" class="clickable" src="#canvas-right-8" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-right-8" class="clickable" src="#canvas-right-8" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -720,15 +720,15 @@
         <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #06b6d4; opacity: 0.3; transparent: true"></a-ring>
 
         <a-entity id="spatial-group-9" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.025 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-9" class="clickable" src="#canvas-top-9" position="0 0.64 0.02" width="1.15" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.52 0.01" radius="0.004" height="0.04" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
+                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
+          <a-plane id="bar-top-9" class="clickable" src="#canvas-top-9" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-left-9" class="clickable" src="#canvas-left-9" position="-0.80 0 0.04" rotation="0 14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-left-9" class="clickable" src="#canvas-left-9" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
 
-          <a-plane id="card-right-9" class="clickable" src="#canvas-right-9" position="0.80 0 0.04" rotation="0 -14 0" width="0.56" height="0.80" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.51 0 0.02" rotation="0 0 90" radius="0.004" height="0.04" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
+          <a-plane id="card-right-9" class="clickable" src="#canvas-right-9" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
@@ -746,8 +746,8 @@
       if (!data) return;
       const canvas = document.getElementById(canvasId);
       if (!canvas) return;
-      canvas.width = 900;
-      canvas.height = 180;
+      canvas.width = 960;
+      canvas.height = 220;
       const ctx = canvas.getContext('2d');
       const w = canvas.width;
       const h = canvas.height;
@@ -758,61 +758,108 @@
       // Thân thanh: Nền Dark Zinc sang trọng
       ctx.fillStyle = '#18181b';
       ctx.beginPath();
-      ctx.roundRect(10, 10, w - 20, h - 20, 36);
+      ctx.roundRect(8, 8, w - 16, h - 16, 28);
       ctx.fill();
 
       // Viền thanh
       ctx.strokeStyle = '#27272a';
-      ctx.lineWidth = 3.5;
+      ctx.lineWidth = 3;
       ctx.stroke();
 
       // Dải màu phát sáng ở mép trên
       ctx.strokeStyle = accent;
       ctx.lineWidth = 4;
       ctx.beginPath();
-      ctx.roundRect(40, 10, w - 80, 2, 2);
+      ctx.roundRect(32, 8, w - 64, 3, 2);
       ctx.stroke();
 
-      // Tag Pill danh hiệu (Bên trái)
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+      // HÀNG 1: TAG PILL (TRÁI) VÀ RATING PILL (PHẢI)
+      let tagText = data.tag || 'Di tích';
+      if (tagText.length > 32) {
+        tagText = tagText.replace('Lịch sử ', '').replace('Văn hóa & Thiên nhiên ', '');
+      }
+
+      ctx.font = 'bold 18px "Plus Jakarta Sans", sans-serif';
+      const tagTextWidth = ctx.measureText(tagText).width;
+      const tagPillWidth = Math.min(tagTextWidth + 56, 440);
+      const tagPillX = 30;
+      const tagPillY = 28;
+      const tagPillH = 42;
+
+      // Nền Tag Pill
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
       ctx.beginPath();
-      ctx.roundRect(32, 38, 250, 48, 24);
+      ctx.roundRect(tagPillX, tagPillY, tagPillWidth, tagPillH, 21);
       ctx.fill();
       ctx.strokeStyle = '#27272a';
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
+      // Chấm phát sáng bên trong Tag Pill
       ctx.fillStyle = accent;
-      ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('● ' + (data.tag || 'Di tích'), 157, 69);
+      ctx.beginPath();
+      ctx.arc(tagPillX + 20, tagPillY + tagPillH / 2, 4.5, 0, Math.PI * 2);
+      ctx.fill();
 
-      // Đánh giá Rating (Bên phải)
+      // Chữ Tag
+      ctx.fillStyle = accent;
+      ctx.font = 'bold 18px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(tagText, tagPillX + 34, tagPillY + tagPillH / 2);
+
+      // Rating Pill (Bên phải)
+      const ratingVal = data.rating ? data.rating.split(' ')[0] + ' ★' : '4.8 ★';
+      const ratingPillW = 110;
+      const ratingPillX = w - 30 - ratingPillW;
+      const ratingPillY = 28;
+      const ratingPillH = 42;
+
       ctx.fillStyle = 'rgba(251, 191, 36, 0.12)';
       ctx.beginPath();
-      ctx.roundRect(w - 180, 38, 148, 48, 24);
+      ctx.roundRect(ratingPillX, ratingPillY, ratingPillW, ratingPillH, 21);
       ctx.fill();
-      ctx.strokeStyle = 'rgba(251, 191, 36, 0.3)';
+      ctx.strokeStyle = 'rgba(251, 191, 36, 0.35)';
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
       ctx.fillStyle = '#fbbf24';
-      ctx.font = 'bold 22px "Plus Jakarta Sans", sans-serif';
+      ctx.font = 'bold 19px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'center';
-      const ratingText = data.rating ? data.rating.split(' ')[0] + ' ★' : '4.8 ★';
-      ctx.fillText(ratingText, w - 106, 70);
+      ctx.textBaseline = 'middle';
+      ctx.fillText(ratingVal, ratingPillX + ratingPillW / 2, ratingPillY + ratingPillH / 2);
 
-      // Tên Địa Danh (In hoa, Trắng đậm, lớn)
+      // HÀNG 2: TÊN ĐỊA DANH (TRÁI) VÀ THÀNH PHỐ (PHẢI)
+      const nameY = 120;
+      let nameText = data.name || '';
+      ctx.font = '800 36px "Plus Jakarta Sans", sans-serif';
+      if (ctx.measureText(nameText).width > w - 360) {
+        ctx.font = '800 30px "Plus Jakarta Sans", sans-serif';
+      }
       ctx.fillStyle = '#ffffff';
-      ctx.font = '800 38px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'left';
-      ctx.fillText(data.name || '', 36, 138);
+      ctx.textBaseline = 'middle';
+      ctx.fillText(nameText, 30, nameY);
 
-      // Thành phố / Tỉnh thành (Bên phải tên)
       ctx.fillStyle = '#a1a1aa';
-      ctx.font = '600 22px "Plus Jakarta Sans", sans-serif';
+      ctx.font = '600 21px "Plus Jakarta Sans", sans-serif';
       ctx.textAlign = 'right';
-      ctx.fillText('📍 ' + (data.city || ''), w - 36, 138);
+      ctx.textBaseline = 'middle';
+      ctx.fillText('📍 ' + (data.city || 'Việt Nam'), w - 30, nameY);
+
+      // HÀNG 3: ĐƯỜNG PHÂN CÁCH VÀ ACTION HINT
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(30, 166);
+      ctx.lineTo(w - 30, 166);
+      ctx.stroke();
+
+      ctx.fillStyle = '#71717a';
+      ctx.font = '600 15px "Plus Jakarta Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('⤢  CHẠM VÀO BẤT KỲ THẺ NÀO ĐỂ XEM CHI TIẾT', w / 2, 192);
     }
 
     // 2. VẼ CARD DETAIL BÊN TRÁI: TỔNG QUAN, LỊCH SỬ & ĐIỂM NỔI BẬT
@@ -1119,7 +1166,18 @@
         });
       }
 
-      // ================= ANIMATION HIỂN THỊ CỤM THẺ AR 3D =================
+      // ================= ANIMATION HIỂN THỊ CỤM THẺ AR 3D & RESPONSIVE =================
+      function getResponsiveScale() {
+        const isPortrait = window.innerHeight > window.innerWidth;
+        const isSmallScreen = window.innerWidth < 520;
+        if (isPortrait && isSmallScreen) {
+          return 0.82;
+        } else if (isPortrait) {
+          return 0.90;
+        }
+        return 1.0;
+      }
+
       function animateCardScale(entityId, toScale, duration = 450) {
         const el = document.getElementById(entityId);
         if (!el) return;
@@ -1132,6 +1190,16 @@
           easing: toScale > 0 ? 'easeOutBack' : 'easeInQuad'
         });
       }
+
+      window.addEventListener("resize", () => {
+        const targetScale = getResponsiveScale();
+        activeTargets.forEach(targetIdx => {
+          const group = document.getElementById(`spatial-group-${targetIdx}`);
+          if (group) {
+            group.setAttribute('scale', `${targetScale} ${targetScale} ${targetScale}`);
+          }
+        });
+      });
 
       // LẮNG NGHE SỰ KIỆN QUÉT ẢNH TARGET (HỖ TRỢ QUÉT ĐỒNG THỜI CẢ 10 THẺ)
       const activeTargets = new Set();
@@ -1155,7 +1223,8 @@
             statusText.textContent = `Đang quét: ${activeTargets.size} địa danh`;
           }
 
-          animateCardScale(`spatial-group-${targetIdx}`, 1, 480);
+          const targetScale = getResponsiveScale();
+          animateCardScale(`spatial-group-${targetIdx}`, targetScale, 480);
         });
 
         el.addEventListener("targetLost", () => {
@@ -1214,8 +1283,12 @@
         const visibleHeightAtDist = 2 * Math.tan((fov * Math.PI) / 360) * dist;
         const pixelPerMeter = window.innerHeight / visibleHeightAtDist;
 
-        const width = Math.min(window.innerWidth * 0.88, Math.max(140, 0.56 * pixelPerMeter));
-        const height = Math.min(window.innerHeight * 0.52, Math.max(90, 0.80 * pixelPerMeter));
+        const isTopBar = sourceElementId && sourceElementId.startsWith('bar-top-');
+        const planeW = isTopBar ? 0.96 : 0.44;
+        const planeH = isTopBar ? 0.22 : 0.64;
+
+        const width = Math.min(window.innerWidth * 0.88, Math.max(120, planeW * pixelPerMeter));
+        const height = Math.min(window.innerHeight * 0.60, Math.max(60, planeH * pixelPerMeter));
 
         return {
           x: screenX - width / 2,
