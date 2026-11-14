@@ -503,7 +503,7 @@
   <!-- AR Scene A-Frame (MindAR Image Tracking - AUTO START ON LOAD) -->
   <div class="ar-viewport">
     <a-scene
-      mindar-image="imageTargetSrc: ./assets/targets.mind; maxTrack: 2; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 5; missTolerance: 8; uiScanning: no; uiLoading: no; autoStart: true"
+      mindar-image="imageTargetSrc: ./assets/targets.mind?v=20261114_10all; maxTrack: 10; filterMinCF: 0.0001; filterBeta: 0.001; warmupTolerance: 5; missTolerance: 8; uiScanning: no; uiLoading: no; autoStart: true"
       color-space="sRGB"
       renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
@@ -864,29 +864,41 @@
         });
       }
 
-      // LẮNG NGHE SỰ KIỆN QUÉT ẢNH TARGET
+      // LẮNG NGHE SỰ KIỆN QUÉT ẢNH TARGET (HỖ TRỢ QUÉT ĐỒNG THỜI CẢ 10 THẺ)
+      const activeTargets = new Set();
+
       function setupTracking(targetIdx) {
         const el = document.getElementById(`target-entity-${targetIdx}`);
         if (!el) return;
 
         el.addEventListener("targetFound", () => {
+          activeTargets.add(targetIdx);
           currentDetectedTarget = targetIdx;
           statusDot.classList.add("active");
           reticle.classList.add("hidden");
 
           const loc = dbLocations[targetIdx] || dbLocations[String(targetIdx)];
-          const locName = loc ? loc.name : (targetIdx === 0 ? "Dinh Độc Lập" : "Phố Cổ Hội An");
-          statusText.textContent = `Đã nhận diện: ${locName}`;
+          const locName = loc ? loc.name : `Địa điểm #${targetIdx + 1}`;
+          
+          if (activeTargets.size === 1) {
+            statusText.textContent = `Đã nhận diện: ${locName}`;
+          } else {
+            statusText.textContent = `Đang quét: ${activeTargets.size} địa danh`;
+          }
 
           animateCardScale(`card-anchor-${targetIdx}`, 1, 480);
         });
 
         el.addEventListener("targetLost", () => {
-          if (currentDetectedTarget === targetIdx) {
+          activeTargets.delete(targetIdx);
+          animateCardScale(`card-anchor-${targetIdx}`, 0, 220);
+
+          if (activeTargets.size === 0) {
             statusDot.classList.remove("active");
             statusText.textContent = "Hướng camera vào ảnh trên bảng";
             reticle.classList.remove("hidden");
-            animateCardScale(`card-anchor-${targetIdx}`, 0, 220);
+          } else {
+            statusText.textContent = `Đang quét: ${activeTargets.size} địa danh`;
           }
         });
       }

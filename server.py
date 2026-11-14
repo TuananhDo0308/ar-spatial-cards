@@ -51,10 +51,13 @@ def generate_ssl_certs():
 
 class ARAppRequestHandler(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
-        # Thêm CORS headers
+        # Thêm CORS headers và chống cache trên trình duyệt di động
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type')
+        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+        self.send_header('Pragma', 'no-cache')
+        self.send_header('Expires', '0')
         super().end_headers()
 
     def do_OPTIONS(self):
