@@ -38,88 +38,77 @@
   <div class="ui-layer"></div>
 
   <!-- Fullscreen Modal Phóng To (VisionOS Shared-Element Spring Curve) -->
-  <div class="fullscreen-modal" id="fullscreen-modal">
-    <div class="fullscreen-card" id="fullscreen-card">
-      <button class="btn-close-modal" id="btn-close-modal" aria-label="Đóng">✕</button>
-      <img src="assets/target-0.png" class="modal-hero-img" id="modal-img" alt="Địa điểm">
+  <div class="modal-backdrop" id="modal-backdrop">
+    <div class="detail-modal" id="detail-modal">
+      <div class="modal-header">
+        <div class="modal-header-text">
+          <span class="modal-tag" id="modal-tag">Di tích</span>
+          <h2 class="modal-title" id="modal-title">Tên địa danh</h2>
+        </div>
+        <button class="btn-close-modal" id="btn-close-modal" aria-label="Đóng modal">✕</button>
+      </div>
 
-      <div class="modal-body">
-        <div class="modal-content-animated">
-          <div class="modal-top-meta">
-            <span class="badge-pill badge-emerald" id="modal-badge">
-              <span style="font-size:9px;">●</span> Di tích
-            </span>
-            <span style="font-size:0.85rem; color:#fbbf24; font-weight:700;" id="modal-rating">4.8 ★</span>
+      <div class="modal-meta-row">
+        <div class="meta-chip" id="modal-rating">4.8 ★</div>
+        <div class="meta-chip" id="modal-city">📍 TP. Hồ Chí Minh</div>
+      </div>
+
+      <div class="modal-content">
+        <p class="modal-desc" id="modal-desc">Mô tả chi tiết...</p>
+
+        <div class="modal-section-title">Điểm nổi bật</div>
+        <div class="modal-highlights" id="modal-highlights"></div>
+
+        <div class="modal-info-grid">
+          <div class="modal-info-card">
+            <div class="info-card-label">Giờ mở cửa</div>
+            <div class="info-card-value" id="modal-hours">08:00 - 16:30</div>
           </div>
-
-          <h2 class="modal-title" id="modal-title">Dinh Độc Lập</h2>
-          <div class="modal-city" id="modal-city">📍 TP. Hồ Chí Minh</div>
-
-          <p class="modal-desc" id="modal-desc">
-            Mô tả chi tiết địa điểm...
-          </p>
-
-          <div style="font-size:0.85rem; font-weight:700; color:#fff; margin-bottom:8px;">Điểm nổi bật:</div>
-          <div id="modal-highlights"></div>
-
-          <div class="meta-box">
-            <div>⏰ <strong>Giờ mở cửa:</strong> <span id="modal-hours">08:00 - 16:30</span></div>
-            <div>🎟️ <strong>Giá vé:</strong> <span id="modal-ticket">65.000 VNĐ</span></div>
-          </div>
-
-          <div style="margin-top: 20px;">
-            <a class="btn btn-default" style="width: 100%;" id="btn-modal-map" target="_blank" rel="noopener noreferrer">
-              <span>🗺️</span> <span>Chỉ Đường Google Maps</span>
-            </a>
+          <div class="modal-info-card">
+            <div class="info-card-label">Vé tham quan</div>
+            <div class="info-card-value" id="modal-ticket">65.000 VNĐ</div>
           </div>
         </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-action btn-map" id="btn-modal-map">📍 Chỉ đường Google Maps</button>
       </div>
     </div>
   </div>
 
-  <!-- Offscreen Canvases (Render Textures cho Cụm Thẻ AR 3D: Thanh trên + 2 Card hai bên) -->
-  <div style="display:none;">
-    <!-- Target 0: Dinh Độc Lập -->
+  <!-- 30 Dynamic Off-screen Texture Canvases (10 địa danh x 3 thẻ) -->
+  <div class="offscreen-canvas-container">
     <canvas id="canvas-top-0" width="960" height="220"></canvas>
     <canvas id="canvas-left-0" width="520" height="760"></canvas>
     <canvas id="canvas-right-0" width="520" height="760"></canvas>
-    <!-- Target 1: Phố Cổ Hội An -->
     <canvas id="canvas-top-1" width="960" height="220"></canvas>
     <canvas id="canvas-left-1" width="520" height="760"></canvas>
     <canvas id="canvas-right-1" width="520" height="760"></canvas>
-    <!-- Target 2: Chợ Bến Thành -->
     <canvas id="canvas-top-2" width="960" height="220"></canvas>
     <canvas id="canvas-left-2" width="520" height="760"></canvas>
     <canvas id="canvas-right-2" width="520" height="760"></canvas>
-    <!-- Target 3: Hồ Hoàn Kiếm -->
     <canvas id="canvas-top-3" width="960" height="220"></canvas>
     <canvas id="canvas-left-3" width="520" height="760"></canvas>
     <canvas id="canvas-right-3" width="520" height="760"></canvas>
-    <!-- Target 4: Cầu Vàng Bà Nà -->
     <canvas id="canvas-top-4" width="960" height="220"></canvas>
     <canvas id="canvas-left-4" width="520" height="760"></canvas>
     <canvas id="canvas-right-4" width="520" height="760"></canvas>
-    <!-- Target 5: Vịnh Hạ Long -->
     <canvas id="canvas-top-5" width="960" height="220"></canvas>
     <canvas id="canvas-left-5" width="520" height="760"></canvas>
     <canvas id="canvas-right-5" width="520" height="760"></canvas>
-    <!-- Target 6: Đại Nội Huế -->
     <canvas id="canvas-top-6" width="960" height="220"></canvas>
     <canvas id="canvas-left-6" width="520" height="760"></canvas>
     <canvas id="canvas-right-6" width="520" height="760"></canvas>
-    <!-- Target 7: Tràng An Ninh Bình -->
     <canvas id="canvas-top-7" width="960" height="220"></canvas>
     <canvas id="canvas-left-7" width="520" height="760"></canvas>
     <canvas id="canvas-right-7" width="520" height="760"></canvas>
-    <!-- Target 8: Nhà Thờ Đức Bà -->
     <canvas id="canvas-top-8" width="960" height="220"></canvas>
     <canvas id="canvas-left-8" width="520" height="760"></canvas>
     <canvas id="canvas-right-8" width="520" height="760"></canvas>
-    <!-- Target 9: Đảo Ngọc Phú Quốc -->
     <canvas id="canvas-top-9" width="960" height="220"></canvas>
     <canvas id="canvas-left-9" width="520" height="760"></canvas>
-    <canvas id="canvas-right-9" width="520" height="760"></canvas>
-  </div>
+    <canvas id="canvas-right-9" width="520" height="760"></canvas>  </div>
 
   <!-- AR Scene A-Frame (Zero-Parallax, bám chặt theo ảnh như Stories AR) -->
   <div class="ar-viewport">
@@ -142,8 +131,8 @@
 
       <!-- ================= TARGET 0: DINH ĐỘC LẬP (640x640 - Vuông 1.0) ================= -->
       <xrextras-named-image-target name="target-0" id="target-entity-0">
-        <a-plane id="target-frame-0" class="clickable" position="0 0 0.001" width="1.0" height="1.0" material="opacity: 0.001; transparent: true"></a-plane>
-        <a-entity id="spatial-group-0" position="0 0 0.005" scale="0 0 0">
+        <a-entity id="spatial-group-0" position="0 0 0.005" rotation="0 0 0" scale="0 0 0">
+          <a-plane id="target-frame-0" class="clickable" position="0 0 0.001" width="1.0" height="1.0" material="opacity: 0.001; transparent: true"></a-plane>
           <a-plane id="bar-top-0" class="clickable" src="#canvas-top-0" position="0 0.64 0.002" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-0" class="clickable" src="#canvas-left-0" position="-0.75 0 0.002" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-right-0" class="clickable" src="#canvas-right-0" position="0.75 0 0.002" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -152,8 +141,8 @@
 
       <!-- ================= TARGET 1: PHỐ CỔ HỘI AN (640x640 - Vuông 1.0) ================= -->
       <xrextras-named-image-target name="target-1" id="target-entity-1">
-        <a-plane id="target-frame-1" class="clickable" position="0 0 0.001" width="1.0" height="1.0" material="opacity: 0.001; transparent: true"></a-plane>
-        <a-entity id="spatial-group-1" position="0 0 0.005" scale="0 0 0">
+        <a-entity id="spatial-group-1" position="0 0 0.005" rotation="0 0 0" scale="0 0 0">
+          <a-plane id="target-frame-1" class="clickable" position="0 0 0.001" width="1.0" height="1.0" material="opacity: 0.001; transparent: true"></a-plane>
           <a-plane id="bar-top-1" class="clickable" src="#canvas-top-1" position="0 0.64 0.002" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-1" class="clickable" src="#canvas-left-1" position="-0.75 0 0.002" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-right-1" class="clickable" src="#canvas-right-1" position="0.75 0 0.002" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -162,8 +151,8 @@
 
       <!-- ================= TARGET 2: CHỢ BẾN THÀNH (800x534 - Ngang 0.667) ================= -->
       <xrextras-named-image-target name="target-2" id="target-entity-2">
-        <a-plane id="target-frame-2" class="clickable" position="0 0 0.001" width="1.0" height="0.667" material="opacity: 0.001; transparent: true"></a-plane>
-        <a-entity id="spatial-group-2" position="0 0 0.005" scale="0 0 0">
+        <a-entity id="spatial-group-2" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
+          <a-plane id="target-frame-2" class="clickable" position="0 0 0.001" width="1.0" height="0.667" material="opacity: 0.001; transparent: true"></a-plane>
           <a-plane id="bar-top-2" class="clickable" src="#canvas-top-2" position="0 0.474 0.002" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-2" class="clickable" src="#canvas-left-2" position="-0.75 0 0.002" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-right-2" class="clickable" src="#canvas-right-2" position="0.75 0 0.002" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -172,8 +161,8 @@
 
       <!-- ================= TARGET 3: HỒ HOÀN KIẾM (800x459 - Ngang 0.574) ================= -->
       <xrextras-named-image-target name="target-3" id="target-entity-3">
-        <a-plane id="target-frame-3" class="clickable" position="0 0 0.001" width="1.0" height="0.574" material="opacity: 0.001; transparent: true"></a-plane>
-        <a-entity id="spatial-group-3" position="0 0 0.005" scale="0 0 0">
+        <a-entity id="spatial-group-3" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
+          <a-plane id="target-frame-3" class="clickable" position="0 0 0.001" width="1.0" height="0.574" material="opacity: 0.001; transparent: true"></a-plane>
           <a-plane id="bar-top-3" class="clickable" src="#canvas-top-3" position="0 0.427 0.002" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-3" class="clickable" src="#canvas-left-3" position="-0.75 0 0.002" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-right-3" class="clickable" src="#canvas-right-3" position="0.75 0 0.002" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -182,8 +171,8 @@
 
       <!-- ================= TARGET 4: CẦU VÀNG BÀ NÀ (800x500 - Ngang 0.625) ================= -->
       <xrextras-named-image-target name="target-4" id="target-entity-4">
-        <a-plane id="target-frame-4" class="clickable" position="0 0 0.001" width="1.0" height="0.625" material="opacity: 0.001; transparent: true"></a-plane>
-        <a-entity id="spatial-group-4" position="0 0 0.005" scale="0 0 0">
+        <a-entity id="spatial-group-4" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
+          <a-plane id="target-frame-4" class="clickable" position="0 0 0.001" width="1.0" height="0.625" material="opacity: 0.001; transparent: true"></a-plane>
           <a-plane id="bar-top-4" class="clickable" src="#canvas-top-4" position="0 0.453 0.002" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-4" class="clickable" src="#canvas-left-4" position="-0.75 0 0.002" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-right-4" class="clickable" src="#canvas-right-4" position="0.75 0 0.002" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -192,8 +181,8 @@
 
       <!-- ================= TARGET 5: VỊNH HẠ LONG (800x533 - Ngang 0.666) ================= -->
       <xrextras-named-image-target name="target-5" id="target-entity-5">
-        <a-plane id="target-frame-5" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="opacity: 0.001; transparent: true"></a-plane>
-        <a-entity id="spatial-group-5" position="0 0 0.005" scale="0 0 0">
+        <a-entity id="spatial-group-5" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
+          <a-plane id="target-frame-5" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="opacity: 0.001; transparent: true"></a-plane>
           <a-plane id="bar-top-5" class="clickable" src="#canvas-top-5" position="0 0.473 0.002" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-5" class="clickable" src="#canvas-left-5" position="-0.75 0 0.002" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-right-5" class="clickable" src="#canvas-right-5" position="0.75 0 0.002" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -202,8 +191,8 @@
 
       <!-- ================= TARGET 6: ĐẠI NỘI HUẾ (800x533 - Ngang 0.666) ================= -->
       <xrextras-named-image-target name="target-6" id="target-entity-6">
-        <a-plane id="target-frame-6" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="opacity: 0.001; transparent: true"></a-plane>
-        <a-entity id="spatial-group-6" position="0 0 0.005" scale="0 0 0">
+        <a-entity id="spatial-group-6" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
+          <a-plane id="target-frame-6" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="opacity: 0.001; transparent: true"></a-plane>
           <a-plane id="bar-top-6" class="clickable" src="#canvas-top-6" position="0 0.473 0.002" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-6" class="clickable" src="#canvas-left-6" position="-0.75 0 0.002" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-right-6" class="clickable" src="#canvas-right-6" position="0.75 0 0.002" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -212,8 +201,8 @@
 
       <!-- ================= TARGET 7: TRÀNG AN NINH BÌNH (800x1200 - Dọc 1.500) ================= -->
       <xrextras-named-image-target name="target-7" id="target-entity-7">
-        <a-plane id="target-frame-7" class="clickable" position="0 0 0.001" width="1.0" height="1.500" material="opacity: 0.001; transparent: true"></a-plane>
-        <a-entity id="spatial-group-7" position="0 0 0.005" scale="0 0 0">
+        <a-entity id="spatial-group-7" position="0 0 0.005" rotation="0 0 0" scale="0 0 0">
+          <a-plane id="target-frame-7" class="clickable" position="0 0 0.001" width="1.0" height="1.5" material="opacity: 0.001; transparent: true"></a-plane>
           <a-plane id="bar-top-7" class="clickable" src="#canvas-top-7" position="0 0.89 0.002" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-7" class="clickable" src="#canvas-left-7" position="-0.75 0 0.002" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-right-7" class="clickable" src="#canvas-right-7" position="0.75 0 0.002" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -222,8 +211,8 @@
 
       <!-- ================= TARGET 8: NHÀ THỜ ĐỨC BÀ (800x533 - Ngang 0.666) ================= -->
       <xrextras-named-image-target name="target-8" id="target-entity-8">
-        <a-plane id="target-frame-8" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="opacity: 0.001; transparent: true"></a-plane>
-        <a-entity id="spatial-group-8" position="0 0 0.005" scale="0 0 0">
+        <a-entity id="spatial-group-8" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
+          <a-plane id="target-frame-8" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="opacity: 0.001; transparent: true"></a-plane>
           <a-plane id="bar-top-8" class="clickable" src="#canvas-top-8" position="0 0.473 0.002" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-8" class="clickable" src="#canvas-left-8" position="-0.75 0 0.002" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-right-8" class="clickable" src="#canvas-right-8" position="0.75 0 0.002" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -232,8 +221,8 @@
 
       <!-- ================= TARGET 9: ĐẢO NGỌC PHÚ QUỐC (800x533 - Ngang 0.666) ================= -->
       <xrextras-named-image-target name="target-9" id="target-entity-9">
-        <a-plane id="target-frame-9" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="opacity: 0.001; transparent: true"></a-plane>
-        <a-entity id="spatial-group-9" position="0 0 0.005" scale="0 0 0">
+        <a-entity id="spatial-group-9" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
+          <a-plane id="target-frame-9" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="opacity: 0.001; transparent: true"></a-plane>
           <a-plane id="bar-top-9" class="clickable" src="#canvas-top-9" position="0 0.473 0.002" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-9" class="clickable" src="#canvas-left-9" position="-0.75 0 0.002" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-right-9" class="clickable" src="#canvas-right-9" position="0.75 0 0.002" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>

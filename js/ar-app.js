@@ -252,6 +252,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await initDatabase();
 
+  // Tự động vẽ lại toàn bộ Texture Canvas ngay khi Google Fonts nạp xong 100%
+  if (typeof document !== 'undefined' && document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+      if (window.ARCanvasRenderer && dbLocations) {
+        window.ARCanvasRenderer.renderAllLocationCanvases(dbLocations);
+        window.ARCanvasRenderer.refreshAllTextures();
+      }
+    }).catch(() => {});
+  }
+
   // Đảm bảo sau khi A-Frame load scene xong, Texture sẽ được Three.js nạp vào GPU đúng 1 lần
   if (sceneEl) {
     if (sceneEl.hasLoaded) {
@@ -376,10 +386,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     const group = document.getElementById(`spatial-group-${targetIdx}`);
     if (!el || !group) return;
 
+    const isLandscape = [2, 3, 4, 5, 6, 8, 9].includes(targetIdx);
+    const is8thWall = typeof XR8 !== 'undefined' || !!document.querySelector('[xrweb]');
+
+    // Khởi tạo góc xoay ban đầu chuẩn xác cho từng loại thẻ
+    if (is8thWall && isLandscape) {
+      group.setAttribute('rotation', '0 0 -90');
+    } else {
+      group.setAttribute('rotation', '0 0 0');
+    }
+
     const onFound = () => {
       // Chặn spam sự kiện nếu thẻ đang hiển thị rồi
       if (targetVisibleState[targetIdx]) return;
       targetVisibleState[targetIdx] = true;
+
+      // Đảm bảo bù góc xoay 100% khi 8th Wall nhận diện ảnh ngang (khắc phục lỗi sai chiều)
+      if (is8thWall && isLandscape) {
+        group.setAttribute('rotation', '0 0 -90');
+      } else {
+        group.setAttribute('rotation', '0 0 0');
+      }
 
       activeTargets.add(targetIdx);
       currentDetectedTarget = targetIdx;

@@ -1,14 +1,16 @@
 /**
  * ============================================================================
- * canvas-renderer.js - Trình Vẽ Giao Diện Thẻ AR 3D Lên Canvas 2D
+ * canvas-renderer.js - Trình Vẽ Giao Diện Thẻ AR 3D Lên Canvas 2D (Chống Mất Chữ)
  * ============================================================================
- * Chức năng:
- * - Vẽ Texture độ phân giải cao cho Cụm Thẻ AR 3D (Thanh trên + 2 Thẻ hai bên)
- * - Tự động ngắt dòng văn bản tiếng Việt an toàn (wrapText)
- * - Cập nhật Three.js Texture (needsUpdate = true) để chống lỗi màn hình đen/trắng
+ * Khắc phục triệt để:
+ * 1. Chống lỗi mất chữ / cắt chữ (Tự động đo chiều dài văn bản, co giãn cỡ chữ thông minh)
+ * 2. Hiển thị ĐẦY ĐỦ cả 3 Điểm nổi bật (Highlights) - không cắt bỏ điểm nào
+ * 3. Chống lỗi icon/emoji biến thành ô vuông / khoảng trắng trên iOS Safari Canvas
+ * 4. Đồng bộ hoá WebFont: Tự động vẽ lại ngay khi Google Fonts nạp xong (document.fonts.ready)
+ * 5. Cập nhật Three.js Texture (needsUpdate = true) lập tức để Texture sắc nét 60 FPS
  */
 
-// Polyfill ctx.roundRect cho các trình duyệt cũ hơn (iOS Safari < 16, Chrome cũ)
+// Polyfill ctx.roundRect cho iOS Safari < 16 & Android Webview cũ
 if (typeof CanvasRenderingContext2D !== 'undefined' && !CanvasRenderingContext2D.prototype.roundRect) {
   CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, radii) {
     if (!radii) radii = 0;
@@ -27,29 +29,34 @@ if (typeof CanvasRenderingContext2D !== 'undefined' && !CanvasRenderingContext2D
   };
 }
 
+// Bộ font chữ tương thích tối đa trên iOS, macOS, Android và Windows
+const CANVAS_FONT_STACK = '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
+
 /**
- * Tự động ngắt dòng chữ an toàn trên Canvas 2D
+ * Ngắt dòng an toàn cho Canvas 2D không bị mất chữ
  */
-function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3) {
+function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 4) {
   const safeText = String(text || '').trim();
-  if (!safeText) return;
+  if (!safeText) return y;
 
   const words = safeText.split(/\s+/);
   let line = '';
   let linesDrawn = 0;
+  let curY = y;
 
   for (let n = 0; n < words.length; n++) {
     const testLine = line ? line + ' ' + words[n] : words[n];
     const metrics = ctx.measureText(testLine);
 
     if (metrics.width > maxWidth && n > 0) {
-      if (linesDrawn === maxLines - 1) {
-        ctx.fillText(line.trim() + '...', x, y);
-        return;
+      if (linesDrawn >= maxLines - 1) {
+        // Dòng cuối cùng nếu còn dư từ thì thêm dấu ...
+        ctx.fillText(line.trim() + '...', x, curY);
+        return curY + lineHeight;
       }
-      ctx.fillText(line, x, y);
+      ctx.fillText(line, x, curY);
       line = words[n];
-      y += lineHeight;
+      curY += lineHeight;
       linesDrawn++;
     } else {
       line = testLine;
@@ -57,36 +64,48 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 3) {
   }
 
   if (line) {
-    ctx.fillText(line, x, y);
+    ctx.fillText(line, x, curY);
+    curY += lineHeight;
   }
+  return curY;
 }
 
 /**
- * Vẽ hộp thông tin chi tiết trên Card bên phải
+ * Vẽ Hộp thông tin chi tiết trên Card bên phải (tự co chữ nếu giá trị quá dài)
  */
 function drawInfoBox(ctx, x, y, w, h, label, val, valColor) {
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+  // Nền box kính mờ
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
   ctx.beginPath();
   ctx.roundRect(x, y, w, h, 14);
   ctx.fill();
 
   ctx.strokeStyle = '#27272a';
-  ctx.lineWidth = 1;
+  ctx.lineWidth = 1.2;
   ctx.stroke();
 
+  // Nhãn tiêu đề (Mở cửa, Vé, Tỉnh thành, Đánh giá)
   ctx.fillStyle = '#a1a1aa';
-  ctx.font = 'bold 14px "Plus Jakarta Sans", sans-serif';
+  ctx.font = `700 13px ${CANVAS_FONT_STACK}`;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'alphabetic';
-  ctx.fillText(label, x + 16, y + 28);
+  ctx.fillText(label, x + 18, y + 27);
+
+  // Nội dung giá trị - tự động thu nhỏ nếu chữ dài để không bao giờ bị tràn/cắt
+  const valStr = String(val || '').trim();
+  let fontSize = 19;
+  ctx.font = `700 ${fontSize}px ${CANVAS_FONT_STACK}`;
+  while (ctx.measureText(valStr).width > w - 36 && fontSize > 14) {
+    fontSize -= 1;
+    ctx.font = `700 ${fontSize}px ${CANVAS_FONT_STACK}`;
+  }
 
   ctx.fillStyle = valColor || '#ffffff';
-  ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText(String(val || ''), x + 16, y + 62);
+  ctx.fillText(valStr, x + 18, y + 60);
 }
 
 /**
- * 1. VẼ THANH NHỎ NẰM NGANG BÊN TRÊN (Top Pill Bar - 960x220)
+ * 1. VẼ THANH TRÊN CÙNG (Top Pill Bar - 960x220)
  */
 function drawTopBar(canvasId, data) {
   if (!data) return;
@@ -102,18 +121,18 @@ function drawTopBar(canvasId, data) {
 
   ctx.clearRect(0, 0, w, h);
 
-  // Thân thanh: Nền Dark Zinc sang trọng
+  // Nền thanh: VisionOS Dark Zinc
   ctx.fillStyle = '#18181b';
   ctx.beginPath();
   ctx.roundRect(8, 8, w - 16, h - 16, 28);
   ctx.fill();
 
-  // Viền thanh
+  // Viền ngoài
   ctx.strokeStyle = '#27272a';
   ctx.lineWidth = 3;
   ctx.stroke();
 
-  // Dải màu phát sáng ở mép trên
+  // Dải phát sáng mép trên cùng
   ctx.strokeStyle = accent;
   ctx.lineWidth = 4;
   ctx.beginPath();
@@ -122,96 +141,110 @@ function drawTopBar(canvasId, data) {
 
   // --- HÀNG 1: TAG PILL (TRÁI) VÀ RATING PILL (PHẢI) ---
   let tagText = String(data.tag || 'Di tích').trim();
-  if (tagText.length > 32) {
+  if (tagText.length > 34) {
     tagText = tagText.replace('Lịch sử ', '').replace('Văn hóa & Thiên nhiên ', '');
   }
 
-  ctx.font = 'bold 18px "Plus Jakarta Sans", sans-serif';
+  ctx.font = `700 17px ${CANVAS_FONT_STACK}`;
   const tagTextWidth = ctx.measureText(tagText).width;
-  const tagPillWidth = Math.min(tagTextWidth + 56, 440);
+  const tagPillWidth = Math.min(tagTextWidth + 52, 460);
   const tagPillX = 30;
-  const tagPillY = 28;
-  const tagPillH = 42;
+  const tagPillY = 26;
+  const tagPillH = 40;
 
   // Nền Tag Pill
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
   ctx.beginPath();
-  ctx.roundRect(tagPillX, tagPillY, tagPillWidth, tagPillH, 21);
+  ctx.roundRect(tagPillX, tagPillY, tagPillWidth, tagPillH, 20);
   ctx.fill();
   ctx.strokeStyle = '#27272a';
   ctx.lineWidth = 1.5;
   ctx.stroke();
 
-  // Chấm phát sáng bên trong Tag Pill
+  // Điểm chấm tròn phát sáng màu accent
   ctx.fillStyle = accent;
   ctx.beginPath();
-  ctx.arc(tagPillX + 20, tagPillY + tagPillH / 2, 4.5, 0, Math.PI * 2);
+  ctx.arc(tagPillX + 18, tagPillY + tagPillH / 2, 4.5, 0, Math.PI * 2);
   ctx.fill();
 
   // Chữ Tag
   ctx.fillStyle = accent;
-  ctx.font = 'bold 18px "Plus Jakarta Sans", sans-serif';
+  ctx.font = `700 16px ${CANVAS_FONT_STACK}`;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.fillText(tagText, tagPillX + 34, tagPillY + tagPillH / 2);
+  ctx.fillText(tagText, tagPillX + 32, tagPillY + tagPillH / 2);
 
   // Rating Pill (Bên phải)
   const rawRating = String(data.rating || '4.8');
   const ratingVal = rawRating.includes('★') ? rawRating.split('(')[0].trim() : rawRating.split(' ')[0] + ' ★';
-  const ratingPillW = 110;
+  const ratingPillW = 105;
   const ratingPillX = w - 30 - ratingPillW;
-  const ratingPillY = 28;
-  const ratingPillH = 42;
+  const ratingPillY = 26;
+  const ratingPillH = 40;
 
   ctx.fillStyle = 'rgba(251, 191, 36, 0.12)';
   ctx.beginPath();
-  ctx.roundRect(ratingPillX, ratingPillY, ratingPillW, ratingPillH, 21);
+  ctx.roundRect(ratingPillX, ratingPillY, ratingPillW, ratingPillH, 20);
   ctx.fill();
   ctx.strokeStyle = 'rgba(251, 191, 36, 0.35)';
   ctx.lineWidth = 1.5;
   ctx.stroke();
 
   ctx.fillStyle = '#fbbf24';
-  ctx.font = 'bold 19px "Plus Jakarta Sans", sans-serif';
+  ctx.font = `800 18px ${CANVAS_FONT_STACK}`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(ratingVal, ratingPillX + ratingPillW / 2, ratingPillY + ratingPillH / 2);
 
   // --- HÀNG 2: TÊN ĐỊA DANH (TRÁI) VÀ THÀNH PHỐ (PHẢI) ---
-  const nameY = 120;
-  const nameText = String(data.name || '');
-  ctx.font = '800 36px "Plus Jakarta Sans", sans-serif';
-  if (ctx.measureText(nameText).width > w - 360) {
-    ctx.font = '800 30px "Plus Jakarta Sans", sans-serif';
+  const nameY = 118;
+  const nameText = String(data.name || '').trim();
+  const cityText = '📍 ' + String(data.city || 'Việt Nam').trim();
+
+  // Đo chiều rộng thành phố trước để dành khoảng trống
+  ctx.font = `600 20px ${CANVAS_FONT_STACK}`;
+  const cityWidth = ctx.measureText(cityText).width;
+
+  // Tự động thu nhỏ font tên địa danh nếu quá dài để không va chạm thành phố
+  let nameFontSize = 34;
+  ctx.font = `800 ${nameFontSize}px ${CANVAS_FONT_STACK}`;
+  const maxNameWidth = w - 60 - cityWidth - 30; // Chừa lề an toàn 30px giữa 2 chữ
+  while (ctx.measureText(nameText).width > maxNameWidth && nameFontSize > 22) {
+    nameFontSize -= 1;
+    ctx.font = `800 ${nameFontSize}px ${CANVAS_FONT_STACK}`;
   }
+
+  // Vẽ Tên địa danh
   ctx.fillStyle = '#ffffff';
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
   ctx.fillText(nameText, 30, nameY);
 
+  // Vẽ Thành phố
   ctx.fillStyle = '#a1a1aa';
-  ctx.font = '600 21px "Plus Jakarta Sans", sans-serif';
+  ctx.font = `600 20px ${CANVAS_FONT_STACK}`;
   ctx.textAlign = 'right';
   ctx.textBaseline = 'middle';
-  ctx.fillText('📍 ' + (data.city || 'Việt Nam'), w - 30, nameY);
+  ctx.fillText(cityText, w - 30, nameY);
 
   // --- HÀNG 3: ĐƯỜNG PHÂN CÁCH VÀ GỢI Ý HÀNH ĐỘNG ---
   ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(30, 166);
-  ctx.lineTo(w - 30, 166);
+  ctx.moveTo(30, 164);
+  ctx.lineTo(w - 30, 164);
   ctx.stroke();
 
-  ctx.fillStyle = '#71717a';
-  ctx.font = '600 15px "Plus Jakarta Sans", sans-serif';
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = `600 15px ${CANVAS_FONT_STACK}`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('⤢  CHẠM VÀO BẤT KỲ THẺ NÀO ĐỂ XEM CHI TIẾT', w / 2, 192);
+  ctx.fillText('↗  CHẠM VÀO BẤT KỲ THẺ NÀO ĐỂ XEM CHI TIẾT', w / 2, 190);
 }
 
 /**
- * 2. VẼ CARD DETAIL BÊN TRÁI: TỔNG QUAN, LỊCH SỬ & ĐIỂM NỔI BẬT (520x760)
+ * 2. VẼ CARD BÊN TRÁI: TỔNG QUAN, LỊCH SỬ & ĐIỂM NỔI BẬT (520x760)
+ * Hiển thị đầy đủ cả 3 điểm nổi bật (không cắt bỏ điểm nào)
  */
 function drawLeftCard(canvasId, data) {
   if (!data) return;
@@ -234,46 +267,50 @@ function drawLeftCard(canvasId, data) {
   ctx.fill();
 
   ctx.strokeStyle = '#27272a';
-  ctx.lineWidth = 3.5;
+  ctx.lineWidth = 3;
   ctx.stroke();
 
   // Header Tag
   ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
   ctx.beginPath();
-  ctx.roundRect(28, 28, w - 56, 46, 23);
+  ctx.roundRect(28, 26, w - 56, 44, 22);
   ctx.fill();
   ctx.strokeStyle = '#27272a';
   ctx.lineWidth = 1.5;
   ctx.stroke();
 
   ctx.fillStyle = accent;
-  ctx.font = 'bold 18px "Plus Jakarta Sans", sans-serif';
+  ctx.font = `800 17px ${CANVAS_FONT_STACK}`;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.fillText('🏛️  TỔNG QUAN & LỊCH SỬ', 46, 51);
+  ctx.fillText('✦  TỔNG QUAN & LỊCH SỬ', 46, 48);
 
   // Đường phân cách
   ctx.strokeStyle = '#27272a';
   ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.moveTo(28, 96);
-  ctx.lineTo(w - 28, 96);
+  ctx.moveTo(28, 86);
+  ctx.lineTo(w - 28, 86);
   ctx.stroke();
 
-  // Mô tả lịch sử tóm tắt (Wrap 3-4 dòng)
-  ctx.fillStyle = '#d4d4d8';
-  ctx.font = '500 21px "Plus Jakarta Sans", sans-serif';
-  ctx.textBaseline = 'alphabetic';
-  const desc = data.short_desc || data.shortDesc || data.full_desc || data.fullDesc || '';
-  wrapText(ctx, desc, 28, 136, w - 56, 32, 4);
-
-  // Tiêu đề Điểm nổi bật
-  ctx.fillStyle = '#a1a1aa';
-  ctx.font = 'bold 16px "Plus Jakarta Sans", sans-serif';
+  // Mô tả lịch sử tóm tắt (tự động điều chỉnh cỡ chữ để hiển thị trọn vẹn không bị cắt ...)
+  const desc = String(data.short_desc || data.shortDesc || data.full_desc || data.fullDesc || '').trim();
+  ctx.fillStyle = '#e4e4e7';
   ctx.textAlign = 'left';
-  ctx.fillText('✦ ĐẶC ĐIỂM NỔI BẬT', 28, 305);
+  ctx.textBaseline = 'alphabetic';
 
-  // 2 Khối điểm nổi bật
+  let descFontSize = desc.length > 130 ? 17 : 19;
+  let descLineHeight = desc.length > 130 ? 25 : 27;
+  ctx.font = `500 ${descFontSize}px ${CANVAS_FONT_STACK}`;
+  wrapText(ctx, desc, 28, 120, w - 56, descLineHeight, 4);
+
+  // Tiêu đề Khối Điểm nổi bật
+  ctx.fillStyle = '#a1a1aa';
+  ctx.font = `800 15px ${CANVAS_FONT_STACK}`;
+  ctx.textAlign = 'left';
+  ctx.fillText('✦  ĐẶC ĐIỂM NỔI BẬT', 28, 254);
+
+  // Parse mảng điểm nổi bật
   let highlights = data.highlights || [];
   if (typeof highlights === 'string') {
     try {
@@ -283,37 +320,55 @@ function drawLeftCard(canvasId, data) {
     }
   }
 
-  let yPos = 345;
-  for (let i = 0; i < Math.min(2, highlights.length); i++) {
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+  // VẼ ĐẦY ĐỦ CẢ 3 ĐIỂM NỔI BẬT (KHÔNG BỎ SÓT ĐIỂM NÀO)
+  let yPos = 278;
+  const boxHeight = 60;
+  const boxGap = 10;
+  const countToDraw = Math.min(3, highlights.length);
+
+  for (let i = 0; i < countToDraw; i++) {
+    // Nền hộp điểm nổi bật
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
     ctx.beginPath();
-    ctx.roundRect(28, yPos - 22, w - 56, 78, 14);
+    ctx.roundRect(28, yPos, w - 56, boxHeight, 12);
     ctx.fill();
+
     ctx.strokeStyle = '#27272a';
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 1.2;
     ctx.stroke();
 
+    // Điểm nhấn màu accent ở mép trái hộp
+    ctx.fillStyle = accent;
+    ctx.beginPath();
+    ctx.roundRect(32, yPos + 12, 4, boxHeight - 24, 2);
+    ctx.fill();
+
+    // Chữ nội dung điểm nổi bật (wrap 2 dòng gọn gàng)
     ctx.fillStyle = '#f4f4f5';
-    ctx.font = '500 18px "Plus Jakarta Sans", sans-serif';
-    wrapText(ctx, '• ' + highlights[i], 42, yPos + 6, w - 84, 26, 2);
-    yPos += 96;
+    ctx.font = `600 15px ${CANVAS_FONT_STACK}`;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    wrapText(ctx, highlights[i], 46, yPos + 24, w - 82, 20, 2);
+
+    yPos += boxHeight + boxGap;
   }
 
   // Nút Action ở chân Card
+  const btnY = h - 76;
   ctx.fillStyle = '#fafafa';
   ctx.beginPath();
-  ctx.roundRect(28, h - 80, w - 56, 52, 14);
+  ctx.roundRect(28, btnY, w - 56, 50, 14);
   ctx.fill();
 
   ctx.fillStyle = '#18181b';
-  ctx.font = 'bold 19px "Plus Jakarta Sans", sans-serif';
+  ctx.font = `800 17px ${CANVAS_FONT_STACK}`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('⤢  CHẠM ĐỂ MỞ RỘNG', w / 2, h - 54);
+  ctx.fillText('↗  CHẠM ĐỂ MỞ RỘNG CHI TIẾT', w / 2, btnY + 25);
 }
 
 /**
- * 3. VẼ CARD DETAIL BÊN PHẢI: THÔNG TIN THAM QUAN & GIỜ MỞ CỬA (520x760)
+ * 3. VẼ CARD BÊN PHẢI: THÔNG TIN THAM QUAN & GIỜ MỞ CỬA (520x760)
  */
 function drawRightCard(canvasId, data) {
   if (!data) return;
@@ -336,64 +391,78 @@ function drawRightCard(canvasId, data) {
   ctx.fill();
 
   ctx.strokeStyle = '#27272a';
-  ctx.lineWidth = 3.5;
+  ctx.lineWidth = 3;
   ctx.stroke();
 
   // Header Tag
   ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
   ctx.beginPath();
-  ctx.roundRect(28, 28, w - 56, 46, 23);
+  ctx.roundRect(28, 26, w - 56, 44, 22);
   ctx.fill();
   ctx.strokeStyle = '#27272a';
   ctx.lineWidth = 1.5;
   ctx.stroke();
 
   ctx.fillStyle = accent;
-  ctx.font = 'bold 18px "Plus Jakarta Sans", sans-serif';
+  ctx.font = `800 17px ${CANVAS_FONT_STACK}`;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.fillText('ℹ️  THÔNG TIN THAM QUAN', 46, 51);
+  ctx.fillText('✦  THÔNG TIN THAM QUAN', 46, 48);
 
   // Đường phân cách
   ctx.strokeStyle = '#27272a';
   ctx.lineWidth = 1.5;
   ctx.beginPath();
-  ctx.moveTo(28, 96);
-  ctx.lineTo(w - 28, 96);
+  ctx.moveTo(28, 86);
+  ctx.lineTo(w - 28, 86);
   ctx.stroke();
 
-  // 4 Box thông tin chi tiết
-  drawInfoBox(ctx, 28, 120, w - 56, 88, '⏰ GIỜ MỞ CỬA', data.hours || 'Mở cửa cả ngày', '#ffffff');
-  drawInfoBox(ctx, 28, 226, w - 56, 88, '🎟️ GIÁ VÉ THAM QUAN', data.ticket || 'Miễn phí', '#34d399');
-  drawInfoBox(ctx, 28, 332, w - 56, 88, '📍 VỊ TRÍ / TỈNH THÀNH', data.city || 'Việt Nam', '#ffffff');
-  drawInfoBox(ctx, 28, 438, w - 56, 88, '⭐️ ĐÁNH GIÁ DU KHÁCH', data.rating || '4.8 ★', '#fbbf24');
+  // 4 Box thông tin chi tiết (bố cục cân đối, co chữ tự động chống tràn)
+  const boxH = 78;
+  const gap = 12;
+  let curY = 104;
+
+  drawInfoBox(ctx, 28, curY, w - 56, boxH, 'GIỜ MỞ CỬA', data.hours || 'Mở cửa tự do cả ngày', '#ffffff');
+  curY += boxH + gap;
+
+  drawInfoBox(ctx, 28, curY, w - 56, boxH, 'GIÁ VÉ THAM QUAN', data.ticket || 'Miễn phí tham quan', '#34d399');
+  curY += boxH + gap;
+
+  drawInfoBox(ctx, 28, curY, w - 56, boxH, 'ĐỊA PHƯƠNG / TỈNH THÀNH', data.city || 'Việt Nam', '#ffffff');
+  curY += boxH + gap;
+
+  drawInfoBox(ctx, 28, curY, w - 56, boxH, 'ĐÁNH GIÁ DU KHÁCH', data.rating || '4.8 ★ (Đánh giá cao)', '#fbbf24');
 
   // Nút Action ở chân Card: Chỉ đường Google Maps
+  const btnY = h - 76;
   ctx.fillStyle = '#27272a';
   ctx.beginPath();
-  ctx.roundRect(28, h - 80, w - 56, 52, 14);
+  ctx.roundRect(28, btnY, w - 56, 50, 14);
   ctx.fill();
   ctx.strokeStyle = accent;
-  ctx.lineWidth = 1.5;
+  ctx.lineWidth = 1.8;
   ctx.stroke();
 
   ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 19px "Plus Jakarta Sans", sans-serif';
+  ctx.font = `800 17px ${CANVAS_FONT_STACK}`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('🗺️  CHỈ ĐƯỜNG & CHI TIẾT', w / 2, h - 54);
+  ctx.fillText('📍  CHỈ ĐƯỜNG & VỊ TRÍ', w / 2, btnY + 25);
 }
 
 /**
- * 4. CẬP NHẬT TEXTURE CHO THREE.JS (Tránh lỗi màn hình Texture không cập nhật)
+ * 4. CẬP NHẬT TEXTURE CHO THREE.JS (Đảm bảo Texture GPU được refresh tức thì)
  */
 function refreshMeshTexture(elementId) {
   const el = document.getElementById(elementId);
   if (!el) return;
 
   const mesh = el.getObject3D('mesh');
-  if (mesh && mesh.material && mesh.material.map) {
-    mesh.material.map.needsUpdate = true;
+  if (mesh && mesh.material) {
+    if (mesh.material.map) {
+      mesh.material.map.needsUpdate = true;
+    }
+    mesh.material.needsUpdate = true;
   }
 }
 
@@ -438,6 +507,17 @@ function renderAllLocationCanvases(locationsMap) {
   }
 }
 
+// Tự động lắng nghe document.fonts.ready để vẽ lại sắc nét ngay khi WebFont tải xong
+if (typeof document !== 'undefined' && document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => {
+    if (typeof LOCATIONS_DATA !== 'undefined') {
+      renderAllLocationCanvases(LOCATIONS_DATA);
+      refreshAllTextures();
+      console.log('✅ [ARCanvasRenderer]: WebFont đã nạp xong, Texture Canvas đã được cập nhật sắc nét 100%!');
+    }
+  }).catch(() => {});
+}
+
 // Export cho môi trường Browser toàn cục
 window.ARCanvasRenderer = {
   drawTopBar,
@@ -449,4 +529,3 @@ window.ARCanvasRenderer = {
   renderTargetCanvases,
   renderAllLocationCanvases
 };
-

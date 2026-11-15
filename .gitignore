@@ -27,3 +27,8 @@ ENV/
 node_modules/
 package-lock.json
 
+# Large media assets (video files > 50MB)
+assets/videos/
+*.mp4
+
+

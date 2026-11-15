@@ -19,6 +19,7 @@
   ],
   "rewrites": [
     { "source": "/mindar", "destination": "/index-mindar.html" },
+    { "source": "/8thwall", "destination": "/index-8thwall.html" },
     { "source": "/gallery", "destination": "/gallery.html" },
     { "source": "/dashboard", "destination": "/admin.html" },
     { "source": "/admin", "destination": "/admin.html" },
