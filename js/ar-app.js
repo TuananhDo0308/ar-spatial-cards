@@ -442,23 +442,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Cả 5 thẻ đều là tỷ lệ vuông 1:1 chuẩn theo tỷ lệ ảnh và video
     const is8thWall = typeof XR8 !== 'undefined' || !!document.querySelector('[xrweb]');
 
-    // Khởi tạo góc xoay bù trừ chuẩn xác cho 8th Wall landscape
-    if (is8thWall) {
-      group.setAttribute('rotation', '0 0 -90');
-    } else {
-      group.setAttribute('rotation', '0 0 0');
-    }
+    // Khởi tạo góc xoay chuẩn xác 0 0 0 (chuẩn vuông 1:1, không xoay nghiêng)
+    group.setAttribute('rotation', '0 0 0');
 
     const onFound = () => {
       // Chặn spam sự kiện nếu thẻ đang hiển thị rồi
       if (targetVisibleState[targetIdx]) return;
       targetVisibleState[targetIdx] = true;
 
-      if (is8thWall) {
-        group.setAttribute('rotation', '0 0 -90');
-      } else {
-        group.setAttribute('rotation', '0 0 0');
-      }
+      group.setAttribute('rotation', '0 0 0');
 
       // Phát video với hiệu ứng Living Photo: Ảnh poster tĩnh hiện 0ms ngay tức thì,
       // video tự động crossfade đè lên ngay khi frame đầu tiên được GPU nạp xong (0ms màn đen)!
