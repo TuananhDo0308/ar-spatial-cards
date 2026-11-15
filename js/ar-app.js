@@ -11,16 +11,11 @@
  */
 
 const FALLBACK_TARGET_IMAGES = {
-  0: 'assets/target-0.png',
-  1: 'assets/target-1.png',
+  0: 'assets/card-hoian.png',
+  1: 'assets/card-dinhdoclap.jpg',
   2: 'assets/card-benthanh.jpg',
   3: 'assets/card-hanoi.jpg',
-  4: 'assets/gallery-danang.jpg',
-  5: 'assets/gallery-halong.jpg',
-  6: 'assets/card-hue.jpg',
-  7: 'assets/card-trangan.jpg',
-  8: 'assets/card-notredame.jpg',
-  9: 'assets/card-phuquoc.jpg'
+  4: 'assets/card-halong.jpg'
 };
 
 // ============================================================================
@@ -386,7 +381,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const group = document.getElementById(`spatial-group-${targetIdx}`);
     if (!el || !group) return;
 
-    const isLandscape = [2, 3, 4, 5, 6, 8, 9].includes(targetIdx);
+    // Ảnh ngang: 1 (Dinh Độc Lập), 2 (Chợ Bến Thành), 3 (Hồ Hoàn Kiếm), 4 (Vịnh Hạ Long)
+    // Ảnh vuông: 0 (Phố Cổ Hội An)
+    const isLandscape = [1, 2, 3, 4].includes(targetIdx);
     const is8thWall = typeof XR8 !== 'undefined' || !!document.querySelector('[xrweb]');
 
     // Khởi tạo góc xoay ban đầu chuẩn xác cho từng loại thẻ
@@ -406,6 +403,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         group.setAttribute('rotation', '0 0 -90');
       } else {
         group.setAttribute('rotation', '0 0 0');
+      }
+
+      // Tự động phát video overlay khi thẻ được nhận diện
+      const vid = document.getElementById(`video-${targetIdx}`);
+      if (vid) {
+        vid.currentTime = 0;
+        const playPromise = vid.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {});
+        }
       }
 
       activeTargets.add(targetIdx);
@@ -435,6 +442,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!targetVisibleState[targetIdx]) return;
       targetVisibleState[targetIdx] = false;
 
+      // Tạm dừng video khi mất dấu thẻ để tiết kiệm pin & CPU
+      const vid = document.getElementById(`video-${targetIdx}`);
+      if (vid) {
+        vid.pause();
+      }
+
       activeTargets.delete(targetIdx);
       group.setAttribute('scale', '0 0 0');
       group.setAttribute('visible', 'false');
@@ -461,8 +474,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     el.addEventListener('xrextraslost', onLost);
   }
 
-  // Khởi tạo tracking cho toàn bộ 10 targets
-  for (let i = 0; i < 10; i++) {
+  // Khởi tạo tracking cho toàn bộ 5 targets
+  for (let i = 0; i < 5; i++) {
     setupTracking(i);
   }
 
@@ -636,14 +649,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Gom các Mesh của các target đang được hiển thị
     candidateMeshes.length = 0;
-    for (let idx = 0; idx < 10; idx++) {
+    for (let idx = 0; idx < 5; idx++) {
       const group = document.getElementById(`spatial-group-${idx}`);
       if (!group) continue;
 
       // Kiểm tra target đang hoạt động hoặc đang hiển thị trên màn hình
       const isVisible = targetVisibleState[idx] || activeTargets.has(idx) || group.getAttribute('visible') === 'true';
       if (isVisible) {
-        ['bar-top-', 'card-left-', 'card-right-', 'target-frame-'].forEach((prefix) => {
+        ['bar-top-', 'card-left-', 'card-right-', 'target-frame-', 'target-video-'].forEach((prefix) => {
           const el = document.getElementById(prefix + idx);
           if (el && el.object3D) {
             el.object3D.traverse((child) => {
@@ -657,10 +670,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    // Nếu vì lý do nào đó targetVisibleState chưa kịp cập nhật, fallback kiểm tra toàn bộ 10 targets
+    // Nếu vì lý do nào đó targetVisibleState chưa kịp cập nhật, fallback kiểm tra toàn bộ 5 targets
     if (candidateMeshes.length === 0) {
-      for (let idx = 0; idx < 10; idx++) {
-        ['bar-top-', 'card-left-', 'card-right-', 'target-frame-'].forEach((prefix) => {
+      for (let idx = 0; idx < 5; idx++) {
+        ['bar-top-', 'card-left-', 'card-right-', 'target-frame-', 'target-video-'].forEach((prefix) => {
           const el = document.getElementById(prefix + idx);
           if (el && el.object3D) {
             el.object3D.traverse((child) => {

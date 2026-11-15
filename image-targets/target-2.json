@@ -3,11 +3,11 @@
   "properties": {
     "top": 0,
     "left": 0,
-    "width": 800,
-    "height": 534,
+    "width": 1000,
+    "height": 500,
     "isRotated": false,
-    "originalWidth": 800,
-    "originalHeight": 534
+    "originalWidth": 1000,
+    "originalHeight": 500
   },
   "imagePath": "image-targets/target-2_luminance.jpg",
   "metadata": null,
@@ -18,6 +18,6 @@
     "thumbnailImage": "target-2_thumbnail.jpg",
     "luminanceImage": "target-2_luminance.jpg"
   },
-  "created": 1794765118732,
-  "updated": 1794765118732
+  "created": 1794766944324,
+  "updated": 1794766944324
 }

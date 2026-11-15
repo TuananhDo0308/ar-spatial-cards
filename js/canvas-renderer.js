@@ -476,10 +476,10 @@ function refreshTargetTextures(targetIdx) {
 }
 
 /**
- * Cập nhật texture cho toàn bộ 10 targets
+ * Cập nhật texture cho toàn bộ 5 targets
  */
 function refreshAllTextures() {
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 5; i++) {
     refreshTargetTextures(i);
   }
 }
@@ -496,10 +496,10 @@ function renderTargetCanvases(targetIdx, data) {
 }
 
 /**
- * Vẽ texture cho toàn bộ danh sách địa điểm
+ * Vẽ texture cho toàn bộ danh sách địa điểm (5 địa danh)
  */
 function renderAllLocationCanvases(locationsMap) {
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 5; i++) {
     const loc = locationsMap[i] || locationsMap[String(i)] || (typeof LOCATIONS_DATA !== 'undefined' ? LOCATIONS_DATA[i] : null);
     if (loc) {
       renderTargetCanvases(i, loc);

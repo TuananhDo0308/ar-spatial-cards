@@ -3,16 +3,11 @@ const fs = require('fs');
 const path = require('path');
 
 const TARGET_IMAGES = [
-  'assets/target-0.png',
-  'assets/target-1.png',
-  'assets/card-benthanh.jpg',
-  'assets/card-hanoi.jpg',
-  'assets/gallery-danang.jpg',
-  'assets/gallery-halong.jpg',
-  'assets/card-hue.jpg',
-  'assets/card-trangan.jpg',
-  'assets/card-notredame.jpg',
-  'assets/card-phuquoc.jpg'
+  "assets/card-hoian.png",
+  "assets/card-dinhdoclap.jpg",
+  "assets/card-benthanh.jpg",
+  "assets/card-hanoi.jpg",
+  "assets/card-halong.jpg"
 ];
 
 async function main() {

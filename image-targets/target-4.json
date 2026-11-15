@@ -4,10 +4,10 @@
     "top": 0,
     "left": 0,
     "width": 800,
-    "height": 500,
+    "height": 533,
     "isRotated": false,
     "originalWidth": 800,
-    "originalHeight": 500
+    "originalHeight": 533
   },
   "imagePath": "image-targets/target-4_luminance.jpg",
   "metadata": null,
@@ -18,6 +18,6 @@
     "thumbnailImage": "target-4_thumbnail.jpg",
     "luminanceImage": "target-4_luminance.jpg"
   },
-  "created": 1794765118775,
-  "updated": 1794765118775
+  "created": 1794766944324,
+  "updated": 1794766944324
 }
