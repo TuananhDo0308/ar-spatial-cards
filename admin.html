@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Database CMS - Dinh Độc Lập & Phố Cổ Hội An</title>
+  <title>Database CMS - Quản Lý 10 Địa Điểm WebAR</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -268,12 +268,12 @@
   <div class="container">
     <header>
       <div>
-        <h1>Database Quản Lý 2 Điểm AR Cố Định</h1>
+        <h1>Database Quản Lý 10 Địa Điểm WebAR</h1>
         <p>Cơ sở dữ liệu SQLite: <code>database.sqlite</code> kết nối với camera WebAR</p>
       </div>
       <div class="header-actions">
         <a href="index.html" class="btn btn-default">📱 Mở Quét Camera</a>
-        <a href="board_sample.html" class="btn btn-outline">🖼️ Bảng 2 Ảnh Mẫu</a>
+        <a href="gallery.html" class="btn btn-outline">🖼️ Thư Viện 10 Ảnh Quét</a>
       </div>
     </header>
 
@@ -282,8 +282,8 @@
       <div>
         <div class="card">
           <div class="card-title">
-            <span>📚 Danh Sách Địa Điểm (Dinh Độc Lập & Hội An)</span>
-            <span style="font-size: 0.8rem; color: var(--emerald);" id="count-badge">2 bản ghi</span>
+            <span>📚 Danh Sách Địa Điểm Du Lịch</span>
+            <span style="font-size: 0.8rem; color: var(--emerald);" id="count-badge">10 bản ghi</span>
           </div>
           
           <div class="location-list" id="location-list">
@@ -432,17 +432,19 @@
       e.preventDefault();
 
       const targetIdx = parseInt(document.getElementById("field-index").value);
+      const existing = locationsData[String(targetIdx)] || {};
+
       const payload = {
+        ...existing,
+        id: targetIdx,
         target_index: targetIdx,
         name: document.getElementById("field-name").value,
         tag: document.getElementById("field-tag").value,
         city: document.getElementById("field-city").value,
-        image_url: `assets/target-${targetIdx}.png`,
         short_desc: document.getElementById("field-short-desc").value,
         full_desc: document.getElementById("field-full-desc").value,
         audio_text: document.getElementById("field-audio").value,
         map_query: document.getElementById("field-map").value,
-        badge_color: targetIdx === 0 ? "#10b981" : "#f59e0b"
       };
 
       try {

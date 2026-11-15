@@ -21,7 +21,7 @@ async function main() {
   // Read images as base64 data URLs so no network or cross-origin issues
   const imageDataUrls = [];
   for (let i = 0; i < TARGET_IMAGES.length; i++) {
-    const imgPath = path.join(__dirname, TARGET_IMAGES[i]);
+    const imgPath = path.join(__dirname, '..', TARGET_IMAGES[i]);
     if (!fs.existsSync(imgPath)) {
       throw new Error(`File not found: ${imgPath}`);
     }
@@ -97,7 +97,7 @@ async function main() {
   console.log(`Exported buffer received! Size: ${(byteArray.length / 1024 / 1024).toFixed(2)} MB (Took ${durationSec}s)`);
 
   const mindBuffer = Buffer.from(byteArray);
-  const outPath = path.join(__dirname, 'assets', 'targets.mind');
+  const outPath = path.join(__dirname, '..', 'assets', 'targets.mind');
   fs.writeFileSync(outPath, mindBuffer);
   console.log(`✅ Successfully saved 10 targets to: ${outPath} (${(mindBuffer.length / 1024 / 1024).toFixed(2)} MB)`);
 

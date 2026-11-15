@@ -1,0 +1,479 @@
+/* ==========================================================================
+   WebAR Spatial Cards - Style System (Shadcn Dark & VisionOS Aesthetic)
+   ========================================================================== */
+
+:root {
+  /* Bảng màu chính - Dark Zinc Palette */
+  --bg: #09090b;
+  --card: #18181b;
+  --border: #27272a;
+  --border-subtle: #1f1f23;
+  --text: #f4f4f5;
+  --text-muted: #a1a1aa;
+  --primary: #fafafa;
+  --primary-foreground: #18181b;
+
+  /* Màu nhấn theo danh mục địa danh */
+  --emerald: #10b981;
+  --amber: #f59e0b;
+  --cyan: #06b6d4;
+}
+
+/* Reset toàn cục & Typography */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  user-select: none;
+  touch-action: manipulation;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* ==========================================================================
+   1. A-FRAME VIEWPORT & CAMERA CONTAINER
+   ========================================================================== */
+
+.ar-viewport {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* ==========================================================================
+   2. FLOATING UI HUD LAYER (Minimalist Shadcn)
+   ========================================================================== */
+
+.ui-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 20px) 16px;
+}
+
+/* Thanh trạng thái phía trên (Top HUD Bar) */
+.top-bar {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: rgba(24, 24, 27, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+  max-width: 420px;
+  margin: 0 auto;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #71717a;
+  transition: background 0.3s, box-shadow 0.3s;
+  flex-shrink: 0;
+}
+
+.status-dot.active {
+  background: var(--emerald);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.9);
+  animation: pulseGreen 1.8s infinite;
+}
+
+@keyframes pulseGreen {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(1.2);
+  }
+}
+
+.status-text {
+  color: var(--text);
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+
+/* ==========================================================================
+   3. SCANNING RETICLE & LASER GUIDE
+   ========================================================================== */
+
+.scanning-reticle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 240px;
+  height: 240px;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s ease;
+}
+
+.scanning-reticle.hidden {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.92);
+}
+
+.reticle-corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-color: rgba(255, 255, 255, 0.5);
+  border-style: solid;
+  transition: border-color 0.3s;
+}
+
+.reticle-corner.tl {
+  top: 0;
+  left: 0;
+  border-width: 2.5px 0 0 2.5px;
+  border-top-left-radius: 8px;
+}
+
+.reticle-corner.tr {
+  top: 0;
+  right: 0;
+  border-width: 2.5px 2.5px 0 0;
+  border-top-right-radius: 8px;
+}
+
+.reticle-corner.bl {
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 2.5px 2.5px;
+  border-bottom-left-radius: 8px;
+}
+
+.reticle-corner.br {
+  bottom: 0;
+  right: 0;
+  border-width: 0 2.5px 2.5px 0;
+  border-bottom-right-radius: 8px;
+}
+
+.laser-scan {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.9), transparent);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.7);
+  animation: laserMove 2.2s ease-in-out infinite alternate;
+}
+
+@keyframes laserMove {
+  0% {
+    top: 12%;
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    top: 88%;
+    opacity: 0.4;
+  }
+}
+
+.reticle-hint {
+  position: absolute;
+  bottom: -46px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.88);
+  background: rgba(24, 24, 27, 0.88);
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================================================
+   4. TOAST NHẮC BẬT CAMERA (Dành cho iOS Safari khi cần cử chỉ chạm)
+   ========================================================================== */
+
+.camera-prompt-toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(24, 24, 27, 0.95);
+  border: 1px solid var(--emerald);
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #fff;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  z-index: 50;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.camera-prompt-toast:active {
+  transform: translateX(-50%) scale(0.96);
+}
+
+/* ==========================================================================
+   5. FULL-SCREEN EXPANDED MODAL (VisionOS Shared-Element Spring Curve)
+   ========================================================================== */
+
+.fullscreen-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(9, 9, 11, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: background-color 0.45s ease, backdrop-filter 0.45s ease;
+}
+
+.fullscreen-modal.active {
+  display: flex;
+}
+
+.fullscreen-card {
+  width: 100%;
+  max-width: 480px;
+  max-height: 88vh;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.85), 0 0 1px 1px var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  will-change: transform, opacity, border-radius;
+  transform-origin: center center;
+}
+
+.btn-close-modal {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  z-index: 10;
+  font-size: 14px;
+  transition: transform 0.15s ease, background 0.2s;
+}
+
+.btn-close-modal:hover {
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.btn-close-modal:active {
+  transform: scale(0.88);
+}
+
+.modal-hero-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  background: #000;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+}
+
+.modal-content-animated {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.32s 0.1s cubic-bezier(0.16, 1, 0.3, 1), transform 0.36s 0.1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fullscreen-card.active .modal-content-animated {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.modal-top-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+/* Category Badges */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid;
+}
+
+.badge-emerald {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--emerald);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.badge-amber {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--amber);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.badge-cyan {
+  background: rgba(6, 182, 212, 0.1);
+  color: var(--cyan);
+  border-color: rgba(6, 182, 212, 0.25);
+}
+
+.modal-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.modal-city {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+
+.modal-desc {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #d4d4d8;
+  margin-bottom: 16px;
+}
+
+.highlight-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  font-size: 0.82rem;
+  color: #d4d4d8;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.meta-box {
+  margin-top: 16px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.meta-box div {
+  margin-bottom: 6px;
+}
+
+.meta-box div:last-child {
+  margin-bottom: 0;
+}
+
+.meta-box strong {
+  color: #fff;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 11px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  border: none;
+}
+
+.btn-default {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.btn-default:hover {
+  background: #e4e4e7;
+}
+
+.btn-default:active {
+  transform: scale(0.98);
+}
+
