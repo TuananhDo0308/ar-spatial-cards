@@ -140,10 +140,10 @@
     <canvas id="canvas-right-9" width="520" height="760"></canvas>
   </div>
 
-  <!-- AR Scene A-Frame (MindAR Image Tracking - Tối ưu 60fps với maxTrack: 2 và bộ lọc bám dính tức thì) -->
+  <!-- AR Scene A-Frame (Khử rung triệt để, cố định vững chắc, bám chuẩn theo 3 mép ảnh) -->
   <div class="ar-viewport">
     <a-scene
-      mindar-image="imageTargetSrc: ./assets/targets.mind?v=20261114_10all; maxTrack: 2; filterMinCF: 0.01; filterBeta: 10; warmupTolerance: 5; missTolerance: 8; uiScanning: no; uiLoading: no; autoStart: false"
+      mindar-image="imageTargetSrc: ./assets/targets.mind?v=20261114_10all; maxTrack: 2; filterMinCF: 0.0008; filterBeta: 1000; warmupTolerance: 4; missTolerance: 10; uiScanning: no; uiLoading: no; autoStart: false"
       color-space="sRGB"
       renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
@@ -159,183 +159,183 @@
         raycaster="near: 0.05; far: 50; objects: .clickable;"
       ></a-camera>
 
-      <!-- ================= TARGET 0: DINH ĐỘC LẬP ================= -->
+      <!-- ================= TARGET 0: DINH ĐỘC LẬP (640x640 - Vuông 1.0) ================= -->
       <a-entity id="target-entity-0" mindar-image-target="targetIndex: 0">
-        <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #10b981; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
-        <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #10b981; opacity: 0.3; transparent: true"></a-ring>
-
-        <a-entity id="spatial-group-0" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-0" class="clickable" src="#canvas-top-0" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-left-0" class="clickable" src="#canvas-left-0" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-right-0" class="clickable" src="#canvas-right-0" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
+        <a-plane position="0 0 0.002" width="1.0" height="1.0" material="color: #10b981; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
+        <a-plane position="0 0 0.001" width="1.0" height="1.0" material="color: #10b981; opacity: 0.05; transparent: true"></a-plane>
+        <a-entity id="spatial-group-0" position="0 0 0.04" scale="0 0 0">
+          <!-- Thanh trên nằm sát mép trên ảnh -->
+          <a-plane id="bar-top-0" class="clickable" src="#canvas-top-0" position="0 0.64 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.515 0.01" radius="0.003" height="0.03" material="color: #10b981; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ trái nằm sát mép trái ảnh -->
+          <a-plane id="card-left-0" class="clickable" src="#canvas-left-0" position="-0.75 0 0.02" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #10b981; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ phải nằm sát mép phải ảnh -->
+          <a-plane id="card-right-0" class="clickable" src="#canvas-right-0" position="0.75 0 0.02" rotation="0 -14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #10b981; opacity: 0.75; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
-      <!-- ================= TARGET 1: PHỐ CỔ HỘI AN ================= -->
+      <!-- ================= TARGET 1: PHỐ CỔ HỘI AN (640x640 - Vuông 1.0) ================= -->
       <a-entity id="target-entity-1" mindar-image-target="targetIndex: 1">
-        <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
-        <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #f59e0b; opacity: 0.3; transparent: true"></a-ring>
-
-        <a-entity id="spatial-group-1" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-1" class="clickable" src="#canvas-top-1" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-left-1" class="clickable" src="#canvas-left-1" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-right-1" class="clickable" src="#canvas-right-1" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
+        <a-plane position="0 0 0.002" width="1.0" height="1.0" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
+        <a-plane position="0 0 0.001" width="1.0" height="1.0" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
+        <a-entity id="spatial-group-1" position="0 0 0.04" scale="0 0 0">
+          <!-- Thanh trên nằm sát mép trên ảnh -->
+          <a-plane id="bar-top-1" class="clickable" src="#canvas-top-1" position="0 0.64 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.515 0.01" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ trái nằm sát mép trái ảnh -->
+          <a-plane id="card-left-1" class="clickable" src="#canvas-left-1" position="-0.75 0 0.02" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ phải nằm sát mép phải ảnh -->
+          <a-plane id="card-right-1" class="clickable" src="#canvas-right-1" position="0.75 0 0.02" rotation="0 -14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.75; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
-      <!-- ================= TARGET 2: CHỢ BẾN THÀNH ================= -->
+      <!-- ================= TARGET 2: CHỢ BẾN THÀNH (800x534 - Ngang 0.667) ================= -->
       <a-entity id="target-entity-2" mindar-image-target="targetIndex: 2">
-        <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
-        <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #f59e0b; opacity: 0.3; transparent: true"></a-ring>
-
-        <a-entity id="spatial-group-2" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-2" class="clickable" src="#canvas-top-2" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-left-2" class="clickable" src="#canvas-left-2" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-right-2" class="clickable" src="#canvas-right-2" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
+        <a-plane position="0 0 0.002" width="1.0" height="0.667" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
+        <a-plane position="0 0 0.001" width="1.0" height="0.667" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
+        <a-entity id="spatial-group-2" position="0 0 0.04" scale="0 0 0">
+          <!-- Thanh trên nằm sát mép trên ảnh -->
+          <a-plane id="bar-top-2" class="clickable" src="#canvas-top-2" position="0 0.474 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.349 0.01" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ trái nằm sát mép trái ảnh -->
+          <a-plane id="card-left-2" class="clickable" src="#canvas-left-2" position="-0.75 0 0.02" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ phải nằm sát mép phải ảnh -->
+          <a-plane id="card-right-2" class="clickable" src="#canvas-right-2" position="0.75 0 0.02" rotation="0 -14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.75; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
-      <!-- ================= TARGET 3: HỒ HOÀN KIẾM ================= -->
+      <!-- ================= TARGET 3: HỒ HOÀN KIẾM (800x459 - Ngang 0.574) ================= -->
       <a-entity id="target-entity-3" mindar-image-target="targetIndex: 3">
-        <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #06b6d4; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
-        <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #06b6d4; opacity: 0.3; transparent: true"></a-ring>
-
-        <a-entity id="spatial-group-3" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-3" class="clickable" src="#canvas-top-3" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-left-3" class="clickable" src="#canvas-left-3" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-right-3" class="clickable" src="#canvas-right-3" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
+        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
+        <a-plane position="0 0 0.002" width="1.0" height="0.574" material="color: #06b6d4; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
+        <a-plane position="0 0 0.001" width="1.0" height="0.574" material="color: #06b6d4; opacity: 0.05; transparent: true"></a-plane>
+        <a-entity id="spatial-group-3" position="0 0 0.04" scale="0 0 0">
+          <!-- Thanh trên nằm sát mép trên ảnh -->
+          <a-plane id="bar-top-3" class="clickable" src="#canvas-top-3" position="0 0.427 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.302 0.01" radius="0.003" height="0.03" material="color: #06b6d4; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ trái nằm sát mép trái ảnh -->
+          <a-plane id="card-left-3" class="clickable" src="#canvas-left-3" position="-0.75 0 0.02" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #06b6d4; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ phải nằm sát mép phải ảnh -->
+          <a-plane id="card-right-3" class="clickable" src="#canvas-right-3" position="0.75 0 0.02" rotation="0 -14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #06b6d4; opacity: 0.75; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
-      <!-- ================= TARGET 4: CẦU VÀNG BÀ NÀ ================= -->
+      <!-- ================= TARGET 4: CẦU VÀNG BÀ NÀ (800x500 - Ngang 0.625) ================= -->
       <a-entity id="target-entity-4" mindar-image-target="targetIndex: 4">
-        <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
-        <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #f59e0b; opacity: 0.3; transparent: true"></a-ring>
-
-        <a-entity id="spatial-group-4" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-4" class="clickable" src="#canvas-top-4" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-left-4" class="clickable" src="#canvas-left-4" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-right-4" class="clickable" src="#canvas-right-4" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
+        <a-plane position="0 0 0.002" width="1.0" height="0.625" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
+        <a-plane position="0 0 0.001" width="1.0" height="0.625" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
+        <a-entity id="spatial-group-4" position="0 0 0.04" scale="0 0 0">
+          <!-- Thanh trên nằm sát mép trên ảnh -->
+          <a-plane id="bar-top-4" class="clickable" src="#canvas-top-4" position="0 0.453 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.328 0.01" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ trái nằm sát mép trái ảnh -->
+          <a-plane id="card-left-4" class="clickable" src="#canvas-left-4" position="-0.75 0 0.02" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ phải nằm sát mép phải ảnh -->
+          <a-plane id="card-right-4" class="clickable" src="#canvas-right-4" position="0.75 0 0.02" rotation="0 -14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.75; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
-      <!-- ================= TARGET 5: VỊNH HẠ LONG ================= -->
+      <!-- ================= TARGET 5: VỊNH HẠ LONG (800x533 - Ngang 0.666) ================= -->
       <a-entity id="target-entity-5" mindar-image-target="targetIndex: 5">
-        <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #10b981; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
-        <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #10b981; opacity: 0.3; transparent: true"></a-ring>
-
-        <a-entity id="spatial-group-5" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-5" class="clickable" src="#canvas-top-5" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-left-5" class="clickable" src="#canvas-left-5" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-right-5" class="clickable" src="#canvas-right-5" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
+        <a-plane position="0 0 0.002" width="1.0" height="0.666" material="color: #10b981; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
+        <a-plane position="0 0 0.001" width="1.0" height="0.666" material="color: #10b981; opacity: 0.05; transparent: true"></a-plane>
+        <a-entity id="spatial-group-5" position="0 0 0.04" scale="0 0 0">
+          <!-- Thanh trên nằm sát mép trên ảnh -->
+          <a-plane id="bar-top-5" class="clickable" src="#canvas-top-5" position="0 0.473 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.348 0.01" radius="0.003" height="0.03" material="color: #10b981; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ trái nằm sát mép trái ảnh -->
+          <a-plane id="card-left-5" class="clickable" src="#canvas-left-5" position="-0.75 0 0.02" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #10b981; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ phải nằm sát mép phải ảnh -->
+          <a-plane id="card-right-5" class="clickable" src="#canvas-right-5" position="0.75 0 0.02" rotation="0 -14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #10b981; opacity: 0.75; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
-      <!-- ================= TARGET 6: ĐẠI NỘI HUẾ ================= -->
+      <!-- ================= TARGET 6: ĐẠI NỘI HUẾ (800x533 - Ngang 0.666) ================= -->
       <a-entity id="target-entity-6" mindar-image-target="targetIndex: 6">
-        <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
-        <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #f59e0b; opacity: 0.3; transparent: true"></a-ring>
-
-        <a-entity id="spatial-group-6" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-6" class="clickable" src="#canvas-top-6" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-left-6" class="clickable" src="#canvas-left-6" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-right-6" class="clickable" src="#canvas-right-6" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
+        <a-plane position="0 0 0.002" width="1.0" height="0.666" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
+        <a-plane position="0 0 0.001" width="1.0" height="0.666" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
+        <a-entity id="spatial-group-6" position="0 0 0.04" scale="0 0 0">
+          <!-- Thanh trên nằm sát mép trên ảnh -->
+          <a-plane id="bar-top-6" class="clickable" src="#canvas-top-6" position="0 0.473 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.348 0.01" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ trái nằm sát mép trái ảnh -->
+          <a-plane id="card-left-6" class="clickable" src="#canvas-left-6" position="-0.75 0 0.02" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ phải nằm sát mép phải ảnh -->
+          <a-plane id="card-right-6" class="clickable" src="#canvas-right-6" position="0.75 0 0.02" rotation="0 -14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.75; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
-      <!-- ================= TARGET 7: TRÀNG AN NINH BÌNH ================= -->
+      <!-- ================= TARGET 7: TRÀNG AN NINH BÌNH (800x1200 - Dọc 1.500) ================= -->
       <a-entity id="target-entity-7" mindar-image-target="targetIndex: 7">
-        <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #10b981; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
-        <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #10b981; opacity: 0.3; transparent: true"></a-ring>
-
-        <a-entity id="spatial-group-7" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-7" class="clickable" src="#canvas-top-7" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-left-7" class="clickable" src="#canvas-left-7" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-right-7" class="clickable" src="#canvas-right-7" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #10b981; opacity: 0.7; transparent: true"></a-cylinder>
+        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
+        <a-plane position="0 0 0.002" width="1.0" height="1.500" material="color: #10b981; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
+        <a-plane position="0 0 0.001" width="1.0" height="1.500" material="color: #10b981; opacity: 0.05; transparent: true"></a-plane>
+        <a-entity id="spatial-group-7" position="0 0 0.04" scale="0 0 0">
+          <!-- Thanh trên nằm sát mép trên ảnh -->
+          <a-plane id="bar-top-7" class="clickable" src="#canvas-top-7" position="0 0.89 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.765 0.01" radius="0.003" height="0.03" material="color: #10b981; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ trái nằm sát mép trái ảnh -->
+          <a-plane id="card-left-7" class="clickable" src="#canvas-left-7" position="-0.75 0 0.02" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #10b981; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ phải nằm sát mép phải ảnh -->
+          <a-plane id="card-right-7" class="clickable" src="#canvas-right-7" position="0.75 0 0.02" rotation="0 -14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #10b981; opacity: 0.75; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
-      <!-- ================= TARGET 8: NHÀ THỜ ĐỨC BÀ ================= -->
+      <!-- ================= TARGET 8: NHÀ THỜ ĐỨC BÀ (800x533 - Ngang 0.666) ================= -->
       <a-entity id="target-entity-8" mindar-image-target="targetIndex: 8">
-        <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
-        <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #f59e0b; opacity: 0.3; transparent: true"></a-ring>
-
-        <a-entity id="spatial-group-8" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-8" class="clickable" src="#canvas-top-8" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-left-8" class="clickable" src="#canvas-left-8" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-right-8" class="clickable" src="#canvas-right-8" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #f59e0b; opacity: 0.7; transparent: true"></a-cylinder>
+        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
+        <a-plane position="0 0 0.002" width="1.0" height="0.666" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
+        <a-plane position="0 0 0.001" width="1.0" height="0.666" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
+        <a-entity id="spatial-group-8" position="0 0 0.04" scale="0 0 0">
+          <!-- Thanh trên nằm sát mép trên ảnh -->
+          <a-plane id="bar-top-8" class="clickable" src="#canvas-top-8" position="0 0.473 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.348 0.01" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ trái nằm sát mép trái ảnh -->
+          <a-plane id="card-left-8" class="clickable" src="#canvas-left-8" position="-0.75 0 0.02" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ phải nằm sát mép phải ảnh -->
+          <a-plane id="card-right-8" class="clickable" src="#canvas-right-8" position="0.75 0 0.02" rotation="0 -14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #f59e0b; opacity: 0.75; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
-      <!-- ================= TARGET 9: ĐẢO NGỌC PHÚ QUỐC ================= -->
+      <!-- ================= TARGET 9: ĐẢO NGỌC PHÚ QUỐC (800x533 - Ngang 0.666) ================= -->
       <a-entity id="target-entity-9" mindar-image-target="targetIndex: 9">
-        <a-plane position="0 0 0.005" width="1.0" height="1.0" material="color: #06b6d4; wireframe: true; wireframeLinewidth: 2; opacity: 0.35"></a-plane>
-        <a-ring position="0 0 0.008" radius-inner="0.44" radius-outer="0.47" material="color: #06b6d4; opacity: 0.3; transparent: true"></a-ring>
-
-        <a-entity id="spatial-group-9" position="0 0 0.06" scale="0 0 0"
-                  animation__float="property: position; to: 0 0.02 0.06; dir: alternate; dur: 3000; loop: true; easing: easeInOutSine">
-          <a-plane id="bar-top-9" class="clickable" src="#canvas-top-9" position="0 0.58 0.04" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0 0.48 0.02" radius="0.003" height="0.03" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-left-9" class="clickable" src="#canvas-left-9" position="-0.58 0 0.05" rotation="0 18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="-0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
-
-          <a-plane id="card-right-9" class="clickable" src="#canvas-right-9" position="0.58 0 0.05" rotation="0 -18 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-cylinder position="0.48 0 0.025" rotation="0 0 90" radius="0.003" height="0.035" material="color: #06b6d4; opacity: 0.7; transparent: true"></a-cylinder>
+        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
+        <a-plane position="0 0 0.002" width="1.0" height="0.666" material="color: #06b6d4; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
+        <a-plane position="0 0 0.001" width="1.0" height="0.666" material="color: #06b6d4; opacity: 0.05; transparent: true"></a-plane>
+        <a-entity id="spatial-group-9" position="0 0 0.04" scale="0 0 0">
+          <!-- Thanh trên nằm sát mép trên ảnh -->
+          <a-plane id="bar-top-9" class="clickable" src="#canvas-top-9" position="0 0.473 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0 0.348 0.01" radius="0.003" height="0.03" material="color: #06b6d4; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ trái nằm sát mép trái ảnh -->
+          <a-plane id="card-left-9" class="clickable" src="#canvas-left-9" position="-0.75 0 0.02" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="-0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #06b6d4; opacity: 0.75; transparent: true"></a-cylinder>
+          <!-- Thẻ phải nằm sát mép phải ảnh -->
+          <a-plane id="card-right-9" class="clickable" src="#canvas-right-9" position="0.75 0 0.02" rotation="0 -14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <a-cylinder position="0.515 0 0.01" rotation="0 0 90" radius="0.003" height="0.03" material="color: #06b6d4; opacity: 0.75; transparent: true"></a-cylinder>
         </a-entity>
       </a-entity>
 
