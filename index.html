@@ -36,7 +36,19 @@
   <!-- Minimalist Floating Overlay -->
   <div class="ui-layer">
     <!-- Top HUD Bar -->
-    <div class="top-bar">
+    <div class="top-bar" style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+      <div style="display:inline-flex; background:rgba(24,24,27,0.90); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid var(--border); border-radius:999px; padding:4px; gap:4px; box-shadow:0 8px 24px rgba(0,0,0,0.4); pointer-events:auto;">
+        <button style="padding:6px 14px; border-radius:999px; font-size:0.76rem; font-weight:700; color:#18181b; background:#fafafa; border:none; display:flex; align-items:center; gap:6px; cursor:pointer;">
+          <span>📷</span> <span>Quét Thẻ Ảnh</span>
+        </button>
+        <a href="world.html" style="padding:6px 14px; border-radius:999px; font-size:0.76rem; font-weight:700; color:var(--text-muted); text-decoration:none; display:flex; align-items:center; gap:6px;">
+          <span>🪐</span> <span>Đặt Không Gian 3D</span>
+        </a>
+        <a href="gallery.html" style="padding:6px 14px; border-radius:999px; font-size:0.76rem; font-weight:700; color:var(--text-muted); text-decoration:none; display:flex; align-items:center; gap:6px;">
+          <span>🖼️</span> <span>Thư Viện</span>
+        </a>
+      </div>
+
       <div class="status-badge">
         <div class="status-dot" id="status-dot"></div>
         <span class="status-text" id="status-text">Đang kết nối camera...</span>

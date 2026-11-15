@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>WebAR - Đặt Địa Danh Vào Không Gian 3D (World Placement)</title>
+  <link rel="icon" href="data:,">
+
+  <!-- Three.js r128 từ CDN uy tín -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Dữ liệu địa danh -->
+  <script src="data/locations.js"></script>
+
+  <!-- Canvas Renderer (vẽ Texture 2D cho các thẻ không gian) -->
+  <script src="js/canvas-renderer.js"></script>
+
+  <style>
+    :root {
+      --bg: #09090b;
+      --card: #18181b;
+      --border: #27272a;
+      --border-subtle: #1f1f23;
+      --text: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --primary: #fafafa;
+      --primary-foreground: #18181b;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --cyan: #06b6d4;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      overflow: hidden;
+      background: #000;
+      color: var(--text);
+      user-select: none;
+      touch-action: manipulation;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* Video nền camera */
+    #camera-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      display: block;
+    }
+
+    /* WebGL Canvas */
+    #webgl-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: auto;
+    }
+
+    /* UI Overlay Layer */
+    .ui-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 16px;
+    }
+
+    /* Top HUD */
+    .top-hud {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      pointer-events: auto;
+      width: 100%;
+    }
+
+    /* Navigation Mode Switcher */
+    .mode-switch {
+      display: inline-flex;
+      background: rgba(24, 24, 27, 0.90);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px;
+      gap: 4px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .mode-btn {
+      padding: 7px 15px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .mode-btn.active {
+      background: var(--primary);
+      color: var(--primary-foreground);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Status Pill */
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: rgba(24, 24, 27, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      max-width: 90%;
+      text-align: center;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #71717a;
+      transition: background 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .status-dot.active {
+      background: var(--emerald);
+      box-shadow: 0 0 10px var(--emerald);
+    }
+
+    .status-dot.seeking {
+      background: var(--amber);
+      box-shadow: 0 0 10px var(--amber);
+      animation: pulse 1.2s infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+
+    /* Reticle Hint ở giữa màn hình (khi chưa đặt) */
+    .center-reticle-guide {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      opacity: 0.85;
+      transition: opacity 0.3s ease;
+    }
+
+    .center-reticle-guide.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .ring-target {
+      width: 90px;
+      height: 90px;
+      border: 2px dashed rgba(16, 185, 129, 0.8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: rotateRing 8s linear infinite;
+    }
+
+    @keyframes rotateRing {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .ring-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--emerald);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--emerald);
+    }
+
+    .guide-text {
+      background: rgba(24, 24, 27, 0.90);
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Bottom Control Bar với Frosted Glass Panel */
+    .bottom-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      pointer-events: auto;
+      background: rgba(18, 18, 20, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 12px 14px 14px 14px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Horizontal Landmark Carousel Selector */
+    .landmark-picker {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 2px 2px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .landmark-picker::-webkit-scrollbar {
+      display: none;
+    }
+
+    .landmark-chip {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px 5px 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .landmark-chip.active {
+      background: rgba(16, 185, 129, 0.16);
+      border-color: var(--emerald);
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+    }
+
+    .landmark-chip img {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .landmark-chip span {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    /* Action Buttons Row */
+    .action-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .btn-main {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 18px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #fff;
+      font-size: 0.86rem;
+      font-weight: 700;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+      transition: all 0.15s ease;
+    }
+
+    .btn-main:active {
+      transform: scale(0.97);
+    }
+
+    .btn-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-icon:active {
+      transform: scale(0.92);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Modal Chi Tiết (VisionOS Spring Curve) */
+    .fullscreen-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(9, 9, 11, 0.92);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+
+    .fullscreen-modal.active {
+      display: flex;
+    }
+
+    .fullscreen-card {
+      width: 100%;
+      max-width: 480px;
+      max-height: 88vh;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.85);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .btn-close-modal {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(24, 24, 27, 0.8);
+      border: 1px solid var(--border);
+      color: #fff;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .modal-hero-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: #27272a;
+    }
+
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      color: var(--text);
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border: 1px solid;
+      margin-bottom: 8px;
+    }
+    .badge-emerald { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); color: var(--emerald); }
+    .badge-amber { background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3); color: var(--amber); }
+    .badge-cyan { background: rgba(6, 182, 212, 0.1); border-color: rgba(6, 182, 212, 0.3); color: var(--cyan); }
+
+    .modal-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .modal-city {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .modal-desc {
+      font-size: 0.88rem;
+      line-height: 1.6;
+      color: #d4d4d8;
+      margin-bottom: 14px;
+    }
+
+    .highlight-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 0.82rem;
+      color: #d4d4d8;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .meta-box {
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .meta-box div { margin-bottom: 6px; }
+    .meta-box div:last-child { margin-bottom: 0; }
+    .meta-box strong { color: #fff; }
+
+    .btn-map {
+      margin-top: 16px;
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 16px;
+      border-radius: 10px;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      font-size: 0.86rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Video Camera thực tế -->
+  <video id="camera-video" playsinline autoplay muted></video>
+
+  <!-- Canvas Three.js hiển thị không gian 3D -->
+  <canvas id="webgl-canvas"></canvas>
+
+  <!-- UI Overlay -->
+  <div class="ui-layer">
+    <!-- Top HUD & Navigation -->
+    <div class="top-hud">
+      <div class="mode-switch">
+        <a href="index.html" class="mode-btn">
+          <span>📷</span> <span>Quét Thẻ Ảnh</span>
+        </a>
+        <button class="mode-btn active">
+          <span>🪐</span> <span>Đặt Không Gian 3D</span>
+        </button>
+        <a href="gallery.html" class="mode-btn">
+          <span>🖼️</span> <span>Thư Viện</span>
+        </a>
+      </div>
+
+      <div class="status-pill" id="status-pill">
+        <div class="status-dot seeking" id="status-dot"></div>
+        <span id="status-text">Đang dò tìm mặt bàn/sàn... Lia camera xuống mặt phẳng</span>
+      </div>
+    </div>
+
+    <!-- Center Reticle Guide (khi chưa đặt) -->
+    <div class="center-reticle-guide" id="center-guide">
+      <div class="ring-target">
+        <div class="ring-dot"></div>
+      </div>
+      <div class="guide-text">Lia camera xuống bàn hoặc sàn nhà</div>
+    </div>
+
+    <!-- Bottom Controls & Selector -->
+    <div class="bottom-bar">
+      <!-- Bộ chọn 10 Địa danh -->
+      <div class="landmark-picker" id="landmark-picker"></div>
+
+      <!-- Action buttons -->
+      <div class="action-row">
+        <button class="btn-icon" id="btn-scale-down" title="Thu nhỏ 0.85x">⊖</button>
+        <button class="btn-main" id="btn-place">
+          <span>⚡</span> <span id="btn-place-text">Đặt Vào Vị Trí Này</span>
+        </button>
+        <button class="btn-icon" id="btn-scale-up" title="Phóng to 1.15x">⊕</button>
+        <button class="btn-icon" id="btn-reset" title="Đặt lại từ đầu">🔄</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fullscreen Modal Phóng To Chi Tiết Thẻ -->
+  <div class="fullscreen-modal" id="fullscreen-modal">
+    <div class="fullscreen-card" id="fullscreen-card">
+      <button class="btn-close-modal" id="btn-close-modal">✕</button>
+      <img src="assets/target-0.png" class="modal-hero-img" id="modal-img" alt="Địa điểm">
+
+      <div class="modal-body">
+        <div class="modal-top-meta">
+          <span class="badge-pill badge-emerald" id="modal-badge">● Di tích</span>
+          <span style="font-size:0.85rem; color:#fbbf24; font-weight:700;" id="modal-rating">4.8 ★</span>
+        </div>
+
+        <h2 class="modal-title" id="modal-title">Dinh Độc Lập</h2>
+        <div class="modal-city" id="modal-city">📍 TP. Hồ Chí Minh</div>
+
+        <p class="modal-desc" id="modal-desc">Mô tả chi tiết địa điểm...</p>
+
+        <div style="font-size:0.85rem; font-weight:700; color:#fff; margin-bottom:8px;">Điểm nổi bật:</div>
+        <div id="modal-highlights"></div>
+
+        <div class="meta-box">
+          <div>⏰ <strong>Giờ mở cửa:</strong> <span id="modal-hours">08:00 - 16:30</span></div>
+          <div>🎟️ <strong>Giá vé:</strong> <span id="modal-ticket">65.000 VNĐ</span></div>
+        </div>
+
+        <a class="btn-map" id="btn-modal-map" target="_blank" rel="noopener noreferrer">
+          <span>🗺️</span> <span>Chỉ Đường Google Maps</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Offscreen Canvases để render texture 2D cho 3 thẻ không gian -->
+  <div style="display:none;">
+    <canvas id="temp-canvas-top" width="960" height="220"></canvas>
+    <canvas id="temp-canvas-left" width="520" height="760"></canvas>
+    <canvas id="temp-canvas-right" width="520" height="760"></canvas>
+  </div>
+
+  <script>
+    // ============================================================================
+    // STATE & VARIABLES
+    // ============================================================================
+    let selectedLandmarkIdx = 0;
+    let isPlaced = false;
+    let currentScale = 1.0;
+    let monumentGroup = null;
+    let reticleMesh = null;
+    let virtualGroundY = -0.38; // Nâng cao độ sa bàn lên vừa tầm mắt trên camera
+
+    // Three.js Core
+    let scene, camera, renderer;
+    let raycaster, pointer;
+    let textureLoader;
+    let topTexture, leftTexture, rightTexture;
+
+    // DOM Elements
+    const videoEl = document.getElementById('camera-video');
+    const canvasEl = document.getElementById('webgl-canvas');
+    const statusText = document.getElementById('status-text');
+    const statusDot = document.getElementById('status-dot');
+    const centerGuide = document.getElementById('center-guide');
+    const landmarkPicker = document.getElementById('landmark-picker');
+    const btnPlace = document.getElementById('btn-place');
+    const btnPlaceText = document.getElementById('btn-place-text');
+    const btnReset = document.getElementById('btn-reset');
+    const btnScaleUp = document.getElementById('btn-scale-up');
+    const btnScaleDown = document.getElementById('btn-scale-down');
+
+    // Modal Elements
+    const modalEl = document.getElementById('fullscreen-modal');
+    const btnCloseModal = document.getElementById('btn-close-modal');
+    const modalImg = document.getElementById('modal-img');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBadge = document.getElementById('modal-badge');
+    const modalRating = document.getElementById('modal-rating');
+    const modalCity = document.getElementById('modal-city');
+    const modalDesc = document.getElementById('modal-desc');
+    const modalHighlights = document.getElementById('modal-highlights');
+    const modalHours = document.getElementById('modal-hours');
+    const modalTicket = document.getElementById('modal-ticket');
+    const btnModalMap = document.getElementById('btn-modal-map');
+
+    // ============================================================================
+    // 1. KHỞI TẠO BỘ CHỌN 10 ĐỊA DANH
+    // ============================================================================
+    function initLandmarkPicker() {
+      landmarkPicker.innerHTML = "";
+      for (let i = 0; i < 10; i++) {
+        const loc = LOCATIONS_DATA[i];
+        if (!loc) continue;
+
+        const chip = document.createElement("div");
+        chip.className = `landmark-chip ${i === selectedLandmarkIdx ? 'active' : ''}`;
+        chip.innerHTML = `
+          <img src="${loc.image_url || 'assets/target-' + i + '.png'}" alt="${loc.name}">
+          <span>${loc.name}</span>
+        `;
+
+        chip.addEventListener("click", () => {
+          document.querySelectorAll('.landmark-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          selectedLandmarkIdx = i;
+
+          if (isPlaced && monumentGroup) {
+            updateMonumentTextures(i);
+          }
+        });
+
+        landmarkPicker.appendChild(chip);
+      }
+    }
+
+    // ============================================================================
+    // 2. KHỞI TẠO CAMERA & THREE.JS SCENE
+    // ============================================================================
+    async function initCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: "environment" },
+            width: { ideal: 1920 },
+            height: { ideal: 1080 }
+          },
+          audio: false
+        });
+        videoEl.srcObject = stream;
+        await videoEl.play();
+      } catch (err) {
+        console.warn("Không thể mở camera sau, thử fallback:", err);
+        try {
+          const fallbackStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+          videoEl.srcObject = fallbackStream;
+          await videoEl.play();
+        } catch (e) {
+          statusText.textContent = "Vui lòng cấp quyền mở Camera để quét không gian!";
+        }
+      }
+    }
+
+    function initThreeScene() {
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.05, 50);
+      camera.position.set(0, 0, 0);
+
+      renderer = new THREE.WebGLRenderer({
+        canvas: canvasEl,
+        alpha: true,
+        antialias: true
+      });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      textureLoader = new THREE.TextureLoader();
+      raycaster = new THREE.Raycaster();
+      pointer = new THREE.Vector2();
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 1.3);
+      scene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0xffffff, 1.1);
+      dirLight.position.set(2, 5, 2);
+      scene.add(dirLight);
+
+      createReticle();
+      window.addEventListener('resize', onWindowResize);
+      setupTouchControls();
+    }
+
+    // Tạo Vòng Tròn Định Vị Reticle
+    function createReticle() {
+      const group = new THREE.Group();
+
+      const outerRingGeo = new THREE.RingGeometry(0.18, 0.21, 48);
+      outerRingGeo.rotateX(-Math.PI / 2);
+      const outerRingMat = new THREE.MeshBasicMaterial({
+        color: 0x10b981,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.85
+      });
+      const outerRing = new THREE.Mesh(outerRingGeo, outerRingMat);
+      group.add(outerRing);
+
+      const innerRingGeo = new THREE.RingGeometry(0.06, 0.08, 32);
+      innerRingGeo.rotateX(-Math.PI / 2);
+      const innerRingMat = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.7
+      });
+      const innerRing = new THREE.Mesh(innerRingGeo, innerRingMat);
+      group.add(innerRing);
+
+      const dotGeo = new THREE.CircleGeometry(0.02, 16);
+      dotGeo.rotateX(-Math.PI / 2);
+      const dotMat = new THREE.MeshBasicMaterial({ color: 0x10b981 });
+      const dot = new THREE.Mesh(dotGeo, dotMat);
+      group.add(dot);
+
+      reticleMesh = group;
+      reticleMesh.position.set(0, virtualGroundY, -1.35);
+      scene.add(reticleMesh);
+    }
+
+    // ============================================================================
+    // 3. TẠO SA BÀN ĐỊA DANH 3D (MONUMENT PEDESTAL & VISIONOS SPATIAL CARDS)
+    // ============================================================================
+    function createMonument(landmarkIdx) {
+      const loc = LOCATIONS_DATA[landmarkIdx];
+      if (!loc) return null;
+
+      const group = new THREE.Group();
+      group.name = "monument-root";
+
+      const accentHex = loc.badgeColor === '#f59e0b' ? 0xf59e0b : (loc.badgeColor === '#06b6d4' ? 0x06b6d4 : 0x10b981);
+
+      // 1. Bệ sa bàn công nghệ tròn (Tech Pedestal)
+      const baseGeo = new THREE.CylinderGeometry(0.44, 0.48, 0.04, 48);
+      const baseMat = new THREE.MeshStandardMaterial({
+        color: 0x18181b,
+        roughness: 0.3,
+        metalness: 0.8
+      });
+      const base = new THREE.Mesh(baseGeo, baseMat);
+      base.position.y = 0.02;
+      group.add(base);
+
+      // Vòng phát sáng Neon trên mép bệ
+      const neonRingGeo = new THREE.RingGeometry(0.40, 0.43, 48);
+      neonRingGeo.rotateX(-Math.PI / 2);
+      const neonRingMat = new THREE.MeshBasicMaterial({
+        color: accentHex,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.95
+      });
+      const neonRing = new THREE.Mesh(neonRingGeo, neonRingMat);
+      neonRing.position.y = 0.042;
+      group.add(neonRing);
+
+      // Lưới toạ độ ánh sáng trên mặt đĩa
+      const gridGeo = new THREE.RingGeometry(0.06, 0.36, 32);
+      gridGeo.rotateX(-Math.PI / 2);
+      const gridMat = new THREE.MeshBasicMaterial({
+        color: accentHex,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.25
+      });
+      const grid = new THREE.Mesh(gridGeo, gridMat);
+      grid.position.y = 0.043;
+      group.add(grid);
+
+      // 2. Tấm Hologram Bức Ảnh Địa Danh Đứng Giữa
+      const photoWidth = 0.44;
+      const photoHeight = 0.44;
+      const photoGeo = new THREE.PlaneGeometry(photoWidth, photoHeight);
+      
+      const photoTex = textureLoader.load(loc.image_url || `assets/target-${landmarkIdx}.png`);
+      const photoMat = new THREE.MeshBasicMaterial({
+        map: photoTex,
+        side: THREE.DoubleSide
+      });
+      const photoMesh = new THREE.Mesh(photoGeo, photoMat);
+      photoMesh.position.set(0, 0.28, 0);
+      group.add(photoMesh);
+
+      // Viền phát sáng cho ảnh
+      const borderGeo = new THREE.RingGeometry(photoWidth * 0.48, photoWidth * 0.51, 4);
+      borderGeo.rotateZ(Math.PI / 4);
+      const borderMat = new THREE.MeshBasicMaterial({ color: accentHex, transparent: true, opacity: 0.8 });
+      const borderMesh = new THREE.Mesh(borderGeo, borderMat);
+      borderMesh.position.set(0, 0.28, 0.002);
+      group.add(borderMesh);
+
+      // 3. Render Canvas cho 3 Thẻ Không Gian
+      drawTopBar('temp-canvas-top', loc);
+      drawLeftCard('temp-canvas-left', loc);
+      drawRightCard('temp-canvas-right', loc);
+
+      topTexture = new THREE.CanvasTexture(document.getElementById('temp-canvas-top'));
+      leftTexture = new THREE.CanvasTexture(document.getElementById('temp-canvas-left'));
+      rightTexture = new THREE.CanvasTexture(document.getElementById('temp-canvas-right'));
+
+      [topTexture, leftTexture, rightTexture].forEach(t => {
+        t.generateMipmaps = true;
+        t.minFilter = THREE.LinearMipmapLinearFilter;
+      });
+
+      // Thẻ trên (Header Bar): width 0.54, height 0.124
+      const topBarGeo = new THREE.PlaneGeometry(0.54, 0.124);
+      const topBarMat = new THREE.MeshBasicMaterial({
+        map: topTexture,
+        transparent: true,
+        opacity: 0.98,
+        side: THREE.DoubleSide
+      });
+      const topBarMesh = new THREE.Mesh(topBarGeo, topBarMat);
+      topBarMesh.name = "card-top";
+      topBarMesh.userData = { landmarkIdx: landmarkIdx, type: "top" };
+      topBarMesh.position.set(0, 0.58, 0.04);
+      group.add(topBarMesh);
+
+      // Thẻ trái (Lịch sử & Điểm nổi bật): width 0.25, height 0.365
+      const leftCardGeo = new THREE.PlaneGeometry(0.25, 0.365);
+      const leftCardMat = new THREE.MeshBasicMaterial({
+        map: leftTexture,
+        transparent: true,
+        opacity: 0.98,
+        side: THREE.DoubleSide
+      });
+      const leftCardMesh = new THREE.Mesh(leftCardGeo, leftCardMat);
+      leftCardMesh.name = "card-left";
+      leftCardMesh.userData = { landmarkIdx: landmarkIdx, type: "left" };
+      leftCardMesh.position.set(-0.36, 0.28, 0.04);
+      leftCardMesh.rotation.y = THREE.MathUtils.degToRad(18);
+      group.add(leftCardMesh);
+
+      // Thẻ phải (Giờ mở cửa, Giá vé): width 0.25, height 0.365
+      const rightCardGeo = new THREE.PlaneGeometry(0.25, 0.365);
+      const rightCardMat = new THREE.MeshBasicMaterial({
+        map: rightTexture,
+        transparent: true,
+        opacity: 0.98,
+        side: THREE.DoubleSide
+      });
+      const rightCardMesh = new THREE.Mesh(rightCardGeo, rightCardMat);
+      rightCardMesh.name = "card-right";
+      rightCardMesh.userData = { landmarkIdx: landmarkIdx, type: "right" };
+      rightCardMesh.position.set(0.36, 0.28, 0.04);
+      rightCardMesh.rotation.y = THREE.MathUtils.degToRad(-18);
+      group.add(rightCardMesh);
+
+      return group;
+    }
+
+    // Cập nhật lại texture khi đổi địa danh
+    function updateMonumentTextures(landmarkIdx) {
+      if (!monumentGroup) return;
+      scene.remove(monumentGroup);
+
+      const oldPos = monumentGroup.position.clone();
+      const oldRot = monumentGroup.rotation.clone();
+      const oldScale = monumentGroup.scale.clone();
+
+      monumentGroup = createMonument(landmarkIdx);
+      if (monumentGroup) {
+        monumentGroup.position.copy(oldPos);
+        monumentGroup.rotation.copy(oldRot);
+        monumentGroup.scale.copy(oldScale);
+        scene.add(monumentGroup);
+      }
+    }
+
+    // ============================================================================
+    // 4. THAO TÁC ĐẶT VẬT THỂ & QUẢN LÝ KHÔNG GIAN
+    // ============================================================================
+    function placeMonumentAtReticle() {
+      if (!reticleMesh) return;
+
+      if (monumentGroup) {
+        scene.remove(monumentGroup);
+      }
+
+      monumentGroup = createMonument(selectedLandmarkIdx);
+      monumentGroup.position.copy(reticleMesh.position);
+      monumentGroup.scale.set(currentScale, currentScale, currentScale);
+
+      monumentGroup.rotation.y = camera.rotation.y;
+      scene.add(monumentGroup);
+
+      isPlaced = true;
+      reticleMesh.visible = false;
+      centerGuide.classList.add('hidden');
+
+      statusDot.className = "status-dot active";
+      const loc = LOCATIONS_DATA[selectedLandmarkIdx];
+      statusText.textContent = `Đã đặt "${loc.name}" lên mặt bàn! Bạn có thể đi vòng quanh để ngắm.`;
+      btnPlaceText.textContent = "Chuyển Đến Điểm Mới";
+
+      if (navigator.vibrate) navigator.vibrate([25, 35]);
+    }
+
+    function resetPlacement() {
+      if (monumentGroup) {
+        scene.remove(monumentGroup);
+        monumentGroup = null;
+      }
+      isPlaced = false;
+      if (reticleMesh) reticleMesh.visible = true;
+      centerGuide.classList.remove('hidden');
+
+      statusDot.className = "status-dot seeking";
+      statusText.textContent = "Đang dò tìm mặt bàn/sàn... Lia camera xuống mặt phẳng";
+      btnPlaceText.textContent = "Đặt Vào Vị Trí Này";
+    }
+
+    // ============================================================================
+    // 5. CẢM ỨNG & RAYCASTER
+    // ============================================================================
+    let isDragging = false;
+    let previousTouchX = 0;
+    let touchStartTime = 0;
+
+    function setupTouchControls() {
+      btnPlace.addEventListener('click', () => {
+        if (!isPlaced) {
+          placeMonumentAtReticle();
+        } else {
+          isPlaced = false;
+          if (reticleMesh) reticleMesh.visible = true;
+          centerGuide.classList.remove('hidden');
+          statusText.textContent = "Lia máy để chọn vị trí mới rồi bấm Đặt!";
+          btnPlaceText.textContent = "Đặt Vào Vị Trí Này";
+        }
+      });
+
+      btnReset.addEventListener('click', resetPlacement);
+
+      btnScaleUp.addEventListener('click', () => {
+        currentScale = Math.min(2.2, currentScale + 0.15);
+        if (monumentGroup) monumentGroup.scale.set(currentScale, currentScale, currentScale);
+      });
+
+      btnScaleDown.addEventListener('click', () => {
+        currentScale = Math.max(0.4, currentScale - 0.15);
+        if (monumentGroup) monumentGroup.scale.set(currentScale, currentScale, currentScale);
+      });
+
+      canvasEl.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          previousTouchX = e.touches[0].clientX;
+          touchStartTime = Date.now();
+        }
+      }, { passive: true });
+
+      canvasEl.addEventListener('touchmove', (e) => {
+        if (isDragging && e.touches.length === 1 && monumentGroup) {
+          const deltaX = e.touches[0].clientX - previousTouchX;
+          monumentGroup.rotation.y += deltaX * 0.008;
+          previousTouchX = e.touches[0].clientX;
+        }
+      }, { passive: true });
+
+      canvasEl.addEventListener('touchend', (e) => {
+        isDragging = false;
+        const touchDuration = Date.now() - touchStartTime;
+
+        if (touchDuration < 220 && e.changedTouches && e.changedTouches.length > 0) {
+          const touch = e.changedTouches[0];
+          checkCardClick(touch.clientX, touch.clientY);
+        }
+      });
+
+      canvasEl.addEventListener('click', (e) => {
+        checkCardClick(e.clientX, e.clientY);
+      });
+    }
+
+    function checkCardClick(clientX, clientY) {
+      if (modalEl.classList.contains('active')) return;
+
+      pointer.x = (clientX / window.innerWidth) * 2 - 1;
+      pointer.y = -(clientY / window.innerHeight) * 2 + 1;
+
+      raycaster.setFromCamera(pointer, camera);
+
+      if (monumentGroup) {
+        const intersects = raycaster.intersectObjects(monumentGroup.children, true);
+        if (intersects.length > 0) {
+          for (let i = 0; i < intersects.length; i++) {
+            const hit = intersects[i].object;
+            if (hit.userData && hit.userData.landmarkIdx !== undefined) {
+              openFullModal(hit.userData.landmarkIdx);
+              return;
+            }
+          }
+        }
+      }
+
+      if (!isPlaced) {
+        placeMonumentAtReticle();
+      }
+    }
+
+    // ============================================================================
+    // 6. MODAL CHI TIẾT ĐỊA DANH
+    // ============================================================================
+    function openFullModal(landmarkIdx) {
+      const loc = LOCATIONS_DATA[landmarkIdx];
+      if (!loc) return;
+
+      modalImg.src = loc.image_url || `assets/target-${landmarkIdx}.png`;
+      modalTitle.textContent = loc.name;
+      modalBadge.textContent = '● ' + (loc.tag || 'Di tích');
+      modalRating.textContent = loc.rating ? loc.rating.split(' ')[0] + ' ★' : '4.8 ★';
+      modalCity.textContent = '📍 ' + (loc.city || 'Việt Nam');
+      modalDesc.textContent = loc.full_desc || loc.short_desc || '';
+
+      modalHighlights.innerHTML = "";
+      const highlights = loc.highlights || [];
+      highlights.forEach(h => {
+        const div = document.createElement("div");
+        div.className = "highlight-card";
+        div.innerHTML = `<span>✦</span><span>${h}</span>`;
+        modalHighlights.appendChild(div);
+      });
+
+      modalHours.textContent = loc.hours || 'Mở cửa cả ngày';
+      modalTicket.textContent = loc.ticket || 'Miễn phí';
+
+      const mapQuery = loc.map_query || loc.name;
+      btnModalMap.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
+
+      modalEl.classList.add('active');
+      if (navigator.vibrate) navigator.vibrate([15, 20]);
+    }
+
+    btnCloseModal.addEventListener('click', () => {
+      modalEl.classList.remove('active');
+    });
+
+    modalEl.addEventListener('click', (e) => {
+      if (e.target === modalEl) modalEl.classList.remove('active');
+    });
+
+    // ============================================================================
+    // 7. VÒNG LẶP RENDER & CẢM BIẾN CON QUAY HỒI CHUYỂN
+    // ============================================================================
+    let devicePitch = 0;
+    let deviceRoll = 0;
+
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', (e) => {
+        if (e.beta !== null) devicePitch = e.beta;
+        if (e.gamma !== null) deviceRoll = e.gamma;
+      }, true);
+    }
+
+    function animate(time) {
+      requestAnimationFrame(animate);
+
+      const sec = time * 0.001;
+
+      // 1. Cập nhật vị trí Reticle trượt trên mặt sàn/bàn ảo khi chưa đặt
+      if (!isPlaced && reticleMesh) {
+        const tiltFactor = Math.min(1.8, Math.max(0.7, (90 - Math.max(10, Math.min(80, devicePitch || 45))) / 35));
+        const targetZ = -0.9 * tiltFactor;
+        const targetY = virtualGroundY;
+        const targetX = ((deviceRoll || 0) / 45) * 0.3;
+
+        reticleMesh.position.x += (targetX - reticleMesh.position.x) * 0.1;
+        reticleMesh.position.y = targetY;
+        reticleMesh.position.z += (targetZ - reticleMesh.position.z) * 0.1;
+
+        reticleMesh.rotation.y += 0.015;
+      }
+
+      // 2. Hiệu ứng bồng bềnh phi trọng lực cho sa bàn đã đặt
+      if (monumentGroup) {
+        const floatOffset = Math.sin(sec * 2.2) * 0.012;
+        monumentGroup.position.y = virtualGroundY + floatOffset;
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    // ============================================================================
+    // 8. KHỞI CHẠY HỆ THỐNG
+    // ============================================================================
+    document.addEventListener('DOMContentLoaded', async () => {
+      initLandmarkPicker();
+      await initCamera();
+      initThreeScene();
+      requestAnimationFrame(animate);
+    });
+  </script>
+</body>
+</html>
