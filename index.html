@@ -143,9 +143,12 @@
           <a-plane id="target-poster-0" class="clickable" src="#poster-0" position="0 0 0.0015" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
           <!-- Video tràn viền 100% che kín toàn bộ hình, ban đầu opacity=0 mượt mà crossfade khi play -->
           <a-plane id="target-video-0" class="clickable" src="#video-0" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
-          <a-plane id="bar-top-0" class="clickable" src="#canvas-top-0" position="0 0.43 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-plane id="card-left-0" class="clickable" src="#canvas-left-0" position="-0.76 0 0.004" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-plane id="card-right-0" class="clickable" src="#canvas-right-0" position="0.76 0 0.004" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <!-- Thanh Top Bar: Thả nổi 3D phía trước (Z=0.035), nghiêng nhẹ 6 độ về người dùng -->
+          <a-plane id="bar-top-0" class="clickable" src="#canvas-top-0" position="0 0.45 0.035" rotation="6 0 0" width="0.96" height="0.22" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
+          <!-- Thẻ Trái: Cánh cong 3D VisionOS góc 14 độ, nổi hẳn phía trước (Z=0.045) -->
+          <a-plane id="card-left-0" class="clickable" src="#canvas-left-0" position="-0.78 0 0.045" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
+          <!-- Thẻ Phải: Cánh cong 3D VisionOS góc -14 độ, ôm trọn không gian thẻ AR -->
+          <a-plane id="card-right-0" class="clickable" src="#canvas-right-0" position="0.78 0 0.045" rotation="0 -14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
         </a-entity>
       </xrextras-named-image-target>
 
@@ -157,9 +160,12 @@
           <a-plane id="target-poster-1" class="clickable" src="#poster-1" position="0 0 0.0015" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
           <!-- Video tràn viền 100% che kín toàn bộ hình, ban đầu opacity=0 mượt mà crossfade khi play -->
           <a-plane id="target-video-1" class="clickable" src="#video-1" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
-          <a-plane id="bar-top-1" class="clickable" src="#canvas-top-1" position="0 0.43 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-plane id="card-left-1" class="clickable" src="#canvas-left-1" position="-0.76 0 0.004" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-plane id="card-right-1" class="clickable" src="#canvas-right-1" position="0.76 0 0.004" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <!-- Thanh Top Bar: Thả nổi 3D phía trước (Z=0.035), nghiêng nhẹ 6 độ về người dùng -->
+          <a-plane id="bar-top-1" class="clickable" src="#canvas-top-1" position="0 0.45 0.035" rotation="6 0 0" width="0.96" height="0.22" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
+          <!-- Thẻ Trái: Cánh cong 3D VisionOS góc 14 độ, nổi hẳn phía trước (Z=0.045) -->
+          <a-plane id="card-left-1" class="clickable" src="#canvas-left-1" position="-0.78 0 0.045" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
+          <!-- Thẻ Phải: Cánh cong 3D VisionOS góc -14 độ, ôm trọn không gian thẻ AR -->
+          <a-plane id="card-right-1" class="clickable" src="#canvas-right-1" position="0.78 0 0.045" rotation="0 -14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
         </a-entity>
       </xrextras-named-image-target>
 
@@ -171,9 +177,12 @@
           <a-plane id="target-poster-2" class="clickable" src="#poster-2" position="0 0 0.0015" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
           <!-- Video tràn viền 100% che kín toàn bộ hình, ban đầu opacity=0 mượt mà crossfade khi play -->
           <a-plane id="target-video-2" class="clickable" src="#video-2" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
-          <a-plane id="bar-top-2" class="clickable" src="#canvas-top-2" position="0 0.43 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-plane id="card-left-2" class="clickable" src="#canvas-left-2" position="-0.76 0 0.004" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-plane id="card-right-2" class="clickable" src="#canvas-right-2" position="0.76 0 0.004" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <!-- Thanh Top Bar: Thả nổi 3D phía trước (Z=0.035), nghiêng nhẹ 6 độ về người dùng -->
+          <a-plane id="bar-top-2" class="clickable" src="#canvas-top-2" position="0 0.45 0.035" rotation="6 0 0" width="0.96" height="0.22" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
+          <!-- Thẻ Trái: Cánh cong 3D VisionOS góc 14 độ, nổi hẳn phía trước (Z=0.045) -->
+          <a-plane id="card-left-2" class="clickable" src="#canvas-left-2" position="-0.78 0 0.045" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
+          <!-- Thẻ Phải: Cánh cong 3D VisionOS góc -14 độ, ôm trọn không gian thẻ AR -->
+          <a-plane id="card-right-2" class="clickable" src="#canvas-right-2" position="0.78 0 0.045" rotation="0 -14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
         </a-entity>
       </xrextras-named-image-target>
 
@@ -185,9 +194,12 @@
           <a-plane id="target-poster-3" class="clickable" src="#poster-3" position="0 0 0.0015" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
           <!-- Video tràn viền 100% che kín toàn bộ hình, ban đầu opacity=0 mượt mà crossfade khi play -->
           <a-plane id="target-video-3" class="clickable" src="#video-3" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
-          <a-plane id="bar-top-3" class="clickable" src="#canvas-top-3" position="0 0.43 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-plane id="card-left-3" class="clickable" src="#canvas-left-3" position="-0.76 0 0.004" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-plane id="card-right-3" class="clickable" src="#canvas-right-3" position="0.76 0 0.004" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <!-- Thanh Top Bar: Thả nổi 3D phía trước (Z=0.035), nghiêng nhẹ 6 độ về người dùng -->
+          <a-plane id="bar-top-3" class="clickable" src="#canvas-top-3" position="0 0.45 0.035" rotation="6 0 0" width="0.96" height="0.22" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
+          <!-- Thẻ Trái: Cánh cong 3D VisionOS góc 14 độ, nổi hẳn phía trước (Z=0.045) -->
+          <a-plane id="card-left-3" class="clickable" src="#canvas-left-3" position="-0.78 0 0.045" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
+          <!-- Thẻ Phải: Cánh cong 3D VisionOS góc -14 độ, ôm trọn không gian thẻ AR -->
+          <a-plane id="card-right-3" class="clickable" src="#canvas-right-3" position="0.78 0 0.045" rotation="0 -14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
         </a-entity>
       </xrextras-named-image-target>
 
@@ -199,9 +211,12 @@
           <a-plane id="target-poster-4" class="clickable" src="#poster-4" position="0 0 0.0015" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
           <!-- Video tràn viền 100% che kín toàn bộ hình, ban đầu opacity=0 mượt mà crossfade khi play -->
           <a-plane id="target-video-4" class="clickable" src="#video-4" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
-          <a-plane id="bar-top-4" class="clickable" src="#canvas-top-4" position="0 0.43 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-plane id="card-left-4" class="clickable" src="#canvas-left-4" position="-0.76 0 0.004" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-          <a-plane id="card-right-4" class="clickable" src="#canvas-right-4" position="0.76 0 0.004" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
+          <!-- Thanh Top Bar: Thả nổi 3D phía trước (Z=0.035), nghiêng nhẹ 6 độ về người dùng -->
+          <a-plane id="bar-top-4" class="clickable" src="#canvas-top-4" position="0 0.45 0.035" rotation="6 0 0" width="0.96" height="0.22" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
+          <!-- Thẻ Trái: Cánh cong 3D VisionOS góc 14 độ, nổi hẳn phía trước (Z=0.045) -->
+          <a-plane id="card-left-4" class="clickable" src="#canvas-left-4" position="-0.78 0 0.045" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
+          <!-- Thẻ Phải: Cánh cong 3D VisionOS góc -14 độ, ôm trọn không gian thẻ AR -->
+          <a-plane id="card-right-4" class="clickable" src="#canvas-right-4" position="0.78 0 0.045" rotation="0 -14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
         </a-entity>
       </xrextras-named-image-target>
     </a-scene>

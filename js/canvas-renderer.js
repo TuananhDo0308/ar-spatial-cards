@@ -71,21 +71,109 @@ function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines = 4) {
 }
 
 /**
+ * Vẽ khung nền Liquid Glass mờ trong suốt phong cách Apple VisionOS
+ * - Gradient chuyển sắc bóng mờ bán trong suốt (cho phép camera xuyên thấu tự nhiên)
+ * - Đốm sáng môi trường màu Accent ở góc trên bên trái
+ * - Vệt phản quang ánh sáng bề mặt cong (Specular Surface Sheen)
+ * - Đường viền vát sáng kính (VisionOS Specular Rim Border)
+ */
+function drawLiquidGlassPanel(ctx, x, y, w, h, radius, accentColor, showTopHairline = true) {
+  // 1. Nền kính bán trong suốt (Liquid Frosted Glass)
+  const bgGrad = ctx.createLinearGradient(x, y, x, y + h);
+  bgGrad.addColorStop(0, 'rgba(26, 28, 36, 0.74)');
+  bgGrad.addColorStop(0.5, 'rgba(18, 20, 26, 0.78)');
+  bgGrad.addColorStop(1, 'rgba(12, 13, 18, 0.84)');
+
+  ctx.fillStyle = bgGrad;
+  ctx.beginPath();
+  ctx.roundRect(x, y, w, h, radius);
+  ctx.fill();
+
+  // 2. Đốm sáng màu Accent ở góc trên trái (Ambient Specular Lighting)
+  const glowGrad = ctx.createRadialGradient(x + 50, y + 40, 5, x + 50, y + 40, w * 0.75);
+  let glowRgba = 'rgba(16, 185, 129, 0.18)';
+  if (accentColor === '#f59e0b') glowRgba = 'rgba(245, 158, 11, 0.18)';
+  else if (accentColor === '#06b6d4') glowRgba = 'rgba(6, 182, 212, 0.18)';
+  else if (accentColor === '#ec4899') glowRgba = 'rgba(236, 72, 153, 0.18)';
+
+  glowGrad.addColorStop(0, glowRgba);
+  glowGrad.addColorStop(0.4, glowRgba.replace('0.18', '0.05'));
+  glowGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+  ctx.fillStyle = glowGrad;
+  ctx.beginPath();
+  ctx.roundRect(x, y, w, h, radius);
+  ctx.fill();
+
+  // 3. Vệt phản quang ánh sáng bề mặt cong (Apple Top-Surface Glass Sheen)
+  const sheenGrad = ctx.createLinearGradient(x, y, x, y + Math.min(h * 0.45, 180));
+  sheenGrad.addColorStop(0, 'rgba(255, 255, 255, 0.15)');
+  sheenGrad.addColorStop(0.3, 'rgba(255, 255, 255, 0.04)');
+  sheenGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+  ctx.fillStyle = sheenGrad;
+  ctx.beginPath();
+  ctx.roundRect(x, y, w, h, radius);
+  ctx.fill();
+
+  // 4. Viền kính vát sắc nét (Apple VisionOS Specular Rim Border)
+  const rimGrad = ctx.createLinearGradient(x, y, x + w, y + h);
+  rimGrad.addColorStop(0, 'rgba(255, 255, 255, 0.58)');   // Mép trên-trái bắt sáng mạnh nhất
+  rimGrad.addColorStop(0.35, 'rgba(255, 255, 255, 0.22)');
+  rimGrad.addColorStop(0.7, 'rgba(255, 255, 255, 0.08)');  // Vùng tối
+  rimGrad.addColorStop(1, 'rgba(255, 255, 255, 0.25)');   // Mép dưới-phải phản xạ nhẹ
+
+  ctx.strokeStyle = rimGrad;
+  ctx.lineWidth = 2.2;
+  ctx.stroke();
+
+  // 5. Hairline Accent Glow trên đỉnh kính
+  if (showTopHairline) {
+    const hairGrad = ctx.createLinearGradient(x + 40, y + 2, x + w - 40, y + 2);
+    hairGrad.addColorStop(0, 'rgba(255, 255, 255, 0)');
+    hairGrad.addColorStop(0.3, accentColor);
+    hairGrad.addColorStop(0.7, accentColor);
+    hairGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+    ctx.strokeStyle = hairGrad;
+    ctx.lineWidth = 3.0;
+    ctx.beginPath();
+    ctx.moveTo(x + 40, y + 2);
+    ctx.lineTo(x + w - 40, y + 2);
+    ctx.stroke();
+  }
+}
+
+/**
+ * Vẽ hộp / viên con nhộng kính lồng (Inset Liquid Glass Pill / Panel)
+ */
+function drawLiquidGlassBox(ctx, x, y, w, h, radius, bgAlpha = 0.06) {
+  const boxGrad = ctx.createLinearGradient(x, y, x, y + h);
+  boxGrad.addColorStop(0, `rgba(255, 255, 255, ${bgAlpha * 1.5})`);
+  boxGrad.addColorStop(1, `rgba(255, 255, 255, ${bgAlpha * 0.7})`);
+
+  ctx.fillStyle = boxGrad;
+  ctx.beginPath();
+  ctx.roundRect(x, y, w, h, radius);
+  ctx.fill();
+
+  const strokeGrad = ctx.createLinearGradient(x, y, x, y + h);
+  strokeGrad.addColorStop(0, 'rgba(255, 255, 255, 0.28)');
+  strokeGrad.addColorStop(1, 'rgba(255, 255, 255, 0.07)');
+
+  ctx.strokeStyle = strokeGrad;
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
+}
+
+/**
  * Vẽ Hộp thông tin chi tiết trên Card bên phải (tự co chữ nếu giá trị quá dài)
  */
 function drawInfoBox(ctx, x, y, w, h, label, val, valColor) {
-  // Nền box kính mờ
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
-  ctx.beginPath();
-  ctx.roundRect(x, y, w, h, 14);
-  ctx.fill();
+  drawLiquidGlassBox(ctx, x, y, w, h, 16, 0.05);
 
-  ctx.strokeStyle = '#27272a';
-  ctx.lineWidth = 1.2;
-  ctx.stroke();
-
-  // Nhãn tiêu đề (Mở cửa, Vé, Tỉnh thành, Đánh giá)
-  ctx.fillStyle = '#a1a1aa';
+  // Nhãn tiêu đề (Mở cửa, Vé, Tỉnh thành, Đánh giá) - phong cách Apple SF Pro
+  ctx.fillStyle = '#94a3b8';
   ctx.font = `700 13px ${CANVAS_FONT_STACK}`;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'alphabetic';
@@ -105,7 +193,7 @@ function drawInfoBox(ctx, x, y, w, h, label, val, valColor) {
 }
 
 /**
- * 1. VẼ THANH TRÊN CÙNG (Top Pill Bar - 960x220)
+ * 1. VẼ THANH TRÊN CÙNG (Top Pill Bar - 960x220 - Liquid Glass Apple VisionOS)
  */
 function drawTopBar(canvasId, data) {
   if (!data) return;
@@ -121,23 +209,8 @@ function drawTopBar(canvasId, data) {
 
   ctx.clearRect(0, 0, w, h);
 
-  // Nền thanh: VisionOS Dark Zinc
-  ctx.fillStyle = '#18181b';
-  ctx.beginPath();
-  ctx.roundRect(8, 8, w - 16, h - 16, 28);
-  ctx.fill();
-
-  // Viền ngoài
-  ctx.strokeStyle = '#27272a';
-  ctx.lineWidth = 3;
-  ctx.stroke();
-
-  // Dải phát sáng mép trên cùng
-  ctx.strokeStyle = accent;
-  ctx.lineWidth = 4;
-  ctx.beginPath();
-  ctx.roundRect(32, 8, w - 64, 3, 2);
-  ctx.stroke();
+  // Nền thanh: Apple VisionOS Liquid Glass
+  drawLiquidGlassPanel(ctx, 8, 8, w - 16, h - 16, 32, accent, true);
 
   // --- HÀNG 1: TAG PILL (TRÁI) VÀ RATING PILL (PHẢI) ---
   let tagText = String(data.tag || 'Di tích').trim();
@@ -147,24 +220,18 @@ function drawTopBar(canvasId, data) {
 
   ctx.font = `700 17px ${CANVAS_FONT_STACK}`;
   const tagTextWidth = ctx.measureText(tagText).width;
-  const tagPillWidth = Math.min(tagTextWidth + 52, 460);
+  const tagPillWidth = Math.min(tagTextWidth + 56, 460);
   const tagPillX = 30;
-  const tagPillY = 26;
+  const tagPillY = 24;
   const tagPillH = 40;
 
-  // Nền Tag Pill
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
-  ctx.beginPath();
-  ctx.roundRect(tagPillX, tagPillY, tagPillWidth, tagPillH, 20);
-  ctx.fill();
-  ctx.strokeStyle = '#27272a';
-  ctx.lineWidth = 1.5;
-  ctx.stroke();
+  // Inset Glass Pill
+  drawLiquidGlassBox(ctx, tagPillX, tagPillY, tagPillWidth, tagPillH, 20, 0.08);
 
-  // Điểm chấm tròn phát sáng màu accent
+  // Chấm sáng màu accent
   ctx.fillStyle = accent;
   ctx.beginPath();
-  ctx.arc(tagPillX + 18, tagPillY + tagPillH / 2, 4.5, 0, Math.PI * 2);
+  ctx.arc(tagPillX + 20, tagPillY + tagPillH / 2, 4.5, 0, Math.PI * 2);
   ctx.fill();
 
   // Chữ Tag
@@ -172,22 +239,30 @@ function drawTopBar(canvasId, data) {
   ctx.font = `700 16px ${CANVAS_FONT_STACK}`;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.fillText(tagText, tagPillX + 32, tagPillY + tagPillH / 2);
+  ctx.fillText(tagText, tagPillX + 34, tagPillY + tagPillH / 2);
 
   // Rating Pill (Bên phải)
   const rawRating = String(data.rating || '4.8');
   const ratingVal = rawRating.includes('★') ? rawRating.split('(')[0].trim() : rawRating.split(' ')[0] + ' ★';
-  const ratingPillW = 105;
+  const ratingPillW = 108;
   const ratingPillX = w - 30 - ratingPillW;
-  const ratingPillY = 26;
+  const ratingPillY = 24;
   const ratingPillH = 40;
 
-  ctx.fillStyle = 'rgba(251, 191, 36, 0.12)';
+  // Inset Amber Glass Pill
+  const amberGrad = ctx.createLinearGradient(ratingPillX, ratingPillY, ratingPillX, ratingPillY + ratingPillH);
+  amberGrad.addColorStop(0, 'rgba(251, 191, 36, 0.20)');
+  amberGrad.addColorStop(1, 'rgba(251, 191, 36, 0.08)');
+  ctx.fillStyle = amberGrad;
   ctx.beginPath();
   ctx.roundRect(ratingPillX, ratingPillY, ratingPillW, ratingPillH, 20);
   ctx.fill();
-  ctx.strokeStyle = 'rgba(251, 191, 36, 0.35)';
-  ctx.lineWidth = 1.5;
+
+  const amberStroke = ctx.createLinearGradient(ratingPillX, ratingPillY, ratingPillX, ratingPillY + ratingPillH);
+  amberStroke.addColorStop(0, 'rgba(251, 191, 36, 0.50)');
+  amberStroke.addColorStop(1, 'rgba(251, 191, 36, 0.20)');
+  ctx.strokeStyle = amberStroke;
+  ctx.lineWidth = 1.3;
   ctx.stroke();
 
   ctx.fillStyle = '#fbbf24';
@@ -201,34 +276,41 @@ function drawTopBar(canvasId, data) {
   const nameText = String(data.name || '').trim();
   const cityText = '📍 ' + String(data.city || 'Việt Nam').trim();
 
-  // Đo chiều rộng thành phố trước để dành khoảng trống
   ctx.font = `600 20px ${CANVAS_FONT_STACK}`;
   const cityWidth = ctx.measureText(cityText).width;
 
-  // Tự động thu nhỏ font tên địa danh nếu quá dài để không va chạm thành phố
   let nameFontSize = 34;
   ctx.font = `800 ${nameFontSize}px ${CANVAS_FONT_STACK}`;
-  const maxNameWidth = w - 60 - cityWidth - 30; // Chừa lề an toàn 30px giữa 2 chữ
+  const maxNameWidth = w - 60 - cityWidth - 30;
   while (ctx.measureText(nameText).width > maxNameWidth && nameFontSize > 22) {
     nameFontSize -= 1;
     ctx.font = `800 ${nameFontSize}px ${CANVAS_FONT_STACK}`;
   }
 
-  // Vẽ Tên địa danh
+  // Tên địa danh (với nhẹ shadow tạo khối 3D)
+  ctx.save();
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+  ctx.shadowBlur = 6;
+  ctx.shadowOffsetY = 2;
   ctx.fillStyle = '#ffffff';
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
   ctx.fillText(nameText, 30, nameY);
+  ctx.restore();
 
-  // Vẽ Thành phố
-  ctx.fillStyle = '#a1a1aa';
+  // Thành phố
+  ctx.fillStyle = '#cbd5e1';
   ctx.font = `600 20px ${CANVAS_FONT_STACK}`;
   ctx.textAlign = 'right';
   ctx.textBaseline = 'middle';
   ctx.fillText(cityText, w - 30, nameY);
 
   // --- HÀNG 3: ĐƯỜNG PHÂN CÁCH VÀ GỢI Ý HÀNH ĐỘNG ---
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+  const divGrad = ctx.createLinearGradient(30, 164, w - 30, 164);
+  divGrad.addColorStop(0, 'rgba(255, 255, 255, 0.02)');
+  divGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.16)');
+  divGrad.addColorStop(1, 'rgba(255, 255, 255, 0.02)');
+  ctx.strokeStyle = divGrad;
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(30, 164);
@@ -239,11 +321,11 @@ function drawTopBar(canvasId, data) {
   ctx.font = `600 15px ${CANVAS_FONT_STACK}`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('↗  CHẠM VÀO BẤT KỲ THẺ NÀO ĐỂ XEM CHI TIẾT', w / 2, 190);
+  ctx.fillText('✦  CHẠM VÀO BẤT KỲ THẺ NÀO ĐỂ XEM CHI TIẾT', w / 2, 190);
 }
 
 /**
- * 2. VẼ CARD BÊN TRÁI: TỔNG QUAN, LỊCH SỬ & ĐIỂM NỔI BẬT (520x760)
+ * 2. VẼ CARD BÊN TRÁI: TỔNG QUAN, LỊCH SỬ & ĐIỂM NỔI BẬT (520x760 - Liquid Glass)
  * Hiển thị đầy đủ cả 3 điểm nổi bật (không cắt bỏ điểm nào)
  */
 function drawLeftCard(canvasId, data) {
@@ -260,24 +342,11 @@ function drawLeftCard(canvasId, data) {
 
   ctx.clearRect(0, 0, w, h);
 
-  // Thân Card
-  ctx.fillStyle = '#18181b';
-  ctx.beginPath();
-  ctx.roundRect(10, 10, w - 20, h - 20, 28);
-  ctx.fill();
+  // Thân Card: Apple VisionOS Liquid Glass
+  drawLiquidGlassPanel(ctx, 10, 10, w - 20, h - 20, 32, accent, true);
 
-  ctx.strokeStyle = '#27272a';
-  ctx.lineWidth = 3;
-  ctx.stroke();
-
-  // Header Tag
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-  ctx.beginPath();
-  ctx.roundRect(28, 26, w - 56, 44, 22);
-  ctx.fill();
-  ctx.strokeStyle = '#27272a';
-  ctx.lineWidth = 1.5;
-  ctx.stroke();
+  // Header Tag Capsule
+  drawLiquidGlassBox(ctx, 28, 26, w - 56, 44, 22, 0.08);
 
   ctx.fillStyle = accent;
   ctx.font = `800 17px ${CANVAS_FONT_STACK}`;
@@ -285,17 +354,21 @@ function drawLeftCard(canvasId, data) {
   ctx.textBaseline = 'middle';
   ctx.fillText('✦  TỔNG QUAN & LỊCH SỬ', 46, 48);
 
-  // Đường phân cách
-  ctx.strokeStyle = '#27272a';
-  ctx.lineWidth = 1.5;
+  // Đường phân cách kính
+  const divGrad = ctx.createLinearGradient(28, 86, w - 28, 86);
+  divGrad.addColorStop(0, 'rgba(255, 255, 255, 0.02)');
+  divGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.14)');
+  divGrad.addColorStop(1, 'rgba(255, 255, 255, 0.02)');
+  ctx.strokeStyle = divGrad;
+  ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(28, 86);
   ctx.lineTo(w - 28, 86);
   ctx.stroke();
 
-  // Mô tả lịch sử tóm tắt (tự động điều chỉnh cỡ chữ để hiển thị trọn vẹn không bị cắt ...)
+  // Mô tả lịch sử
   const desc = String(data.short_desc || data.shortDesc || data.full_desc || data.fullDesc || '').trim();
-  ctx.fillStyle = '#e4e4e7';
+  ctx.fillStyle = '#f1f5f9';
   ctx.textAlign = 'left';
   ctx.textBaseline = 'alphabetic';
 
@@ -305,7 +378,7 @@ function drawLeftCard(canvasId, data) {
   wrapText(ctx, desc, 28, 120, w - 56, descLineHeight, 4);
 
   // Tiêu đề Khối Điểm nổi bật
-  ctx.fillStyle = '#a1a1aa';
+  ctx.fillStyle = '#94a3b8';
   ctx.font = `800 15px ${CANVAS_FONT_STACK}`;
   ctx.textAlign = 'left';
   ctx.fillText('✦  ĐẶC ĐIỂM NỔI BẬT', 28, 254);
@@ -327,24 +400,20 @@ function drawLeftCard(canvasId, data) {
   const countToDraw = Math.min(3, highlights.length);
 
   for (let i = 0; i < countToDraw; i++) {
-    // Nền hộp điểm nổi bật
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
-    ctx.beginPath();
-    ctx.roundRect(28, yPos, w - 56, boxHeight, 12);
-    ctx.fill();
+    // Inset Glass Capsule cho từng highlight
+    drawLiquidGlassBox(ctx, 28, yPos, w - 56, boxHeight, 14, 0.06);
 
-    ctx.strokeStyle = '#27272a';
-    ctx.lineWidth = 1.2;
-    ctx.stroke();
-
-    // Điểm nhấn màu accent ở mép trái hộp
-    ctx.fillStyle = accent;
+    // Điểm nhấn thanh Accent phát sáng bên trái
+    const barGrad = ctx.createLinearGradient(32, yPos + 12, 32, yPos + boxHeight - 12);
+    barGrad.addColorStop(0, accent);
+    barGrad.addColorStop(1, 'rgba(255, 255, 255, 0.4)');
+    ctx.fillStyle = barGrad;
     ctx.beginPath();
     ctx.roundRect(32, yPos + 12, 4, boxHeight - 24, 2);
     ctx.fill();
 
     // Chữ nội dung điểm nổi bật (wrap 2 dòng gọn gàng)
-    ctx.fillStyle = '#f4f4f5';
+    ctx.fillStyle = '#f8fafc';
     ctx.font = `600 15px ${CANVAS_FONT_STACK}`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
@@ -353,22 +422,33 @@ function drawLeftCard(canvasId, data) {
     yPos += boxHeight + boxGap;
   }
 
-  // Nút Action ở chân Card
+  // Nút Action chân Card: Apple VisionOS Solid Capsule Button
   const btnY = h - 76;
-  ctx.fillStyle = '#fafafa';
+  const btnW = w - 56;
+  const btnH = 50;
+  const btnGrad = ctx.createLinearGradient(28, btnY, 28, btnY + btnH);
+  btnGrad.addColorStop(0, 'rgba(255, 255, 255, 0.98)');
+  btnGrad.addColorStop(1, 'rgba(235, 240, 250, 0.90)');
+
+  ctx.fillStyle = btnGrad;
   ctx.beginPath();
-  ctx.roundRect(28, btnY, w - 56, 50, 14);
+  ctx.roundRect(28, btnY, btnW, btnH, 16);
   ctx.fill();
 
-  ctx.fillStyle = '#18181b';
+  // Viền sáng nút
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+  ctx.lineWidth = 1.2;
+  ctx.stroke();
+
+  ctx.fillStyle = '#09090b';
   ctx.font = `800 17px ${CANVAS_FONT_STACK}`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('↗  CHẠM ĐỂ MỞ RỘNG CHI TIẾT', w / 2, btnY + 25);
+  ctx.fillText('↗  XEM CHI TIẾT ĐỊA DANH', w / 2, btnY + 25);
 }
 
 /**
- * 3. VẼ CARD BÊN PHẢI: THÔNG TIN THAM QUAN & GIỜ MỞ CỬA (520x760)
+ * 3. VẼ CARD BÊN PHẢI: THÔNG TIN THAM QUAN & GIỜ MỞ CỬA (520x760 - Liquid Glass)
  */
 function drawRightCard(canvasId, data) {
   if (!data) return;
@@ -384,24 +464,11 @@ function drawRightCard(canvasId, data) {
 
   ctx.clearRect(0, 0, w, h);
 
-  // Thân Card
-  ctx.fillStyle = '#18181b';
-  ctx.beginPath();
-  ctx.roundRect(10, 10, w - 20, h - 20, 28);
-  ctx.fill();
+  // Thân Card: Apple VisionOS Liquid Glass
+  drawLiquidGlassPanel(ctx, 10, 10, w - 20, h - 20, 32, accent, true);
 
-  ctx.strokeStyle = '#27272a';
-  ctx.lineWidth = 3;
-  ctx.stroke();
-
-  // Header Tag
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
-  ctx.beginPath();
-  ctx.roundRect(28, 26, w - 56, 44, 22);
-  ctx.fill();
-  ctx.strokeStyle = '#27272a';
-  ctx.lineWidth = 1.5;
-  ctx.stroke();
+  // Header Tag Capsule
+  drawLiquidGlassBox(ctx, 28, 26, w - 56, 44, 22, 0.08);
 
   ctx.fillStyle = accent;
   ctx.font = `800 17px ${CANVAS_FONT_STACK}`;
@@ -409,9 +476,13 @@ function drawRightCard(canvasId, data) {
   ctx.textBaseline = 'middle';
   ctx.fillText('✦  THÔNG TIN THAM QUAN', 46, 48);
 
-  // Đường phân cách
-  ctx.strokeStyle = '#27272a';
-  ctx.lineWidth = 1.5;
+  // Đường phân cách kính
+  const divGrad = ctx.createLinearGradient(28, 86, w - 28, 86);
+  divGrad.addColorStop(0, 'rgba(255, 255, 255, 0.02)');
+  divGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.14)');
+  divGrad.addColorStop(1, 'rgba(255, 255, 255, 0.02)');
+  ctx.strokeStyle = divGrad;
+  ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(28, 86);
   ctx.lineTo(w - 28, 86);
@@ -433,21 +504,32 @@ function drawRightCard(canvasId, data) {
 
   drawInfoBox(ctx, 28, curY, w - 56, boxH, 'ĐÁNH GIÁ DU KHÁCH', data.rating || '4.8 ★ (Đánh giá cao)', '#fbbf24');
 
-  // Nút Action ở chân Card: Chỉ đường Google Maps
+  // Nút Action ở chân Card: Apple Frosted Capsule Button
   const btnY = h - 76;
-  ctx.fillStyle = '#27272a';
+  const btnW = w - 56;
+  const btnH = 50;
+
+  const btnGrad = ctx.createLinearGradient(28, btnY, 28, btnY + btnH);
+  btnGrad.addColorStop(0, 'rgba(255, 255, 255, 0.18)');
+  btnGrad.addColorStop(1, 'rgba(255, 255, 255, 0.08)');
+
+  ctx.fillStyle = btnGrad;
   ctx.beginPath();
-  ctx.roundRect(28, btnY, w - 56, 50, 14);
+  ctx.roundRect(28, btnY, btnW, btnH, 16);
   ctx.fill();
-  ctx.strokeStyle = accent;
-  ctx.lineWidth = 1.8;
+
+  const btnStroke = ctx.createLinearGradient(28, btnY, 28, btnY + btnH);
+  btnStroke.addColorStop(0, 'rgba(255, 255, 255, 0.40)');
+  btnStroke.addColorStop(1, 'rgba(255, 255, 255, 0.12)');
+  ctx.strokeStyle = btnStroke;
+  ctx.lineWidth = 1.3;
   ctx.stroke();
 
   ctx.fillStyle = '#ffffff';
   ctx.font = `800 17px ${CANVAS_FONT_STACK}`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('📍  CHỈ ĐƯỜNG & VỊ TRÍ', w / 2, btnY + 25);
+  ctx.fillText('🗺️  CHỈ ĐƯỜNG GOOGLE MAPS', w / 2, btnY + 25);
 }
 
 /**
