@@ -18,6 +18,7 @@
     }
   ],
   "rewrites": [
+    { "source": "/mindar", "destination": "/index-mindar.html" },
     { "source": "/gallery", "destination": "/gallery.html" },
     { "source": "/dashboard", "destination": "/admin.html" },
     { "source": "/admin", "destination": "/admin.html" },

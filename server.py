@@ -67,7 +67,7 @@ class ARAppRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_HEAD(self):
         parsed_path = urllib.parse.urlparse(self.path)
         path = parsed_path.path
-        if path in ("/dashboard", "/dashboard/", "/admin", "/admin/", "/gallery", "/gallery/"):
+        if path in ("/dashboard", "/dashboard/", "/admin", "/admin/", "/gallery", "/gallery/", "/mindar", "/mindar/"):
             self.send_response(200)
             self.send_header('Content-Type', 'text/html; charset=utf-8')
             self.end_headers()
@@ -125,6 +125,16 @@ class ARAppRequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_header('Content-Type', 'text/html; charset=utf-8')
                 self.end_headers()
                 with open(gallery_file, "rb") as f:
+                    self.wfile.write(f.read())
+                return
+
+        elif path in ("/mindar", "/mindar/"):
+            mindar_file = os.path.join(os.path.dirname(__file__), "index-mindar.html")
+            if os.path.exists(mindar_file):
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/html; charset=utf-8')
+                self.end_headers()
+                with open(mindar_file, "rb") as f:
                     self.wfile.write(f.read())
                 return
 

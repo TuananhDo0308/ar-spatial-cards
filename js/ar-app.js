@@ -344,14 +344,39 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // ==========================================================================
-  // 4. LẮNG NGHE SỰ KIỆN QUÉT ẢNH TARGET (TỐI ƯU HOÁ: CHỐNG MEMORY LEAK)
+  // 4. LẮNG NGHE SỰ KIỆN QUÉT ẢNH TARGET (HỖ TRỢ CẢ 8TH WALL VÀ MINDAR)
   // ==========================================================================
+  // Khởi tạo 8th Wall Image Targets nếu phát hiện thư viện XR8
+  const init8thWall = () => {
+    if (typeof XR8 !== 'undefined' && XR8.XrController) {
+      fetch('./image-targets/all-targets.json')
+        .then((res) => res.json())
+        .then((targets) => {
+          XR8.XrController.configure({
+            imageTargetData: targets,
+          });
+          console.log('✨ [8th Wall SLAM Engine]: Đã cấu hình thành công 10 Image Targets!');
+        })
+        .catch((err) => {
+          console.warn('Lỗi khi nạp all-targets.json cho 8th Wall:', err);
+        });
+    }
+  };
+
+  if (typeof window !== 'undefined') {
+    if (window.XR8) {
+      init8thWall();
+    } else {
+      window.addEventListener('xrloaded', init8thWall);
+    }
+  }
+
   function setupTracking(targetIdx) {
     const el = document.getElementById(`target-entity-${targetIdx}`);
     const group = document.getElementById(`spatial-group-${targetIdx}`);
     if (!el || !group) return;
 
-    el.addEventListener('targetFound', () => {
+    const onFound = () => {
       // Chặn spam sự kiện nếu thẻ đang hiển thị rồi
       if (targetVisibleState[targetIdx]) return;
       targetVisibleState[targetIdx] = true;
@@ -376,9 +401,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       const targetScale = getResponsiveScale();
       group.setAttribute('scale', `${targetScale} ${targetScale} ${targetScale}`);
       group.setAttribute('visible', 'true');
-    });
+    };
 
-    el.addEventListener('targetLost', () => {
+    const onLost = () => {
       // Chặn spam sự kiện nếu thẻ đang ẩn rồi
       if (!targetVisibleState[targetIdx]) return;
       targetVisibleState[targetIdx] = false;
@@ -400,7 +425,13 @@ document.addEventListener('DOMContentLoaded', async () => {
           statusText.textContent = `Đang quét: ${activeTargets.size} địa danh`;
         }
       }
-    });
+    };
+
+    // Hỗ trợ cả sự kiện chuẩn của MindAR (targetFound/Lost) và 8th Wall (xrextrasfound/lost)
+    el.addEventListener('targetFound', onFound);
+    el.addEventListener('xrextrasfound', onFound);
+    el.addEventListener('targetLost', onLost);
+    el.addEventListener('xrextraslost', onLost);
   }
 
   // Khởi tạo tracking cho toàn bộ 10 targets
