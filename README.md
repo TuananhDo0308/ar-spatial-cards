@@ -17,11 +17,11 @@ Hệ thống được chuẩn hóa thành đúng 3 giao diện chuyên biệt, l
 
 2. **UI 2: Thư Viện Ảnh Quét AR Trên Desktop (`gallery.html`)**
    * Dành riêng để mở trên máy tính (Desktop/Laptop) để người dùng lấy điện thoại giơ vào quét.
-   * Mỗi ảnh được đặt trong **Khung Nhận Diện Quang Học AR (Optical Registration Frame)**:
-     * Viền đen kép tương phản cao giúp camera điện thoại phân biệt rõ ràng ảnh và nền màn hình.
-     * 4 góc L-Bracket quang học `┏ ┓ ┗ ┛` tăng cường điểm đặc trưng góc (corner keypoints) giúp MindAR khóa mục tiêu nhanh gấp đôi.
-     * Tỉ lệ ảnh giữ chuẩn 100% (không méo hình).
-   * 2 chế độ hiển thị: **Trình chiếu đơn (Focus Presentation Mode)** với phím tắt `←`, `→`, `F`, `Space` và **Lưới 10 Thẻ Tổng Quan (Grid Mode)**.
+   * **Hiển thị ảnh kích thước lớn Full Viewport**, tối đa hóa diện tích quét.
+   * **Cuộn qua lại tự nhiên (Swipe / Scroll)**: hỗ trợ chuột cuộn (wheel), bàn rê chuột (trackpad), cảm ứng (touch swipe), và phím mũi tên `←`, `→`.
+   * **Dải Preview List ảnh bên dưới chân màn hình**: hiển thị trực quan cả 10 thumbnail kèm mã `#0` - `#9`, click chuyển ảnh tức thì và tự động cuộn đồng bộ.
+   * **Hoàn toàn không có nút bấm nào vướng víu** (Zero buttons clean design).
+   * Mỗi ảnh đều có **Khung Nhận Diện Quang Học AR** kèm 4 góc L-Bracket `┏ ┓ ┗ ┛` tăng tương phản giúp camera bắt mục tiêu cực nhanh.
 
 3. **UI 3: Quản Trị Cơ Sở Dữ Liệu CMS (`admin.html`)**
    * Quản lý dữ liệu 10 địa danh lưu trữ trong SQLite (`database.sqlite`).

@@ -2,26 +2,20 @@
 <html lang="vi" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thư Viện Ảnh Quét WebAR - Màn Hình Desktop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Thư Viện Ảnh Quét WebAR</title>
   <link rel="icon" href="data:,">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #09090b;
-      --card: #18181b;
-      --card-hover: #202024;
+      --bg: #000000;
+      --card-bg: #09090b;
       --border: #27272a;
-      --border-subtle: #1f1f23;
       --text: #f4f4f5;
       --text-muted: #a1a1aa;
-      --primary: #fafafa;
-      --primary-foreground: #18181b;
       --emerald: #10b981;
-      --amber: #f59e0b;
-      --cyan: #06b6d4;
     }
 
     * {
@@ -32,872 +26,406 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 24px 20px 40px 20px;
-      overflow-x: hidden;
-    }
-
-    /* Shadcn Container */
-    .container {
-      width: 100%;
-      max-width: 1180px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    /* Header */
-    .header-bar {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--border);
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .brand-group h1 {
-      font-size: 1.45rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-group p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.15s ease;
-      border: 1px solid var(--border);
-      background: var(--card);
-      color: var(--text);
-    }
-
-    .btn:hover {
-      background: var(--border);
-      border-color: #3f3f46;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: var(--primary-foreground);
-      border-color: var(--primary);
-    }
-
-    .btn-primary:hover {
-      background: #e4e4e7;
-    }
-
-    .btn-active {
-      background: rgba(255, 255, 255, 0.12);
-      border-color: #52525b;
-      color: #fff;
-    }
-
-    /* Instruction Callout */
-    .hint-banner {
-      width: 100%;
-      background: rgba(24, 24, 27, 0.7);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 18px;
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      flex-wrap: wrap;
-    }
-
-    .hint-banner strong {
-      color: #fff;
-    }
-
-    .badge-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.74rem;
-      font-weight: 600;
-      padding: 3px 10px;
-      border-radius: 999px;
-      background: rgba(16, 185, 129, 0.12);
-      color: var(--emerald);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-
-    /* ==========================================================================
-       CHẾ ĐỘ TRÌNH CHIẾU ĐƠN (FOCUS PRESENTATION MODE)
-       ========================================================================== */
-    .focus-section {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .focus-card-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 860px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    /* Khung quét quang học AR độ tương phản cao */
-    .ar-target-card {
-      background: #000;
-      border: 2px solid var(--border);
-      border-radius: 18px;
+    html, body {
+      width: 100vw;
+      height: 100vh;
       overflow: hidden;
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.75);
-      position: relative;
+      background: var(--bg);
+      color: var(--text);
       display: flex;
       flex-direction: column;
+    }
+
+    /* Floating Info Pill tinh tế ở góc trên giữa (Không chứa button nào) */
+    .top-floating-hud {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 40;
+      pointer-events: none;
+    }
+
+    .info-pill {
+      display: inline-flex;
       align-items: center;
+      gap: 10px;
+      background: rgba(18, 18, 20, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 8px 18px;
+      border-radius: 999px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
       transition: all 0.25s ease;
-      width: 100%;
     }
 
-    .ar-target-card:hover {
-      border-color: #3f3f46;
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 10px var(--emerald);
+      flex-shrink: 0;
     }
 
-    /* Header của thẻ mục tiêu */
-    .card-top-hud {
-      width: 100%;
-      background: #18181b;
-      padding: 12px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .target-id-badge {
-      font-size: 0.8rem;
+    .pill-title {
+      font-size: 0.85rem;
       font-weight: 700;
       color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
     }
 
-    .target-res-info {
-      font-size: 0.75rem;
+    .pill-sub {
+      font-size: 0.78rem;
       color: var(--text-muted);
-      font-family: monospace;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 3px 8px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
+      white-space: nowrap;
     }
 
-    /* Container chứa ảnh có khung viền quang học tương phản cao */
-    .optical-frame-container {
-      position: relative;
-      width: 100%;
-      height: 60vh;
-      min-height: 380px;
-      max-height: 560px;
-      background: #09090b;
+    /* VÙNG CHỨA ẢNH FULL CHIẾM TOÀN BỘ MÀN HÌNH - CUỘN NGANG QUA LẠI */
+    .gallery-slider {
+      flex: 1;
+      width: 100vw;
+      height: calc(100vh - 100px);
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .gallery-slider::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Mỗi slide chiếm trọn 100vw */
+    .slide-item {
+      flex: 0 0 100vw;
+      width: 100vw;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 24px;
-      cursor: zoom-in;
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
+      padding: 68px 28px 24px 28px;
+      box-sizing: border-box;
+      user-select: none;
     }
 
-    /* Khung ảnh thực tế có 4 góc ngắm AR */
+    /* Khung ảnh Quang học AR tương phản cao để Camera điện thoại bắt dính siêu nhạy */
     .optical-image-box {
       position: relative;
-      max-width: 100%;
-      max-height: 100%;
+      max-width: 92vw;
+      max-height: calc(100vh - 190px);
       display: flex;
       align-items: center;
       justify-content: center;
       border: 4px solid #000;
-      box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.25), 0 24px 50px rgba(0, 0, 0, 0.8);
       background: #000;
+      border-radius: 6px;
     }
 
     .optical-image-box img {
       max-width: 100%;
-      max-height: 52vh;
+      max-height: calc(100vh - 198px);
       object-fit: contain;
       display: block;
+      border-radius: 3px;
       user-select: none;
       -webkit-user-drag: none;
     }
 
-    /* 4 góc L-Bracket quang học AR - Đặt bên ngoài mép ảnh để không che khuất các điểm đặc trưng (corner keypoints) */
+    /* 4 góc L-Bracket quang học AR tăng cường điểm đặc trưng góc cho camera AR */
     .ar-bracket {
       position: absolute;
-      width: 20px;
-      height: 20px;
-      border-color: rgba(255, 255, 255, 0.7);
+      width: 24px;
+      height: 24px;
+      border-color: rgba(255, 255, 255, 0.9);
       border-style: solid;
       pointer-events: none;
-      box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.95);
       z-index: 2;
     }
 
     .ar-bracket.tl {
       top: -12px;
       left: -12px;
-      border-width: 3px 0 0 3px;
+      border-width: 3.5px 0 0 3.5px;
       border-top-left-radius: 4px;
     }
 
     .ar-bracket.tr {
       top: -12px;
       right: -12px;
-      border-width: 3px 3px 0 0;
+      border-width: 3.5px 3.5px 0 0;
       border-top-right-radius: 4px;
     }
 
     .ar-bracket.bl {
       bottom: -12px;
       left: -12px;
-      border-width: 0 0 3px 3px;
+      border-width: 0 0 3.5px 3.5px;
       border-bottom-left-radius: 4px;
     }
 
     .ar-bracket.br {
       bottom: -12px;
       right: -12px;
-      border-width: 0 3px 3px 0;
+      border-width: 0 3.5px 3.5px 0;
       border-bottom-right-radius: 4px;
     }
 
-    /* Footer của thẻ */
-    .card-footer-meta {
-      width: 100%;
-      background: #18181b;
-      padding: 16px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    /* DẢI PREVIEW LIST ẢNH BÊN DƯỚI CHÂN MÀN HÌNH */
+    .bottom-preview-dock {
+      width: 100vw;
+      height: 96px;
+      background: rgba(9, 9, 11, 0.92);
       border-top: 1px solid var(--border);
-    }
-
-    .meta-title-box h3 {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #fff;
-    }
-
-    .meta-title-box p {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    /* Nút Next/Prev to hai bên */
-    .nav-arrow-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: rgba(24, 24, 27, 0.85);
-      border: 1px solid var(--border);
-      color: #fff;
-      font-size: 22px;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      backdrop-filter: blur(12px);
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      z-index: 10;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+      padding: 0 16px;
+      z-index: 40;
     }
 
-    .nav-arrow-btn:hover {
-      background: #27272a;
-      transform: translateY(-50%) scale(1.08);
-      border-color: #52525b;
-    }
-
-    .nav-arrow-btn.prev { left: -24px; }
-    .nav-arrow-btn.next { right: -24px; }
-
-    @media (max-width: 920px) {
-      .nav-arrow-btn.prev { left: 8px; }
-      .nav-arrow-btn.next { right: 8px; }
-    }
-
-    /* Thumbnail Dải cuộn dưới chân */
-    .thumbnails-scroll-bar {
-      width: 100%;
-      max-width: 860px;
+    .preview-track {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       overflow-x: auto;
-      padding: 8px 4px 16px 4px;
-      scrollbar-width: thin;
-      scrollbar-color: #27272a transparent;
+      scrollbar-width: none;
+      padding: 8px 10px;
+      max-width: 1100px;
+      width: 100%;
+      align-items: center;
+      scroll-behavior: smooth;
     }
 
-    .thumb-item {
-      flex: 0 0 74px;
-      height: 74px;
-      border-radius: 12px;
+    .preview-track::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Mỗi item trong dải preview */
+    .preview-item {
+      flex: 0 0 82px;
+      height: 64px;
+      border-radius: 10px;
       background: #18181b;
       border: 2px solid var(--border);
       overflow: hidden;
       cursor: pointer;
       position: relative;
-      transition: all 0.15s ease;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      flex-shrink: 0;
     }
 
-    .thumb-item:hover {
+    .preview-item:hover {
       border-color: #52525b;
       transform: translateY(-2px);
     }
 
-    .thumb-item.active {
+    .preview-item.active {
       border-color: var(--emerald);
-      box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.5);
+      transform: scale(1.06);
     }
 
-    .thumb-item img {
+    .preview-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
 
-    .thumb-tag {
+    .preview-tag {
       position: absolute;
       bottom: 2px;
       right: 2px;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(0, 0, 0, 0.82);
       font-size: 0.65rem;
       font-weight: 700;
-      padding: 1px 4px;
+      padding: 1px 5px;
       border-radius: 4px;
       color: #e4e4e7;
     }
 
-    /* ==========================================================================
-       CHẾ ĐỘ LƯỚI TỔNG QUAN (GRID MODE 10 MỤC TIÊU)
-       ========================================================================== */
-    .grid-section {
-      width: 100%;
-      display: none;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 18px;
-    }
-
-    .grid-item-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .grid-item-card:hover {
-      border-color: #3f3f46;
-      transform: translateY(-3px);
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
-    }
-
-    .grid-thumb-box {
-      width: 100%;
-      height: 190px;
-      background: #000;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-bottom: 1px solid var(--border);
-      padding: 12px;
-    }
-
-    .grid-thumb-box img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      border: 2px solid #000;
-    }
-
-    .grid-info-box {
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .grid-title {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .grid-sub {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    /* Modal phóng to toàn màn hình (Presentation Lightbox) */
-    .fullscreen-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.96);
-      backdrop-filter: blur(16px);
-      z-index: 1000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
-
-    .fullscreen-overlay.active {
-      display: flex;
-    }
-
-    .fullscreen-box {
-      position: relative;
-      max-width: 90vw;
-      max-height: 90vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .fullscreen-img-frame {
-      position: relative;
-      border: 6px solid #000;
-      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4);
-      background: #000;
-      max-width: 100%;
-      max-height: 82vh;
-    }
-
-    .fullscreen-img-frame img {
-      max-width: 100%;
-      max-height: 80vh;
-      object-fit: contain;
-      display: block;
-    }
-
-    .btn-close-fs {
-      position: absolute;
-      top: -48px;
-      right: 0;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-    }
-
-    .fs-caption {
-      margin-top: 14px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #fff;
+    @media (max-width: 640px) {
+      .bottom-preview-dock {
+        height: 84px;
+      }
+      .preview-item {
+        flex: 0 0 70px;
+        height: 54px;
+      }
+      .optical-image-box {
+        max-width: 96vw;
+      }
+      .slide-item {
+        padding: 58px 12px 18px 12px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-
-    <!-- Top Bar chuẩn Shadcn -->
-    <header class="header-bar">
-      <div class="brand-group">
-        <h1><span>🖼️</span> <span>Thư Viện Ảnh Quét AR</span></h1>
-        <p>Màn hình máy tính hiển thị chuẩn 10 mục tiêu • Giơ camera điện thoại vào để bám dính 3D</p>
-      </div>
-
-      <div class="header-actions">
-        <!-- Chuyển đổi View -->
-        <button class="btn btn-active" id="btn-mode-focus" onclick="switchView('focus')">
-          <span>🎯</span> <span>Trình Chiếu Quét</span>
-        </button>
-        <button class="btn" id="btn-mode-grid" onclick="switchView('grid')">
-          <span>⊞</span> <span>Lưới 10 Thẻ</span>
-        </button>
-        <a href="admin.html" class="btn">
-          <span>⚙️</span> <span>Quản Trị DB</span>
-        </a>
-      </div>
-    </header>
-
-    <!-- Hướng dẫn ngắm quét tối ưu -->
-    <div class="hint-banner">
-      <div style="display:flex; align-items:center; gap:8px;">
-        <span class="badge-pill">● Khung Quang Học AR</span>
-        <span>Mỗi ảnh được bao bọc bởi <strong>4 góc ngắm AR tương phản cao</strong> giúp camera khóa mục tiêu ngay lập tức.</span>
-      </div>
-      <div>
-        <span>Phím tắt: <strong>←</strong> ảnh trước • <strong>→</strong> ảnh sau • <strong>F</strong> phóng to</span>
-      </div>
+  <!-- Floating Minimal HUD: Chỉ hiển thị tên ảnh đang ngắm, hoàn toàn không có button -->
+  <div class="top-floating-hud">
+    <div class="info-pill">
+      <span class="status-dot"></span>
+      <span class="pill-title" id="pill-title">Target #0 • Dinh Độc Lập</span>
+      <span class="pill-sub" id="pill-sub">📍 TP. Hồ Chí Minh</span>
     </div>
-
-    <!-- 1. CHẾ ĐỘ FOCUS TRÌNH CHIẾU ĐƠN (MẶC ĐỊNH) -->
-    <div class="focus-section" id="focus-section">
-      <div class="focus-card-wrapper">
-        <!-- Nút Prev -->
-        <button class="nav-arrow-btn prev" onclick="prevTarget()" title="Ảnh trước (Mũi tên trái)">‹</button>
-
-        <!-- Thẻ Target Quang Học -->
-        <div class="ar-target-card">
-          <!-- Top HUD -->
-          <div class="card-top-hud">
-            <div class="target-id-badge">
-              <span id="target-badge-pill" class="badge-pill">Target #0</span>
-              <span id="target-name-top" style="color:#fafafa;">Dinh Độc Lập</span>
-            </div>
-            <div class="target-res-info" id="target-res-info">640 × 640 px (Tỉ lệ 1:1)</div>
-          </div>
-
-          <!-- Khu vực hiển thị ảnh có 4 góc ngắm quang học -->
-          <div class="optical-frame-container" onclick="openFullscreen()">
-            <div class="optical-image-box">
-              <img id="focus-image" src="assets/target-0.png" alt="Ảnh quét mục tiêu AR">
-              <!-- 4 Góc AR Brackets tạo độ tương phản góc cực đại cho thuật toán MindAR -->
-              <div class="ar-bracket tl"></div>
-              <div class="ar-bracket tr"></div>
-              <div class="ar-bracket bl"></div>
-              <div class="ar-bracket br"></div>
-            </div>
-          </div>
-
-          <!-- Footer Meta -->
-          <div class="card-footer-meta">
-            <div class="meta-title-box">
-              <h3 id="target-name-bottom">Dinh Độc Lập</h3>
-              <p id="target-city-bottom">📍 TP. Hồ Chí Minh • Di tích Lịch sử Quốc gia Đặc biệt</p>
-            </div>
-            <button class="btn btn-primary" onclick="openFullscreen()">
-              <span>⛶</span> <span>Toàn Màn Hình</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Nút Next -->
-        <button class="nav-arrow-btn next" onclick="nextTarget()" title="Ảnh tiếp theo (Mũi tên phải)">›</button>
-      </div>
-
-      <!-- Dải Thumbnail Cuộn Ngang -->
-      <div class="thumbnails-scroll-bar" id="thumb-bar"></div>
-    </div>
-
-    <!-- 2. CHẾ ĐỘ LƯỚI TỔNG QUAN (GRID MODE) -->
-    <div class="grid-section" id="grid-section"></div>
-
   </div>
 
-  <!-- Fullscreen Modal Presentation -->
-  <div class="fullscreen-overlay" id="fs-overlay" onclick="closeFullscreen(event)">
-    <div class="fullscreen-box" onclick="event.stopPropagation()">
-      <button class="btn-close-fs" onclick="closeFullscreen()">✕</button>
-      <div class="fullscreen-img-frame">
-        <img id="fs-img" src="" alt="Ảnh mục tiêu toàn màn hình">
-        <div class="ar-bracket tl"></div>
-        <div class="ar-bracket tr"></div>
-        <div class="ar-bracket bl"></div>
-        <div class="ar-bracket br"></div>
-      </div>
-      <div class="fs-caption" id="fs-caption">Dinh Độc Lập</div>
-    </div>
+  <!-- VÙNG ẢNH FULL VIEWPORT: CUỘN QUA LẠI BẰNG CHUỘT / TOUCH / PHÍM MŨI TÊN -->
+  <div class="gallery-slider" id="slider"></div>
+
+  <!-- DẢI PREVIEW LIST ẢNH BÊN DƯỚI -->
+  <div class="bottom-preview-dock">
+    <div class="preview-track" id="preview-track"></div>
   </div>
 
   <script>
-    // Dữ liệu 10 mục tiêu chuẩn xác 100% với file targets.mind
+    // Dữ liệu 10 mục tiêu chuẩn xác 100% khớp với targets.mind
     const TARGETS = [
-      {
-        id: 0,
-        name: "Dinh Độc Lập",
-        city: "TP. Hồ Chí Minh",
-        tag: "Di tích Lịch sử Quốc gia Đặc biệt",
-        res: "640 × 640 px (Tỉ lệ 1:1)",
-        src: "assets/target-0.png",
-        color: "#10b981"
-      },
-      {
-        id: 1,
-        name: "Phố Cổ Hội An",
-        city: "Quảng Nam",
-        tag: "Di sản Văn hóa Thế giới UNESCO",
-        res: "640 × 640 px (Tỉ lệ 1:1)",
-        src: "assets/target-1.png",
-        color: "#f59e0b"
-      },
-      {
-        id: 2,
-        name: "Chợ Bến Thành",
-        city: "TP. Hồ Chí Minh",
-        tag: "Biểu tượng Sài Gòn",
-        res: "800 × 534 px (Tỉ lệ 3:2)",
-        src: "assets/card-benthanh.jpg",
-        color: "#f59e0b"
-      },
-      {
-        id: 3,
-        name: "Hồ Hoàn Kiếm & Tháp Rùa",
-        city: "Hà Nội",
-        tag: "Trái tim Thủ đô Ngàn năm",
-        res: "800 × 459 px (Tỉ lệ 1.74:1)",
-        src: "assets/card-hanoi.jpg",
-        color: "#06b6d4"
-      },
-      {
-        id: 4,
-        name: "Cầu Vàng Bà Nà Hills",
-        city: "Đà Nẵng",
-        tag: "Kỳ quan Kiến trúc Hiện đại",
-        res: "800 × 500 px (Tỉ lệ 1.6:1)",
-        src: "assets/gallery-danang.jpg",
-        color: "#f59e0b"
-      },
-      {
-        id: 5,
-        name: "Vịnh Hạ Long",
-        city: "Quảng Ninh",
-        tag: "Di sản Thiên nhiên Thế giới UNESCO",
-        res: "800 × 533 px (Tỉ lệ 3:2)",
-        src: "assets/gallery-halong.jpg",
-        color: "#10b981"
-      },
-      {
-        id: 6,
-        name: "Đại Nội Kinh Thành Huế",
-        city: "Thừa Thiên Huế",
-        tag: "Quần thể Di tích Cố đô UNESCO",
-        res: "800 × 533 px (Tỉ lệ 3:2)",
-        src: "assets/card-hue.jpg",
-        color: "#f59e0b"
-      },
-      {
-        id: 7,
-        name: "Quần Thể Danh Thắng Tràng An",
-        city: "Ninh Bình",
-        tag: "Di sản Kép Văn hóa & Thiên nhiên",
-        res: "800 × 1200 px (Tỉ lệ 2:3 Dọc)",
-        src: "assets/card-trangan.jpg",
-        color: "#10b981"
-      },
-      {
-        id: 8,
-        name: "Nhà Thờ Đức Bà Sài Gòn",
-        city: "TP. Hồ Chí Minh",
-        tag: "Kiến trúc Cổ điển La Mã & Gothic",
-        res: "800 × 533 px (Tỉ lệ 3:2)",
-        src: "assets/card-notredame.jpg",
-        color: "#f59e0b"
-      },
-      {
-        id: 9,
-        name: "Đảo Ngọc Phú Quốc",
-        city: "Kiên Giang",
-        tag: "Thiên đường Nghỉ dưỡng Biển Đảo",
-        res: "800 × 533 px (Tỉ lệ 3:2)",
-        src: "assets/card-phuquoc.jpg",
-        color: "#06b6d4"
-      }
+      { id: 0, name: "Dinh Độc Lập", city: "TP. Hồ Chí Minh", src: "assets/target-0.png" },
+      { id: 1, name: "Phố Cổ Hội An", city: "Quảng Nam", src: "assets/target-1.png" },
+      { id: 2, name: "Chợ Bến Thành", city: "TP. Hồ Chí Minh", src: "assets/card-benthanh.jpg" },
+      { id: 3, name: "Hồ Hoàn Kiếm", city: "Hà Nội", src: "assets/card-hanoi.jpg" },
+      { id: 4, name: "Cầu Vàng Bà Nà Hills", city: "Đà Nẵng", src: "assets/gallery-danang.jpg" },
+      { id: 5, name: "Vịnh Hạ Long", city: "Quảng Ninh", src: "assets/gallery-halong.jpg" },
+      { id: 6, name: "Đại Nội Huế", city: "Thừa Thiên Huế", src: "assets/card-hue.jpg" },
+      { id: 7, name: "Tràng An Ninh Bình", city: "Ninh Bình", src: "assets/card-trangan.jpg" },
+      { id: 8, name: "Nhà Thờ Đức Bà", city: "TP. Hồ Chí Minh", src: "assets/card-notredame.jpg" },
+      { id: 9, name: "Đảo Ngọc Phú Quốc", city: "Kiên Giang", src: "assets/card-phuquoc.jpg" }
     ];
 
     let currentIndex = 0;
-    let currentView = 'focus';
+    let isClickScrolling = false;
+    let scrollTimeout = null;
 
-    // DOM Elements
-    const focusSection = document.getElementById('focus-section');
-    const gridSection = document.getElementById('grid-section');
-    const btnModeFocus = document.getElementById('btn-mode-focus');
-    const btnModeGrid = document.getElementById('btn-mode-grid');
+    const slider = document.getElementById('slider');
+    const previewTrack = document.getElementById('preview-track');
+    const pillTitle = document.getElementById('pill-title');
+    const pillSub = document.getElementById('pill-sub');
 
-    const focusImg = document.getElementById('focus-image');
-    const targetBadgePill = document.getElementById('target-badge-pill');
-    const targetNameTop = document.getElementById('target-name-top');
-    const targetResInfo = document.getElementById('target-res-info');
-    const targetNameBottom = document.getElementById('target-name-bottom');
-    const targetCityBottom = document.getElementById('target-city-bottom');
-    const thumbBar = document.getElementById('thumb-bar');
-
-    const fsOverlay = document.getElementById('fs-overlay');
-    const fsImg = document.getElementById('fs-img');
-    const fsCaption = document.getElementById('fs-caption');
-
-    // Khởi tạo dải Thumbnail
-    function initThumbnails() {
-      thumbBar.innerHTML = '';
+    // 1. Tạo các Slide ảnh Full với Khung Định Vị Quang Học AR
+    function renderSlides() {
+      slider.innerHTML = '';
       TARGETS.forEach((item, idx) => {
-        const div = document.createElement('div');
-        div.className = `thumb-item ${idx === currentIndex ? 'active' : ''}`;
-        div.onclick = () => selectTarget(idx);
-        div.innerHTML = `
-          <img src="${item.src}" alt="${item.name}">
-          <span class="thumb-tag">#${item.id}</span>
-        `;
-        thumbBar.appendChild(div);
-      });
-    }
-
-    // Khởi tạo danh sách Grid
-    function initGrid() {
-      gridSection.innerHTML = '';
-      TARGETS.forEach((item, idx) => {
-        const card = document.createElement('div');
-        card.className = 'grid-item-card';
-        card.onclick = () => {
-          selectTarget(idx);
-          switchView('focus');
-        };
-        card.innerHTML = `
-          <div class="grid-thumb-box">
+        const slide = document.createElement('div');
+        slide.className = 'slide-item';
+        slide.id = `slide-${idx}`;
+        slide.innerHTML = `
+          <div class="optical-image-box">
             <img src="${item.src}" alt="${item.name}">
-            <div class="ar-bracket tl" style="width:16px; height:16px; border-width:2.5px 0 0 2.5px; top:4px; left:4px;"></div>
-            <div class="ar-bracket tr" style="width:16px; height:16px; border-width:2.5px 2.5px 0 0; top:4px; right:4px;"></div>
-            <div class="ar-bracket bl" style="width:16px; height:16px; border-width:0 0 2.5px 2.5px; bottom:4px; left:4px;"></div>
-            <div class="ar-bracket br" style="width:16px; height:16px; border-width:0 2.5px 2.5px 0; bottom:4px; right:4px;"></div>
-          </div>
-          <div class="grid-info-box">
-            <div class="grid-title">${item.name}</div>
-            <div class="grid-sub">
-              <span>📍 ${item.city}</span>
-              <span class="badge-pill" style="font-size:0.68rem; padding:2px 6px;">#${item.id}</span>
-            </div>
+            <div class="ar-bracket tl"></div>
+            <div class="ar-bracket tr"></div>
+            <div class="ar-bracket bl"></div>
+            <div class="ar-bracket br"></div>
           </div>
         `;
-        gridSection.appendChild(card);
+        slider.appendChild(slide);
       });
     }
 
-    // Chọn hiển thị mục tiêu cụ thể
-    function selectTarget(idx) {
+    // 2. Tạo Preview List ảnh bên dưới
+    function renderPreviewList() {
+      previewTrack.innerHTML = '';
+      TARGETS.forEach((item, idx) => {
+        const thumb = document.createElement('div');
+        thumb.className = `preview-item ${idx === currentIndex ? 'active' : ''}`;
+        thumb.id = `thumb-${idx}`;
+        thumb.onclick = () => selectIndex(idx);
+        thumb.innerHTML = `
+          <img src="${item.src}" alt="${item.name}">
+          <span class="preview-tag">#${item.id}</span>
+        `;
+        previewTrack.appendChild(thumb);
+      });
+    }
+
+    // 3. Cập nhật trạng thái hiển thị
+    function updateHUD(idx) {
+      currentIndex = idx;
+      const t = TARGETS[currentIndex];
+      if (t) {
+        pillTitle.textContent = `Target #${t.id} • ${t.name}`;
+        pillSub.textContent = `📍 ${t.city}`;
+      }
+
+      // Highlight thumbnail tương ứng
+      const thumbs = previewTrack.querySelectorAll('.preview-item');
+      thumbs.forEach((th, i) => {
+        th.classList.toggle('active', i === currentIndex);
+      });
+
+      // Cuộn thumbnail active vào giữa dải preview
+      const activeThumb = document.getElementById(`thumb-${currentIndex}`);
+      if (activeThumb) {
+        activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+
+    // 4. Chọn ảnh khi click vào thumbnail
+    function selectIndex(idx) {
       if (idx < 0) idx = 0;
       if (idx >= TARGETS.length) idx = TARGETS.length - 1;
       currentIndex = idx;
-      const t = TARGETS[currentIndex];
+      updateHUD(idx);
 
-      focusImg.src = t.src;
-      targetBadgePill.textContent = `Target #${t.id}`;
-      targetNameTop.textContent = t.name;
-      targetResInfo.textContent = t.res;
-      targetNameBottom.textContent = t.name;
-      targetCityBottom.textContent = `📍 ${t.city} • ${t.tag}`;
-
-      // Update active thumbnail
-      const thumbs = thumbBar.querySelectorAll('.thumb-item');
-      thumbs.forEach((th, i) => th.classList.toggle('active', i === currentIndex));
-
-      // Cuộn thumbnail vào vùng nhìn thấy
-      if (thumbs[currentIndex]) {
-        thumbs[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      const targetSlide = document.getElementById(`slide-${idx}`);
+      if (targetSlide) {
+        isClickScrolling = true;
+        targetSlide.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        setTimeout(() => {
+          isClickScrolling = false;
+        }, 450);
       }
     }
 
-    function nextTarget() {
-      selectTarget((currentIndex + 1) % TARGETS.length);
-    }
+    // 5. Lắng nghe sự kiện cuộn qua lại trên Slider
+    slider.addEventListener('scroll', () => {
+      if (isClickScrolling) return;
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        const itemWidth = slider.clientWidth;
+        if (itemWidth > 0) {
+          const newIdx = Math.round(slider.scrollLeft / itemWidth);
+          if (newIdx !== currentIndex && newIdx >= 0 && newIdx < TARGETS.length) {
+            updateHUD(newIdx);
+          }
+        }
+      }, 40);
+    }, { passive: true });
 
-    function prevTarget() {
-      selectTarget((currentIndex - 1 + TARGETS.length) % TARGETS.length);
-    }
-
-    // Chuyển đổi giữa Chế độ Focus và Chế độ Grid
-    function switchView(mode) {
-      currentView = mode;
-      if (mode === 'focus') {
-        focusSection.style.display = 'flex';
-        gridSection.style.display = 'none';
-        btnModeFocus.classList.add('btn-active');
-        btnModeGrid.classList.remove('btn-active');
-      } else {
-        focusSection.style.display = 'none';
-        gridSection.style.display = 'grid';
-        btnModeGrid.classList.add('btn-active');
-        btnModeFocus.classList.remove('btn-active');
+    // 6. Chuyển đổi con lăn chuột dọc thành cuộn ngang tự nhiên trên Desktop
+    slider.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        slider.scrollLeft += e.deltaY;
+        e.preventDefault();
       }
-    }
+    }, { passive: false });
 
-    // Toàn màn hình
-    function openFullscreen() {
-      const t = TARGETS[currentIndex];
-      fsImg.src = t.src;
-      fsCaption.textContent = `Target #${t.id}: ${t.name} (📍 ${t.city})`;
-      fsOverlay.classList.add('active');
-    }
-
-    function closeFullscreen(e) {
-      if (!e || e.target === fsOverlay || e.target.classList.contains('btn-close-fs')) {
-        fsOverlay.classList.remove('active');
-      }
-    }
-
-    // Lắng nghe phím bấm
+    // 7. Lắng nghe phím mũi tên trái / phải trên bàn phím
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') nextTarget();
-      if (e.key === 'ArrowLeft') prevTarget();
-      if (e.key === 'f' || e.key === 'F') {
-        if (fsOverlay.classList.contains('active')) closeFullscreen();
-        else openFullscreen();
+      if (e.key === 'ArrowRight') {
+        selectIndex((currentIndex + 1) % TARGETS.length);
+      } else if (e.key === 'ArrowLeft') {
+        selectIndex((currentIndex - 1 + TARGETS.length) % TARGETS.length);
       }
-      if (e.key === 'Escape') closeFullscreen();
-      if (e.key === 'g' || e.key === 'G') switchView(currentView === 'focus' ? 'grid' : 'focus');
     });
 
-    // Khởi chạy khi load trang
-    initThumbnails();
-    initGrid();
-    selectTarget(0);
+    // Khởi tạo
+    renderSlides();
+    renderPreviewList();
+    updateHUD(0);
   </script>
 </body>
 </html>
