@@ -298,11 +298,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
+  // Pre-warm video buffer trong nền (sau khi camera đã chạy) để loại bỏ 100% độ trễ khi quét
+  function prewarmVideos() {
+    for (let i = 0; i < 5; i++) {
+      const vid = document.getElementById(`video-${i}`);
+      if (vid && vid.readyState === 0) {
+        try {
+          vid.load();
+        } catch (e) {}
+      }
+    }
+  }
+
   // Tự động start khi scene đã load hoặc chờ event loaded
   if (sceneEl.hasLoaded) {
     startARDirectly();
+    setTimeout(prewarmVideos, 300);
   } else {
-    sceneEl.addEventListener('loaded', startARDirectly);
+    sceneEl.addEventListener('loaded', () => {
+      startARDirectly();
+      setTimeout(prewarmVideos, 300);
+    });
   }
 
   // Fallback mở camera bằng cử chỉ chạm màn hình đầu tiên (iOS Safari)
@@ -344,6 +360,50 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================================================
   // 4. LẮNG NGHE SỰ KIỆN QUÉT ẢNH TARGET (HỖ TRỢ CẢ 8TH WALL VÀ MINDAR)
   // ==========================================================================
+  // Quản lý video playback mượt mà, chống màn đen bằng cơ chế Living Photo Crossfade
+  function playTargetVideo(targetIdx) {
+    const vid = document.getElementById(`video-${targetIdx}`);
+    const videoPlane = document.getElementById(`target-video-${targetIdx}`);
+    if (!vid) return;
+
+    const revealVideo = () => {
+      if (videoPlane && targetVisibleState[targetIdx]) {
+        videoPlane.setAttribute('material', 'transparent: true; opacity: 1.0; roughness: 0.2;');
+      }
+    };
+
+    // Nếu video đã có frame sẵn và đang chạy (ví dụ quét lại thẻ nhanh)
+    if (vid.readyState >= 2 && vid.currentTime > 0.05 && !vid.paused) {
+      revealVideo();
+      return;
+    }
+
+    const onFrameReady = () => {
+      revealVideo();
+      vid.removeEventListener('playing', onFrameReady);
+      vid.removeEventListener('timeupdate', onFrameReady);
+    };
+
+    vid.addEventListener('playing', onFrameReady, { once: true });
+    vid.addEventListener('timeupdate', onFrameReady);
+
+    const playPromise = vid.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {});
+    }
+  }
+
+  function stopTargetVideo(targetIdx) {
+    const vid = document.getElementById(`video-${targetIdx}`);
+    const videoPlane = document.getElementById(`target-video-${targetIdx}`);
+    if (vid) {
+      vid.pause();
+    }
+    if (videoPlane) {
+      videoPlane.setAttribute('material', 'transparent: true; opacity: 0.0; roughness: 0.2;');
+    }
+  }
+
   // Khởi tạo 8th Wall Image Targets nếu phát hiện thư viện XR8
   const init8thWall = () => {
     if (typeof XR8 !== 'undefined' && XR8.XrController) {
@@ -395,15 +455,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         group.setAttribute('rotation', '0 0 0');
       }
 
-      // Tự động phát video overlay khi thẻ được nhận diện
-      const vid = document.getElementById(`video-${targetIdx}`);
-      if (vid) {
-        vid.currentTime = 0;
-        const playPromise = vid.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(() => {});
-        }
-      }
+      // Phát video với hiệu ứng Living Photo: Ảnh poster tĩnh hiện 0ms ngay tức thì,
+      // video tự động crossfade đè lên ngay khi frame đầu tiên được GPU nạp xong (0ms màn đen)!
+      playTargetVideo(targetIdx);
 
       activeTargets.add(targetIdx);
       currentDetectedTarget = targetIdx;
@@ -431,11 +485,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!targetVisibleState[targetIdx]) return;
       targetVisibleState[targetIdx] = false;
 
-      // Tạm dừng video khi mất dấu thẻ để tiết kiệm pin & CPU
-      const vid = document.getElementById(`video-${targetIdx}`);
-      if (vid) {
-        vid.pause();
-      }
+      // Tạm dừng video và ẩn plane video để nhường poster cho lần quét tiếp theo
+      stopTargetVideo(targetIdx);
 
       activeTargets.delete(targetIdx);
       group.setAttribute('scale', '0 0 0');
@@ -662,7 +713,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Kiểm tra target đang hoạt động hoặc đang hiển thị trên màn hình
       const isVisible = targetVisibleState[idx] || activeTargets.has(idx) || group.getAttribute('visible') === 'true';
       if (isVisible) {
-        ['bar-top-', 'card-left-', 'card-right-', 'target-frame-', 'target-video-'].forEach((prefix) => {
+        ['bar-top-', 'card-left-', 'card-right-', 'target-frame-', 'target-poster-', 'target-video-'].forEach((prefix) => {
           const el = document.getElementById(prefix + idx);
           if (el && el.object3D) {
             el.object3D.traverse((child) => {
@@ -679,7 +730,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Nếu vì lý do nào đó targetVisibleState chưa kịp cập nhật, fallback kiểm tra toàn bộ 5 targets
     if (candidateMeshes.length === 0) {
       for (let idx = 0; idx < 5; idx++) {
-        ['bar-top-', 'card-left-', 'card-right-', 'target-frame-', 'target-video-'].forEach((prefix) => {
+        ['bar-top-', 'card-left-', 'card-right-', 'target-frame-', 'target-poster-', 'target-video-'].forEach((prefix) => {
           const el = document.getElementById(prefix + idx);
           if (el && el.object3D) {
             el.object3D.traverse((child) => {
@@ -761,7 +812,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Giữ sự kiện click A-Frame làm lớp bảo hiểm thứ 2
   for (let i = 0; i < 5; i++) {
-    ['bar-top-', 'card-left-', 'card-right-', 'target-frame-', 'target-video-'].forEach((prefix) => {
+    ['bar-top-', 'card-left-', 'card-right-', 'target-frame-', 'target-poster-', 'target-video-'].forEach((prefix) => {
       const el = document.getElementById(prefix + i);
       if (el) {
         el.addEventListener('click', (e) => {

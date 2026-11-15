@@ -111,13 +111,19 @@
       device-orientation-permission-ui="enabled: false"
       embedded
     >
-      <!-- Assets Videos: preload='none' để KHÔNG chặn nạp trang / mở Camera tức thì! -->
-      <a-assets timeout="500">
-        <video id="video-0" src="assets/videos/HoiAn.mp4" preload="none" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
-        <video id="video-1" src="assets/videos/DinhDocLap.mp4" preload="none" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
-        <video id="video-2" src="assets/videos/ChoBenThanh.mp4" preload="none" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
-        <video id="video-3" src="assets/videos/HoHoanKiem.mp4" preload="none" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
-        <video id="video-4" src="assets/videos/VinhHaLong.mp4" preload="none" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
+      <!-- Assets Videos & Posters: preload='auto' cho video đã được nén tối ưu, posters hiển thị tức thì 0ms -->
+      <a-assets timeout="2000">
+        <img id="poster-0" src="assets/card-hoian.jpg" crossorigin="anonymous">
+        <img id="poster-1" src="assets/card-dinhdoclap.jpg" crossorigin="anonymous">
+        <img id="poster-2" src="assets/card-benthanh.jpg" crossorigin="anonymous">
+        <img id="poster-3" src="assets/card-hanoi.jpg" crossorigin="anonymous">
+        <img id="poster-4" src="assets/card-halong.jpg" crossorigin="anonymous">
+
+        <video id="video-0" src="assets/videos/HoiAn.mp4" preload="auto" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
+        <video id="video-1" src="assets/videos/DinhDocLap.mp4" preload="auto" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
+        <video id="video-2" src="assets/videos/ChoBenThanh.mp4" preload="auto" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
+        <video id="video-3" src="assets/videos/HoHoanKiem.mp4" preload="auto" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
+        <video id="video-4" src="assets/videos/VinhHaLong.mp4" preload="auto" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
       </a-assets>
 
       <!-- Camera -->
@@ -133,8 +139,10 @@
       <xrextras-named-image-target name="target-0" id="target-entity-0">
         <a-entity id="spatial-group-0" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
           <a-plane id="target-frame-0" class="clickable" position="0 0 0.001" width="1.0" height="0.5625" material="opacity: 0.001; transparent: true"></a-plane>
-          <!-- Video tràn viền 100% che kín toàn bộ hình (1.02 x 0.5738) -->
-          <a-plane id="target-video-0" class="clickable" src="#video-0" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
+          <!-- Poster hiển thị tức thì 0ms, chống hoàn toàn màn đen WebGL -->
+          <a-plane id="target-poster-0" class="clickable" src="#poster-0" position="0 0 0.0015" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
+          <!-- Video tràn viền 100% che kín toàn bộ hình, ban đầu opacity=0 mượt mà crossfade khi play -->
+          <a-plane id="target-video-0" class="clickable" src="#video-0" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
           <a-plane id="bar-top-0" class="clickable" src="#canvas-top-0" position="0 0.43 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-0" class="clickable" src="#canvas-left-0" position="-0.76 0 0.004" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-right-0" class="clickable" src="#canvas-right-0" position="0.76 0 0.004" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -145,8 +153,10 @@
       <xrextras-named-image-target name="target-1" id="target-entity-1">
         <a-entity id="spatial-group-1" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
           <a-plane id="target-frame-1" class="clickable" position="0 0 0.001" width="1.0" height="0.5625" material="opacity: 0.001; transparent: true"></a-plane>
-          <!-- Video tràn viền 100% che kín toàn bộ hình (1.02 x 0.5738) -->
-          <a-plane id="target-video-1" class="clickable" src="#video-1" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
+          <!-- Poster hiển thị tức thì 0ms, chống hoàn toàn màn đen WebGL -->
+          <a-plane id="target-poster-1" class="clickable" src="#poster-1" position="0 0 0.0015" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
+          <!-- Video tràn viền 100% che kín toàn bộ hình, ban đầu opacity=0 mượt mà crossfade khi play -->
+          <a-plane id="target-video-1" class="clickable" src="#video-1" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
           <a-plane id="bar-top-1" class="clickable" src="#canvas-top-1" position="0 0.43 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-1" class="clickable" src="#canvas-left-1" position="-0.76 0 0.004" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-right-1" class="clickable" src="#canvas-right-1" position="0.76 0 0.004" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -157,8 +167,10 @@
       <xrextras-named-image-target name="target-2" id="target-entity-2">
         <a-entity id="spatial-group-2" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
           <a-plane id="target-frame-2" class="clickable" position="0 0 0.001" width="1.0" height="0.5625" material="opacity: 0.001; transparent: true"></a-plane>
-          <!-- Video tràn viền 100% che kín toàn bộ hình (1.02 x 0.5738) -->
-          <a-plane id="target-video-2" class="clickable" src="#video-2" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
+          <!-- Poster hiển thị tức thì 0ms, chống hoàn toàn màn đen WebGL -->
+          <a-plane id="target-poster-2" class="clickable" src="#poster-2" position="0 0 0.0015" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
+          <!-- Video tràn viền 100% che kín toàn bộ hình, ban đầu opacity=0 mượt mà crossfade khi play -->
+          <a-plane id="target-video-2" class="clickable" src="#video-2" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
           <a-plane id="bar-top-2" class="clickable" src="#canvas-top-2" position="0 0.43 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-2" class="clickable" src="#canvas-left-2" position="-0.76 0 0.004" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-right-2" class="clickable" src="#canvas-right-2" position="0.76 0 0.004" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -169,8 +181,10 @@
       <xrextras-named-image-target name="target-3" id="target-entity-3">
         <a-entity id="spatial-group-3" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
           <a-plane id="target-frame-3" class="clickable" position="0 0 0.001" width="1.0" height="0.5625" material="opacity: 0.001; transparent: true"></a-plane>
-          <!-- Video tràn viền 100% che kín toàn bộ hình (1.02 x 0.5738) -->
-          <a-plane id="target-video-3" class="clickable" src="#video-3" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
+          <!-- Poster hiển thị tức thì 0ms, chống hoàn toàn màn đen WebGL -->
+          <a-plane id="target-poster-3" class="clickable" src="#poster-3" position="0 0 0.0015" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
+          <!-- Video tràn viền 100% che kín toàn bộ hình, ban đầu opacity=0 mượt mà crossfade khi play -->
+          <a-plane id="target-video-3" class="clickable" src="#video-3" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
           <a-plane id="bar-top-3" class="clickable" src="#canvas-top-3" position="0 0.43 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-3" class="clickable" src="#canvas-left-3" position="-0.76 0 0.004" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-right-3" class="clickable" src="#canvas-right-3" position="0.76 0 0.004" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -181,8 +195,10 @@
       <xrextras-named-image-target name="target-4" id="target-entity-4">
         <a-entity id="spatial-group-4" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
           <a-plane id="target-frame-4" class="clickable" position="0 0 0.001" width="1.0" height="0.5625" material="opacity: 0.001; transparent: true"></a-plane>
-          <!-- Video tràn viền 100% che kín toàn bộ hình (1.02 x 0.5738) -->
-          <a-plane id="target-video-4" class="clickable" src="#video-4" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
+          <!-- Poster hiển thị tức thì 0ms, chống hoàn toàn màn đen WebGL -->
+          <a-plane id="target-poster-4" class="clickable" src="#poster-4" position="0 0 0.0015" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
+          <!-- Video tràn viền 100% che kín toàn bộ hình, ban đầu opacity=0 mượt mà crossfade khi play -->
+          <a-plane id="target-video-4" class="clickable" src="#video-4" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
           <a-plane id="bar-top-4" class="clickable" src="#canvas-top-4" position="0 0.43 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-4" class="clickable" src="#canvas-left-4" position="-0.76 0 0.004" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-right-4" class="clickable" src="#canvas-right-4" position="0.76 0 0.004" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
