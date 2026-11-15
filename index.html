@@ -33,28 +33,8 @@
     <span>Chạm vào màn hình để mở Camera</span>
   </div>
 
-  <!-- Minimalist Floating Overlay (Clean UI 1: Chỉ mở Camera, hoàn toàn không có button nào) -->
-  <div class="ui-layer">
-    <!-- Clean Shadcn Status Pill: Chỉ hiển thị trạng thái quét, không chứa nút bấm -->
-    <div class="top-hud">
-      <div class="status-pill">
-        <span class="status-dot" id="status-dot"></span>
-        <span class="status-text" id="status-text">Hướng camera vào ảnh trên bảng</span>
-      </div>
-    </div>
-
-    <!-- Center Reticle Laser Guide -->
-    <div class="scanning-reticle" id="reticle">
-      <div class="reticle-corner tl"></div>
-      <div class="reticle-corner tr"></div>
-      <div class="reticle-corner bl"></div>
-      <div class="reticle-corner br"></div>
-      <div class="laser-scan"></div>
-      <div class="reticle-hint">Căn chỉnh khung ảnh vào giữa màn hình</div>
-    </div>
-
-    <div class="bottom-hud"></div>
-  </div>
+  <!-- Camera View Hoàn Toàn Thuần Túy: Không khung ngắm, không text trên cùng -->
+  <div class="ui-layer"></div>
 
   <!-- Fullscreen Modal Phóng To (VisionOS Shared-Element Spring Curve) -->
   <div class="fullscreen-modal" id="fullscreen-modal">

@@ -245,9 +245,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       try {
         arSystem.start();
         arSystemStarted = true;
-        statusText.textContent = isAuthorMode
-          ? 'Hướng camera vào ảnh (Chế độ gốc MindAR)'
-          : 'Hướng camera vào ảnh trên bảng';
+        if (statusText) {
+          statusText.textContent = isAuthorMode
+            ? 'Hướng camera vào ảnh (Chế độ gốc MindAR)'
+            : 'Hướng camera vào ảnh trên bảng';
+        }
         if (cameraToast) cameraToast.style.display = 'none';
       } catch (err) {
         console.warn('Cần cử chỉ chạm của người dùng để mở camera:', err);
@@ -321,16 +323,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       activeTargets.add(targetIdx);
       currentDetectedTarget = targetIdx;
-      statusDot.classList.add('active');
-      reticle.classList.add('hidden');
+      if (statusDot) statusDot.classList.add('active');
+      if (reticle) reticle.classList.add('hidden');
 
       const loc = dbLocations[targetIdx] || dbLocations[String(targetIdx)];
       const locName = loc ? loc.name : `Địa điểm #${targetIdx + 1}`;
 
-      if (activeTargets.size === 1) {
-        statusText.textContent = `Đã nhận diện: ${locName}`;
-      } else {
-        statusText.textContent = `Đang quét: ${activeTargets.size} địa danh`;
+      if (statusText) {
+        if (activeTargets.size === 1) {
+          statusText.textContent = `Đã nhận diện: ${locName}`;
+        } else {
+          statusText.textContent = `Đang quét: ${activeTargets.size} địa danh`;
+        }
       }
 
       // Hiện thẻ tức thì, không tạo animation object gây lag bộ nhớ
@@ -349,13 +353,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       group.setAttribute('visible', 'false');
 
       if (activeTargets.size === 0) {
-        statusDot.classList.remove('active');
-        statusText.textContent = isAuthorMode
-          ? 'Hướng camera vào ảnh (Chế độ gốc MindAR)'
-          : 'Hướng camera vào ảnh trên bảng';
-        reticle.classList.remove('hidden');
+        if (statusDot) statusDot.classList.remove('active');
+        if (statusText) {
+          statusText.textContent = isAuthorMode
+            ? 'Hướng camera vào ảnh (Chế độ gốc MindAR)'
+            : 'Hướng camera vào ảnh trên bảng';
+        }
+        if (reticle) reticle.classList.remove('hidden');
       } else {
-        statusText.textContent = `Đang quét: ${activeTargets.size} địa danh`;
+        if (statusText) {
+          statusText.textContent = `Đang quét: ${activeTargets.size} địa danh`;
+        }
       }
     });
   }

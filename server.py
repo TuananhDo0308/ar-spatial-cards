@@ -64,6 +64,16 @@ class ARAppRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.send_response(200, "ok")
         self.end_headers()
 
+    def do_HEAD(self):
+        parsed_path = urllib.parse.urlparse(self.path)
+        path = parsed_path.path
+        if path in ("/dashboard", "/dashboard/", "/admin", "/admin/", "/gallery", "/gallery/"):
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html; charset=utf-8')
+            self.end_headers()
+            return
+        super().do_HEAD()
+
     def do_GET(self):
         # Xử lý REST API endpoints
         parsed_path = urllib.parse.urlparse(self.path)
@@ -97,6 +107,26 @@ class ARAppRequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(400)
                 self.end_headers()
             return
+
+        elif path in ("/dashboard", "/dashboard/", "/admin", "/admin/"):
+            admin_file = os.path.join(os.path.dirname(__file__), "admin.html")
+            if os.path.exists(admin_file):
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/html; charset=utf-8')
+                self.end_headers()
+                with open(admin_file, "rb") as f:
+                    self.wfile.write(f.read())
+                return
+
+        elif path in ("/gallery", "/gallery/"):
+            gallery_file = os.path.join(os.path.dirname(__file__), "gallery.html")
+            if os.path.exists(gallery_file):
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/html; charset=utf-8')
+                self.end_headers()
+                with open(gallery_file, "rb") as f:
+                    self.wfile.write(f.read())
+                return
 
         # Mặc định: Phục vụ tệp tĩnh (HTML, CSS, JS, Image, Mind file...)
         super().do_GET()
@@ -182,7 +212,7 @@ def run_server(mode="https"):
         print(f"💻 Trên máy tính (Mac/PC):")
         print(f"   👉 UI 1 (Camera WebAR):       https://localhost:{PORT_HTTPS}/index.html")
         print(f"   👉 UI 2 (Thư Viện Desktop):   https://localhost:{PORT_HTTPS}/gallery.html")
-        print(f"   👉 UI 3 (Quản Trị Database):  https://localhost:{PORT_HTTPS}/admin.html")
+        print(f"   👉 UI 3 (Quản Trị / Dashboard): https://localhost:{PORT_HTTPS}/dashboard (admin / TuananhDo0308)")
         print(f"   👉 REST API Endpoints:        https://localhost:{PORT_HTTPS}/api/locations")
         print("-" * 65)
         print(f"📱 Trên điện thoại (cùng mạng Wi-Fi để mở camera):")
@@ -199,7 +229,7 @@ def run_server(mode="https"):
         print(f"💻 Trên máy tính:")
         print(f"   👉 UI 1 (Camera WebAR):       http://localhost:{PORT_HTTP}/index.html")
         print(f"   👉 UI 2 (Thư Viện Desktop):   http://localhost:{PORT_HTTP}/gallery.html")
-        print(f"   👉 UI 3 (Quản trị Database):  http://localhost:{PORT_HTTP}/admin.html")
+        print(f"   👉 UI 3 (Quản Trị / Dashboard): http://localhost:{PORT_HTTP}/dashboard (admin / TuananhDo0308)")
         print("=" * 65)
 
     try:

@@ -9,10 +9,8 @@ Hệ thống WebAR không gian 3D chạy trực tiếp trên trình duyệt web 
 Hệ thống được chuẩn hóa thành đúng 3 giao diện chuyên biệt, loại bỏ tất cả các tính năng dư thừa:
 
 1. **UI 1: Camera WebAR Scanner (`index.html`)**
-   * Mở camera AR toàn màn hình, **hoàn toàn không có nút bấm điều hướng vướng víu**.
-   * Chỉ có một status capsule tinh tế hiển thị trạng thái phát hiện ảnh mục tiêu.
-   * Khi camera bắt trúng ảnh, **Khung định vị quang học 3D (AR Target Frame)** cùng 4 góc L-bracket khóa chặt vào bức ảnh thật.
-   * 3 thẻ không gian nổi bao gồm: Thanh tiêu đề trên, thẻ điểm nổi bật bên trái (kèm nút `⤢ CHẠM ĐỂ MỞ RỘNG`), và thẻ thông tin tham quan bên phải.
+   * Mở camera AR thuần túy toàn màn hình, **không có khung ngắm (reticle), không có laser và không có chữ trên cùng**, giao diện hoàn toàn như một camera chụp ảnh thông thường.
+   * Khi camera hướng vào ảnh trên bảng/màn hình, **Cụm 3 Thẻ Không Gian 3D** lập tức hiện ra bám dính chắc chắn theo mép ảnh (Thanh tiêu đề trên, thẻ điểm nổi bật bên trái, và thẻ thông tin tham quan bên phải).
    * Chạm vào thẻ hoặc bức ảnh sẽ mở Modal chi tiết địa danh kèm chỉ đường Google Maps.
 
 2. **UI 2: Thư Viện Ảnh Quét AR Trên Desktop (`gallery.html`)**
@@ -23,11 +21,14 @@ Hệ thống được chuẩn hóa thành đúng 3 giao diện chuyên biệt, l
    * **Hoàn toàn không có nút bấm nào vướng víu** (Zero buttons clean design).
    * Mỗi ảnh đều có **Khung Nhận Diện Quang Học AR** kèm 4 góc L-Bracket `┏ ┓ ┗ ┛` tăng tương phản giúp camera bắt mục tiêu cực nhanh.
 
-3. **UI 3: Quản Trị Cơ Sở Dữ Liệu CMS (`admin.html`)**
+3. **UI 3: Quản Trị Cơ Sở Dữ Liệu CMS (`/dashboard` hoặc `admin.html`)**
    * Quản lý dữ liệu 10 địa danh lưu trữ trong SQLite (`database.sqlite`).
+   * **Bảo Mật Đăng Nhập (Login Guard)**:
+     * **Tài khoản:** `admin`
+     * **Mật khẩu:** `TuananhDo0308`
    * Bảng dữ liệu chuẩn Shadcn Data Table với thumbnail, badge danh mục, rating, giờ mở cửa, giá vé.
    * Form chỉnh sửa Dialog mượt mà: cập nhật mô tả AR 3D, mô tả chi tiết, màu sắc badge, tọa độ Google Maps.
-   * Hỗ trợ xuất file JSON backup.
+   * Hỗ trợ xuất file JSON backup và nút Đăng xuất an toàn.
 
 ---
 
