@@ -5,10 +5,9 @@
  * Chức năng:
  * - Khởi tạo dữ liệu từ SQLite API hoặc offline fallback
  * - Quản lý vòng đời Camera AR an toàn (chống xung đột trên iOS Safari)
- * - Lắng nghe sự kiện theo dõi đa mục tiêu (quét đồng thời cả 10 ảnh target)
+ * - Lắng nghe sự kiện theo dõi đa mục tiêu (quét tối đa 2 ảnh cùng lúc)
  * - Tự động co giãn giao diện 3D responsive theo màn hình điện thoại
- * - Tính toán toạ độ 2D từ không gian 3D để phóng to Shared-Element Modal (VisionOS)
- * - Xử lý cảm ứng trực tiếp trên màn hình, chống duplicate click/touch
+ * - Tối ưu hoá triệt để: Chống rò rỉ bộ nhớ, chống giật modal, bám dính siêu mượt 60 FPS
  */
 
 // Bảng ảnh fallback chính xác cho từng target
@@ -29,9 +28,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Trạng thái ứng dụng
   let dbLocations = {};
   const activeTargets = new Set();
+  const targetVisibleState = new Array(10).fill(false);
   let currentDetectedTarget = null;
   let activeCardIdx = 0;
-  let activeSourceElementId = null;
   let isModalOpening = false;
   let isModalOpen = false;
   let arSystemStarted = false;
@@ -78,7 +77,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    // Vẽ toàn bộ 30 canvas (10 địa danh x 3 thẻ)
+    // Vẽ toàn bộ 30 canvas (10 địa danh x 3 thẻ) đúng 1 lần duy nhất
     if (window.ARCanvasRenderer) {
       window.ARCanvasRenderer.renderAllLocationCanvases(dbLocations);
     }
@@ -86,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   await initDatabase();
 
-  // Đảm bảo sau khi A-Frame load scene xong, Texture sẽ được Three.js refresh ngay
+  // Đảm bảo sau khi A-Frame load scene xong, Texture sẽ được Three.js nạp vào GPU đúng 1 lần
   if (sceneEl) {
     if (sceneEl.hasLoaded) {
       if (window.ARCanvasRenderer) window.ARCanvasRenderer.refreshAllTextures();
@@ -156,37 +155,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     return 1.0;
   }
 
-  function animateCardScale(entityId, toScale, duration = 450) {
-    const el = document.getElementById(entityId);
-    if (!el) return;
-
-    el.removeAttribute('animation__boot');
-    el.setAttribute('animation__boot', {
-      property: 'scale',
-      to: `${toScale} ${toScale} ${toScale}`,
-      dur: duration,
-      easing: toScale > 0 ? 'easeOutBack' : 'easeInQuad'
-    });
-  }
-
   window.addEventListener('resize', () => {
     const targetScale = getResponsiveScale();
     activeTargets.forEach((targetIdx) => {
       const group = document.getElementById(`spatial-group-${targetIdx}`);
-      if (group) {
+      if (group && targetVisibleState[targetIdx]) {
         group.setAttribute('scale', `${targetScale} ${targetScale} ${targetScale}`);
       }
     });
   });
 
   // ==========================================================================
-  // 4. LẮNG NGHE SỰ KIỆN QUÉT ẢNH TARGET (QUÉT ĐỒNG THỜI CẢ 10 THẺ)
+  // 4. LẮNG NGHE SỰ KIỆN QUÉT ẢNH TARGET (TỐI ƯU HOÁ: CHỐNG MEMORY LEAK)
   // ==========================================================================
   function setupTracking(targetIdx) {
     const el = document.getElementById(`target-entity-${targetIdx}`);
-    if (!el) return;
+    const group = document.getElementById(`spatial-group-${targetIdx}`);
+    if (!el || !group) return;
 
     el.addEventListener('targetFound', () => {
+      // Chặn spam sự kiện nếu thẻ đang hiển thị rồi
+      if (targetVisibleState[targetIdx]) return;
+      targetVisibleState[targetIdx] = true;
+
       activeTargets.add(targetIdx);
       currentDetectedTarget = targetIdx;
       statusDot.classList.add('active');
@@ -201,18 +192,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         statusText.textContent = `Đang quét: ${activeTargets.size} địa danh`;
       }
 
+      // Hiện thẻ tức thì, không tạo animation object gây lag bộ nhớ
       const targetScale = getResponsiveScale();
-      animateCardScale(`spatial-group-${targetIdx}`, targetScale, 480);
-
-      // Đảm bảo texture luôn sắc nét khi vừa phát hiện
-      if (window.ARCanvasRenderer) {
-        window.ARCanvasRenderer.refreshTargetTextures(targetIdx);
-      }
+      group.setAttribute('scale', `${targetScale} ${targetScale} ${targetScale}`);
+      group.setAttribute('visible', 'true');
     });
 
     el.addEventListener('targetLost', () => {
+      // Chặn spam sự kiện nếu thẻ đang ẩn rồi
+      if (!targetVisibleState[targetIdx]) return;
+      targetVisibleState[targetIdx] = false;
+
       activeTargets.delete(targetIdx);
-      animateCardScale(`spatial-group-${targetIdx}`, 0, 220);
+      group.setAttribute('scale', '0 0 0');
+      group.setAttribute('visible', 'false');
 
       if (activeTargets.size === 0) {
         statusDot.classList.remove('active');
@@ -230,78 +223,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ==========================================================================
-  // 5. TÍNH TOÁN TOẠ ĐỘ 2D TRÊN MÀN HÌNH ĐIỆN THOẠI CỦA THẺ 3D
+  // 5. HIỆU ỨNG PHÓNG TO MODAL CHI TIẾT (MƯỢT MÀ 60 FPS, KHÔNG GIẬT LAG)
   // ==========================================================================
-  function get3DCardScreenRect(targetIdx, sourceElementId) {
-    const defaultRect = {
-      x: window.innerWidth / 2 - 140,
-      y: window.innerHeight / 2 - 80,
-      width: 280,
-      height: 160
-    };
-
-    let cardEl = null;
-    if (sourceElementId) {
-      cardEl = document.getElementById(sourceElementId);
-    }
-    if (!cardEl) {
-      cardEl = document.getElementById(`bar-top-${targetIdx}`) || document.getElementById(`card-left-${targetIdx}`);
-    }
-
-    const camera = sceneEl.camera;
-    if (!cardEl || !camera || !cardEl.object3D) return defaultRect;
-
-    const pos = new THREE.Vector3();
-    cardEl.object3D.getWorldPosition(pos);
-
-    // Kiểm tra nếu thẻ nằm phía sau camera
-    pos.project(camera);
-    if (pos.z > 1 || isNaN(pos.x) || isNaN(pos.y)) {
-      return defaultRect;
-    }
-
-    const screenX = (pos.x * 0.5 + 0.5) * window.innerWidth;
-    const screenY = (-(pos.y * 0.5) + 0.5) * window.innerHeight;
-
-    const camPos = new THREE.Vector3();
-    camera.getWorldPosition(camPos);
-    const cardPos = new THREE.Vector3();
-    cardEl.object3D.getWorldPosition(cardPos);
-    const dist = Math.max(0.2, camPos.distanceTo(cardPos));
-
-    const fov = camera.fov || 60;
-    const visibleHeightAtDist = 2 * Math.tan((fov * Math.PI) / 360) * dist;
-    const pixelPerMeter = window.innerHeight / visibleHeightAtDist;
-
-    const isTopBar = sourceElementId && sourceElementId.startsWith('bar-top-');
-    const planeW = isTopBar ? 0.96 : 0.44;
-    const planeH = isTopBar ? 0.22 : 0.64;
-
-    const width = Math.min(window.innerWidth * 0.88, Math.max(120, planeW * pixelPerMeter));
-    const height = Math.min(window.innerHeight * 0.60, Math.max(60, planeH * pixelPerMeter));
-
-    return {
-      x: screenX - width / 2,
-      y: screenY - height / 2,
-      width: width,
-      height: height
-    };
-  }
-
-  // ==========================================================================
-  // 6. PHÓNG TO MORPHING SPRING TỪ ĐÚNG VỊ TRÍ THẺ 3D (VISIONOS CURVE)
-  // ==========================================================================
-  window.openFullView = function (targetIdx, sourceElementId) {
+  window.openFullView = function (targetIdx) {
     if (isModalOpening || isModalOpen) return;
     isModalOpening = true;
     isModalOpen = true;
     activeCardIdx = targetIdx;
-    activeSourceElementId = sourceElementId;
 
-    // Phản hồi rung haptic nhẹ nhàng
+    // Phản hồi rung nhẹ nhàng
     if (navigator.vibrate) {
       try {
-        navigator.vibrate([18, 25]);
+        navigator.vibrate(18);
       } catch (e) {}
     }
 
@@ -316,7 +249,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    // 1. Điền thông tin vào Modal
+    // Điền dữ liệu vào Modal
     modalImg.src = data.image_url || data.imageUrl || FALLBACK_TARGET_IMAGES[targetIdx] || 'assets/target-0.png';
     modalTitle.textContent = data.name || `Địa điểm #${targetIdx + 1}`;
     modalBadge.textContent = data.tag || 'Di tích';
@@ -358,84 +291,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mapQuery = data.map_query || data.mapQuery || data.name;
     btnModalMap.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
 
-    // 2. Lấy toạ độ xuất phát chính xác của thẻ 3D trên màn hình điện thoại
-    const startRect = get3DCardScreenRect(targetIdx, sourceElementId);
-
-    const finalWidth = Math.min(window.innerWidth - 32, 480);
-    const finalHeight = Math.min(window.innerHeight * 0.88, 720);
-    const finalLeft = (window.innerWidth - finalWidth) / 2;
-    const finalTop = (window.innerHeight - finalHeight) / 2;
-
-    const scaleX = Math.max(0.18, startRect.width / finalWidth);
-    const scaleY = Math.max(0.18, startRect.height / finalHeight);
-    const deltaX = startRect.x + startRect.width / 2 - (finalLeft + finalWidth / 2);
-    const deltaY = startRect.y + startRect.height / 2 - (finalTop + finalHeight / 2);
-
-    // Đặt thẻ ở vị trí xuất phát ban đầu
+    // Hiển thị modal với hiệu ứng Scale & Fade mượt mà chuẩn 60 FPS
     fullscreenCard.classList.remove('active');
     fullscreenCard.style.transition = 'none';
-    fullscreenCard.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0) scale(${scaleX}, ${scaleY})`;
-    fullscreenCard.style.opacity = '0.35';
-    fullscreenCard.style.borderRadius = '30px';
+    fullscreenCard.style.transform = 'translateY(16px) scale(0.96)';
+    fullscreenCard.style.opacity = '0';
 
     fullscreenModal.classList.add('active');
-    fullscreenModal.style.backgroundColor = 'rgba(9, 9, 11, 0)';
-    fullscreenModal.style.backdropFilter = 'blur(0px)';
-
     fullscreenCard.offsetHeight; // Kích hoạt reflow
 
-    // 3. Kích hoạt hiệu ứng Spring mở rộng
     requestAnimationFrame(() => {
-      fullscreenCard.style.transition =
-        'transform 0.46s cubic-bezier(0.2, 0.9, 0.25, 1), opacity 0.32s ease, border-radius 0.4s ease';
-      fullscreenCard.style.transform = 'translate3d(0, 0, 0) scale(1, 1)';
+      fullscreenCard.style.transition = 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.26s ease';
+      fullscreenCard.style.transform = 'translateY(0) scale(1)';
       fullscreenCard.style.opacity = '1';
-      fullscreenCard.style.borderRadius = '24px';
       fullscreenCard.classList.add('active');
-
-      fullscreenModal.style.backgroundColor = 'rgba(9, 9, 11, 0.90)';
-      fullscreenModal.style.backdropFilter = 'blur(22px)';
 
       setTimeout(() => {
         isModalOpening = false;
-      }, 460);
+      }, 340);
     });
   };
 
   // ==========================================================================
-  // 7. ĐÓNG MODAL CHI TIẾT
+  // 6. ĐÓNG MODAL CHI TIẾT
   // ==========================================================================
   function closeFullView() {
-    if (!fullscreenModal.classList.contains('active')) return;
+    if (!isModalOpen) return;
+    isModalOpening = true;
 
-    const endRect = get3DCardScreenRect(activeCardIdx, activeSourceElementId);
-
-    const finalWidth = Math.min(window.innerWidth - 32, 480);
-    const finalHeight = Math.min(window.innerHeight * 0.88, 720);
-    const finalLeft = (window.innerWidth - finalWidth) / 2;
-    const finalTop = (window.innerHeight - finalHeight) / 2;
-
-    const scaleX = Math.max(0.18, endRect.width / finalWidth);
-    const scaleY = Math.max(0.18, endRect.height / finalHeight);
-    const deltaX = endRect.x + endRect.width / 2 - (finalLeft + finalWidth / 2);
-    const deltaY = endRect.y + endRect.height / 2 - (finalTop + finalHeight / 2);
-
-    fullscreenCard.classList.remove('active');
-    fullscreenCard.style.transition =
-      'transform 0.38s cubic-bezier(0.25, 1, 0.35, 1), opacity 0.28s ease, border-radius 0.32s ease';
-    fullscreenCard.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0) scale(${scaleX}, ${scaleY})`;
+    fullscreenCard.style.transition = 'transform 0.22s cubic-bezier(0.25, 1, 0.35, 1), opacity 0.18s ease';
+    fullscreenCard.style.transform = 'translateY(12px) scale(0.96)';
     fullscreenCard.style.opacity = '0';
-    fullscreenCard.style.borderRadius = '30px';
-
-    fullscreenModal.style.backgroundColor = 'rgba(9, 9, 11, 0)';
-    fullscreenModal.style.backdropFilter = 'blur(0px)';
+    fullscreenCard.classList.remove('active');
 
     setTimeout(() => {
       fullscreenModal.classList.remove('active');
       fullscreenCard.style.transform = 'none';
       isModalOpen = false;
       isModalOpening = false;
-    }, 380);
+    }, 230);
   }
 
   btnCloseModal.addEventListener('click', closeFullView);
@@ -451,93 +345,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // ==========================================================================
-  // 8. TƯƠNG TÁC CHẠM CẢM ỨNG & CLICK VÀO CỤM THẺ AR 3D (CHỐNG DUPLICATE)
+  // 7. BẮT CHẠM VÀO THẺ 3D (ĐIỀU PHỐI QUA A-FRAME RAYCASTER DUY NHẤT)
   // ==========================================================================
-  const raycaster = new THREE.Raycaster();
-  const pointer = new THREE.Vector2();
-
-  function triggerCardOpen(targetIdx, elementId) {
+  function triggerCardOpen(targetIdx) {
     const now = Date.now();
-    if (now - lastTriggerTime < 500) return; // Debounce 500ms
+    if (now - lastTriggerTime < 450) return; // Debounce 450ms
     lastTriggerTime = now;
-    openFullView(targetIdx, elementId);
+    openFullView(targetIdx);
   }
 
-  function handleScreenTouch(clientX, clientY) {
-    if (isModalOpen || isModalOpening) return;
-    if (!sceneEl || !sceneEl.camera) return;
-
-    pointer.x = (clientX / window.innerWidth) * 2 - 1;
-    pointer.y = -(clientY / window.innerHeight) * 2 + 1;
-
-    raycaster.setFromCamera(pointer, sceneEl.camera);
-
-    // CHỈ gom các Mesh của những Target ĐANG ĐƯỢC THEO DÕI (activeTargets)
-    const activeMeshes = [];
-    activeTargets.forEach((idx) => {
-      ['bar-top-', 'card-left-', 'card-right-'].forEach((prefix) => {
-        const el = document.getElementById(prefix + idx);
-        if (el && el.object3D) {
-          el.object3D.traverse((child) => {
-            if (child.isMesh) {
-              child.userData.cardIdx = idx;
-              child.userData.elementId = el.id;
-              activeMeshes.push(child);
-            }
-          });
-        }
-      });
-    });
-
-    if (activeMeshes.length === 0) return;
-
-    const intersects = raycaster.intersectObjects(activeMeshes, true);
-    if (intersects.length > 0) {
-      const hit = intersects[0].object.userData;
-      if (hit && hit.cardIdx !== undefined) {
-        triggerCardOpen(hit.cardIdx, hit.elementId);
-      }
-    }
-  }
-
-  // Bắt touchend trên điện thoại cảm ứng (tránh chạm nhầm vào thanh HUD)
-  window.addEventListener(
-    'touchend',
-    (e) => {
-      if (isModalOpen) return;
-      if (e.target && (e.target.closest('.top-bar') || e.target.closest('.fullscreen-modal') || e.target.closest('#camera-toast'))) {
-        return;
-      }
-      if (e.changedTouches && e.changedTouches.length > 0) {
-        const t = e.changedTouches[0];
-        handleScreenTouch(t.clientX, t.clientY);
-      }
-    },
-    { passive: true }
-  );
-
-  // Bắt chuột click trên máy tính
-  window.addEventListener('pointerup', (e) => {
-    if (e.pointerType === 'touch') return; // Đã xử lý qua touchend
-    if (isModalOpen) return;
-    if (e.target && (e.target.closest('.top-bar') || e.target.closest('.fullscreen-modal') || e.target.closest('#camera-toast'))) {
-      return;
-    }
-    handleScreenTouch(e.clientX, e.clientY);
-  });
-
-  // Bắt click trực tiếp qua A-Frame raycaster
   for (let i = 0; i < 10; i++) {
     ['bar-top-', 'card-left-', 'card-right-'].forEach((prefix) => {
       const el = document.getElementById(prefix + i);
       if (el) {
         el.addEventListener('click', (e) => {
-          if (activeTargets.has(i)) {
-            triggerCardOpen(i, el.id);
+          if (activeTargets.has(i) && !isModalOpen && !isModalOpening) {
+            triggerCardOpen(i);
           }
         });
       }
     });
   }
 });
-
