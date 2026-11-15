@@ -325,25 +325,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ==========================================================================
-  // 3. RESPONSIVE SCALE CỤM THẺ AR 3D THEO MÀN HÌNH
+  // 3. TỶ LỆ CHUẨN 1:1 ĐỒNG NHẤT VỚI HÌNH ẢNH THẬT NGOÀI ĐỜI
   // ==========================================================================
   function getResponsiveScale() {
-    const isPortrait = window.innerHeight > window.innerWidth;
-    const isSmallScreen = window.innerWidth < 520;
-    if (isPortrait && isSmallScreen) {
-      return 0.82;
-    } else if (isPortrait) {
-      return 0.90;
-    }
+    // Luôn giữ tỉ lệ 1.0 để mặt phẳng video đè tràn viền 100% khớp tuyệt đối với bức ảnh thật
     return 1.0;
   }
 
   window.addEventListener('resize', () => {
-    const targetScale = getResponsiveScale();
     activeTargets.forEach((targetIdx) => {
       const group = document.getElementById(`spatial-group-${targetIdx}`);
       if (group && targetVisibleState[targetIdx]) {
-        group.setAttribute('scale', `${targetScale} ${targetScale} ${targetScale}`);
+        group.setAttribute('scale', '1 1 1');
       }
     });
   });
@@ -428,9 +421,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       }
 
-      // Hiện thẻ tức thì, không tạo animation object gây lag bộ nhớ
-      const targetScale = getResponsiveScale();
-      group.setAttribute('scale', `${targetScale} ${targetScale} ${targetScale}`);
+      // Khóa tỉ lệ 1:1 chuẩn xác theo kích thước thật của ảnh ngoài đời
+      group.setAttribute('scale', '1 1 1');
       group.setAttribute('visible', 'true');
     };
 
