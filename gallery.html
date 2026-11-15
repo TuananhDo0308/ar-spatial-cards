@@ -265,42 +265,43 @@
       -webkit-user-drag: none;
     }
 
-    /* 4 góc L-Bracket quang học AR (Độ tương phản cực đại để camera khóa mục tiêu) */
+    /* 4 góc L-Bracket quang học AR - Đặt bên ngoài mép ảnh để không che khuất các điểm đặc trưng (corner keypoints) */
     .ar-bracket {
       position: absolute;
-      width: 28px;
-      height: 28px;
-      border-color: #fafafa;
+      width: 20px;
+      height: 20px;
+      border-color: rgba(255, 255, 255, 0.7);
       border-style: solid;
       pointer-events: none;
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+      z-index: 2;
     }
 
     .ar-bracket.tl {
-      top: -8px;
-      left: -8px;
-      border-width: 3.5px 0 0 3.5px;
+      top: -12px;
+      left: -12px;
+      border-width: 3px 0 0 3px;
       border-top-left-radius: 4px;
     }
 
     .ar-bracket.tr {
-      top: -8px;
-      right: -8px;
-      border-width: 3.5px 3.5px 0 0;
+      top: -12px;
+      right: -12px;
+      border-width: 3px 3px 0 0;
       border-top-right-radius: 4px;
     }
 
     .ar-bracket.bl {
-      bottom: -8px;
-      left: -8px;
-      border-width: 0 0 3.5px 3.5px;
+      bottom: -12px;
+      left: -12px;
+      border-width: 0 0 3px 3px;
       border-bottom-left-radius: 4px;
     }
 
     .ar-bracket.br {
-      bottom: -8px;
-      right: -8px;
-      border-width: 0 3.5px 3.5px 0;
+      bottom: -12px;
+      right: -12px;
+      border-width: 0 3px 3px 0;
       border-bottom-right-radius: 4px;
     }
 
