@@ -163,7 +163,7 @@
       <a-entity id="target-entity-0" mindar-image-target="targetIndex: 0">
         <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
         <a-plane position="0 0 0.002" width="1.0" height="1.0" material="color: #10b981; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane position="0 0 0.001" width="1.0" height="1.0" material="color: #10b981; opacity: 0.05; transparent: true"></a-plane>
+        <a-plane id="target-frame-0" class="clickable" position="0 0 0.001" width="1.0" height="1.0" material="color: #10b981; opacity: 0.05; transparent: true"></a-plane>
         <a-entity id="spatial-group-0" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-0" class="clickable" src="#canvas-top-0" position="0 0.64 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -181,7 +181,7 @@
       <a-entity id="target-entity-1" mindar-image-target="targetIndex: 1">
         <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
         <a-plane position="0 0 0.002" width="1.0" height="1.0" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane position="0 0 0.001" width="1.0" height="1.0" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
+        <a-plane id="target-frame-1" class="clickable" position="0 0 0.001" width="1.0" height="1.0" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
         <a-entity id="spatial-group-1" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-1" class="clickable" src="#canvas-top-1" position="0 0.64 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -199,7 +199,7 @@
       <a-entity id="target-entity-2" mindar-image-target="targetIndex: 2">
         <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
         <a-plane position="0 0 0.002" width="1.0" height="0.667" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane position="0 0 0.001" width="1.0" height="0.667" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
+        <a-plane id="target-frame-2" class="clickable" position="0 0 0.001" width="1.0" height="0.667" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
         <a-entity id="spatial-group-2" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-2" class="clickable" src="#canvas-top-2" position="0 0.474 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -217,7 +217,7 @@
       <a-entity id="target-entity-3" mindar-image-target="targetIndex: 3">
         <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
         <a-plane position="0 0 0.002" width="1.0" height="0.574" material="color: #06b6d4; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane position="0 0 0.001" width="1.0" height="0.574" material="color: #06b6d4; opacity: 0.05; transparent: true"></a-plane>
+        <a-plane id="target-frame-3" class="clickable" position="0 0 0.001" width="1.0" height="0.574" material="color: #06b6d4; opacity: 0.05; transparent: true"></a-plane>
         <a-entity id="spatial-group-3" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-3" class="clickable" src="#canvas-top-3" position="0 0.427 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -235,7 +235,7 @@
       <a-entity id="target-entity-4" mindar-image-target="targetIndex: 4">
         <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
         <a-plane position="0 0 0.002" width="1.0" height="0.625" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane position="0 0 0.001" width="1.0" height="0.625" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
+        <a-plane id="target-frame-4" class="clickable" position="0 0 0.001" width="1.0" height="0.625" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
         <a-entity id="spatial-group-4" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-4" class="clickable" src="#canvas-top-4" position="0 0.453 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -253,7 +253,7 @@
       <a-entity id="target-entity-5" mindar-image-target="targetIndex: 5">
         <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
         <a-plane position="0 0 0.002" width="1.0" height="0.666" material="color: #10b981; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane position="0 0 0.001" width="1.0" height="0.666" material="color: #10b981; opacity: 0.05; transparent: true"></a-plane>
+        <a-plane id="target-frame-5" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="color: #10b981; opacity: 0.05; transparent: true"></a-plane>
         <a-entity id="spatial-group-5" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-5" class="clickable" src="#canvas-top-5" position="0 0.473 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -271,7 +271,7 @@
       <a-entity id="target-entity-6" mindar-image-target="targetIndex: 6">
         <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
         <a-plane position="0 0 0.002" width="1.0" height="0.666" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane position="0 0 0.001" width="1.0" height="0.666" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
+        <a-plane id="target-frame-6" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
         <a-entity id="spatial-group-6" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-6" class="clickable" src="#canvas-top-6" position="0 0.473 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -289,7 +289,7 @@
       <a-entity id="target-entity-7" mindar-image-target="targetIndex: 7">
         <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
         <a-plane position="0 0 0.002" width="1.0" height="1.500" material="color: #10b981; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane position="0 0 0.001" width="1.0" height="1.500" material="color: #10b981; opacity: 0.05; transparent: true"></a-plane>
+        <a-plane id="target-frame-7" class="clickable" position="0 0 0.001" width="1.0" height="1.500" material="color: #10b981; opacity: 0.05; transparent: true"></a-plane>
         <a-entity id="spatial-group-7" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-7" class="clickable" src="#canvas-top-7" position="0 0.89 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -307,7 +307,7 @@
       <a-entity id="target-entity-8" mindar-image-target="targetIndex: 8">
         <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
         <a-plane position="0 0 0.002" width="1.0" height="0.666" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane position="0 0 0.001" width="1.0" height="0.666" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
+        <a-plane id="target-frame-8" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
         <a-entity id="spatial-group-8" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-8" class="clickable" src="#canvas-top-8" position="0 0.473 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -325,7 +325,7 @@
       <a-entity id="target-entity-9" mindar-image-target="targetIndex: 9">
         <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
         <a-plane position="0 0 0.002" width="1.0" height="0.666" material="color: #06b6d4; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane position="0 0 0.001" width="1.0" height="0.666" material="color: #06b6d4; opacity: 0.05; transparent: true"></a-plane>
+        <a-plane id="target-frame-9" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="color: #06b6d4; opacity: 0.05; transparent: true"></a-plane>
         <a-entity id="spatial-group-9" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-9" class="clickable" src="#canvas-top-9" position="0 0.473 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>

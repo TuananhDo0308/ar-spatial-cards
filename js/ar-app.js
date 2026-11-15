@@ -231,85 +231,91 @@ document.addEventListener('DOMContentLoaded', async () => {
     isModalOpen = true;
     activeCardIdx = targetIdx;
 
-    // Phản hồi rung nhẹ nhàng
-    if (navigator.vibrate) {
-      try {
-        navigator.vibrate(18);
-      } catch (e) {}
-    }
+    try {
+      // Phản hồi rung nhẹ nhàng
+      if (navigator.vibrate) {
+        try {
+          navigator.vibrate(18);
+        } catch (e) {}
+      }
 
-    const data =
-      dbLocations[targetIdx] ||
-      dbLocations[String(targetIdx)] ||
-      (typeof LOCATIONS_DATA !== 'undefined' ? LOCATIONS_DATA[targetIdx] : null);
+      const data =
+        dbLocations[targetIdx] ||
+        dbLocations[String(targetIdx)] ||
+        (typeof LOCATIONS_DATA !== 'undefined' ? LOCATIONS_DATA[targetIdx] : null);
 
-    if (!data) {
+      if (!data) {
+        isModalOpening = false;
+        isModalOpen = false;
+        return;
+      }
+
+      // Điền dữ liệu vào Modal
+      modalImg.src = data.image_url || data.imageUrl || FALLBACK_TARGET_IMAGES[targetIdx] || 'assets/target-0.png';
+      modalTitle.textContent = data.name || `Địa điểm #${targetIdx + 1}`;
+      modalBadge.textContent = data.tag || 'Di tích';
+
+      const accent = data.badgeColor || data.badge_color || '#10b981';
+      let badgeClass = 'badge-emerald';
+      if (accent === '#f59e0b') badgeClass = 'badge-amber';
+      else if (accent === '#06b6d4') badgeClass = 'badge-cyan';
+      modalBadge.className = `badge-pill ${badgeClass}`;
+
+      const rawRating = String(data.rating || '4.8');
+      modalRating.textContent = rawRating.includes('★') ? rawRating : rawRating + ' ★';
+      modalCity.textContent = '📍 ' + (data.city || 'Việt Nam');
+      modalDesc.textContent =
+        data.full_desc || data.fullDesc || data.short_desc || data.shortDesc || 'Đang cập nhật mô tả chi tiết...';
+      modalHours.textContent = data.hours || '08:00 - 16:30';
+      modalTicket.textContent = data.ticket || 'Miễn phí';
+
+      // Highlights
+      modalHighlights.innerHTML = '';
+      let highlights = data.highlights || [];
+      if (typeof highlights === 'string') {
+        try {
+          highlights = JSON.parse(highlights);
+        } catch (e) {
+          highlights = [];
+        }
+      }
+      if (Array.isArray(highlights)) {
+        highlights.forEach((item) => {
+          const div = document.createElement('div');
+          div.className = 'highlight-card';
+          div.innerHTML = `<span>✦</span><span>${item}</span>`;
+          modalHighlights.appendChild(div);
+        });
+      }
+
+      // Map Query
+      const mapQuery = data.map_query || data.mapQuery || data.name;
+      btnModalMap.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
+
+      // Hiển thị modal với hiệu ứng Scale & Fade mượt mà chuẩn 60 FPS
+      fullscreenCard.classList.remove('active');
+      fullscreenCard.style.transition = 'none';
+      fullscreenCard.style.transform = 'translateY(16px) scale(0.96)';
+      fullscreenCard.style.opacity = '0';
+
+      fullscreenModal.classList.add('active');
+      fullscreenCard.offsetHeight; // Kích hoạt reflow
+
+      requestAnimationFrame(() => {
+        fullscreenCard.style.transition = 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.26s ease';
+        fullscreenCard.style.transform = 'translateY(0) scale(1)';
+        fullscreenCard.style.opacity = '1';
+        fullscreenCard.classList.add('active');
+
+        setTimeout(() => {
+          isModalOpening = false;
+        }, 340);
+      });
+    } catch (err) {
+      console.error('Lỗi khi mở modal chi tiết:', err);
       isModalOpening = false;
       isModalOpen = false;
-      return;
     }
-
-    // Điền dữ liệu vào Modal
-    modalImg.src = data.image_url || data.imageUrl || FALLBACK_TARGET_IMAGES[targetIdx] || 'assets/target-0.png';
-    modalTitle.textContent = data.name || `Địa điểm #${targetIdx + 1}`;
-    modalBadge.textContent = data.tag || 'Di tích';
-
-    const accent = data.badgeColor || data.badge_color || '#10b981';
-    let badgeClass = 'badge-emerald';
-    if (accent === '#f59e0b') badgeClass = 'badge-amber';
-    else if (accent === '#06b6d4') badgeClass = 'badge-cyan';
-    modalBadge.className = `badge-pill ${badgeClass}`;
-
-    const rawRating = String(data.rating || '4.8');
-    modalRating.textContent = rawRating.includes('★') ? rawRating : rawRating + ' ★';
-    modalCity.textContent = '📍 ' + (data.city || 'Việt Nam');
-    modalDesc.textContent =
-      data.full_desc || data.fullDesc || data.short_desc || data.shortDesc || 'Đang cập nhật mô tả chi tiết...';
-    modalHours.textContent = data.hours || '08:00 - 16:30';
-    modalTicket.textContent = data.ticket || 'Miễn phí';
-
-    // Highlights
-    modalHighlights.innerHTML = '';
-    let highlights = data.highlights || [];
-    if (typeof highlights === 'string') {
-      try {
-        highlights = JSON.parse(highlights);
-      } catch (e) {
-        highlights = [];
-      }
-    }
-    if (Array.isArray(highlights)) {
-      highlights.forEach((item) => {
-        const div = document.createElement('div');
-        div.className = 'highlight-card';
-        div.innerHTML = `<span>✦</span><span>${item}</span>`;
-        modalHighlights.appendChild(div);
-      });
-    }
-
-    // Map Query
-    const mapQuery = data.map_query || data.mapQuery || data.name;
-    btnModalMap.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
-
-    // Hiển thị modal với hiệu ứng Scale & Fade mượt mà chuẩn 60 FPS
-    fullscreenCard.classList.remove('active');
-    fullscreenCard.style.transition = 'none';
-    fullscreenCard.style.transform = 'translateY(16px) scale(0.96)';
-    fullscreenCard.style.opacity = '0';
-
-    fullscreenModal.classList.add('active');
-    fullscreenCard.offsetHeight; // Kích hoạt reflow
-
-    requestAnimationFrame(() => {
-      fullscreenCard.style.transition = 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.26s ease';
-      fullscreenCard.style.transform = 'translateY(0) scale(1)';
-      fullscreenCard.style.opacity = '1';
-      fullscreenCard.classList.add('active');
-
-      setTimeout(() => {
-        isModalOpening = false;
-      }, 340);
-    });
   };
 
   // ==========================================================================
@@ -345,21 +351,158 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // ==========================================================================
-  // 7. BẮT CHẠM VÀO THẺ 3D (ĐIỀU PHỐI QUA A-FRAME RAYCASTER DUY NHẤT)
+  // 7. TƯƠNG TÁC CHẠM CẢM ỨNG (TOUCH / CLICK) VÀO CỤM THẺ AR 3D & NÚT EXTEND
   // ==========================================================================
+  const raycaster = new THREE.Raycaster();
+  const pointer = new THREE.Vector2();
+  const candidateMeshes = [];
+
   function triggerCardOpen(targetIdx) {
     const now = Date.now();
-    if (now - lastTriggerTime < 450) return; // Debounce 450ms
+    if (now - lastTriggerTime < 450) return; // Debounce 450ms chống kích hoạt kép
     lastTriggerTime = now;
     openFullView(targetIdx);
   }
 
+  function handleScreenTouch(clientX, clientY) {
+    if (isModalOpen || isModalOpening) return;
+    if (!sceneEl) return;
+    const camera = sceneEl.camera;
+    if (!camera) return;
+
+    // Chuẩn hoá toạ độ chạm màn hình sang NDC [-1, 1] chính xác theo khung Canvas
+    const canvas = sceneEl.canvas;
+    let x = clientX;
+    let y = clientY;
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+
+    if (canvas) {
+      const rect = canvas.getBoundingClientRect();
+      x = clientX - rect.left;
+      y = clientY - rect.top;
+      width = rect.width;
+      height = rect.height;
+    }
+
+    pointer.x = (x / width) * 2 - 1;
+    pointer.y = -(y / height) * 2 + 1;
+
+    raycaster.setFromCamera(pointer, camera);
+
+    // Gom các Mesh của các target đang được hiển thị
+    candidateMeshes.length = 0;
+    for (let idx = 0; idx < 10; idx++) {
+      const group = document.getElementById(`spatial-group-${idx}`);
+      if (!group) continue;
+
+      // Kiểm tra target đang hoạt động hoặc đang hiển thị trên màn hình
+      const isVisible = targetVisibleState[idx] || activeTargets.has(idx) || group.getAttribute('visible') === 'true';
+      if (isVisible) {
+        ['bar-top-', 'card-left-', 'card-right-', 'target-frame-'].forEach((prefix) => {
+          const el = document.getElementById(prefix + idx);
+          if (el && el.object3D) {
+            el.object3D.traverse((child) => {
+              if (child.isMesh) {
+                child.userData.cardIdx = idx;
+                candidateMeshes.push(child);
+              }
+            });
+          }
+        });
+      }
+    }
+
+    // Nếu vì lý do nào đó targetVisibleState chưa kịp cập nhật, fallback kiểm tra toàn bộ 10 targets
+    if (candidateMeshes.length === 0) {
+      for (let idx = 0; idx < 10; idx++) {
+        ['bar-top-', 'card-left-', 'card-right-', 'target-frame-'].forEach((prefix) => {
+          const el = document.getElementById(prefix + idx);
+          if (el && el.object3D) {
+            el.object3D.traverse((child) => {
+              if (child.isMesh) {
+                child.userData.cardIdx = idx;
+                candidateMeshes.push(child);
+              }
+            });
+          }
+        });
+      }
+    }
+
+    if (candidateMeshes.length === 0) return;
+
+    const intersects = raycaster.intersectObjects(candidateMeshes, true);
+    if (intersects.length > 0) {
+      const hit = intersects[0].object.userData;
+      if (hit && hit.cardIdx !== undefined) {
+        triggerCardOpen(hit.cardIdx);
+      }
+    }
+  }
+
+  // Theo dõi toạ độ bắt đầu chạm để phân biệt Tap và Drag (vuốt)
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchStartTime = 0;
+
+  window.addEventListener(
+    'touchstart',
+    (e) => {
+      if (e.touches && e.touches.length > 0) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+      }
+    },
+    { passive: true }
+  );
+
+  // Bắt touchend trên điện thoại (đảm bảo bấm nút Extend / mở rộng siêu nhạy)
+  window.addEventListener(
+    'touchend',
+    (e) => {
+      if (isModalOpen || isModalOpening) return;
+      if (
+        e.target &&
+        (e.target.closest('.top-bar') || e.target.closest('.fullscreen-modal') || e.target.closest('#camera-toast'))
+      ) {
+        return;
+      }
+      if (!e.changedTouches || e.changedTouches.length === 0) return;
+      const t = e.changedTouches[0];
+      const deltaX = Math.abs(t.clientX - touchStartX);
+      const deltaY = Math.abs(t.clientY - touchStartY);
+      const touchDuration = Date.now() - touchStartTime;
+
+      // Ngưỡng phát hiện Tap: ngón tay di chuyển < 25px và thời gian giữ < 600ms
+      if (deltaX < 25 && deltaY < 25 && touchDuration < 600) {
+        handleScreenTouch(t.clientX, t.clientY);
+      }
+    },
+    { passive: true }
+  );
+
+  // Bắt chuột click trên máy tính (Pointerup)
+  window.addEventListener('pointerup', (e) => {
+    if (e.pointerType === 'touch') return; // Đã xử lý qua touchend
+    if (isModalOpen || isModalOpening) return;
+    if (
+      e.target &&
+      (e.target.closest('.top-bar') || e.target.closest('.fullscreen-modal') || e.target.closest('#camera-toast'))
+    ) {
+      return;
+    }
+    handleScreenTouch(e.clientX, e.clientY);
+  });
+
+  // Giữ sự kiện click A-Frame làm lớp bảo hiểm thứ 2
   for (let i = 0; i < 10; i++) {
-    ['bar-top-', 'card-left-', 'card-right-'].forEach((prefix) => {
+    ['bar-top-', 'card-left-', 'card-right-', 'target-frame-'].forEach((prefix) => {
       const el = document.getElementById(prefix + i);
       if (el) {
-        el.addEventListener('click', (e) => {
-          if (activeTargets.has(i) && !isModalOpen && !isModalOpening) {
+        el.addEventListener('click', () => {
+          if (!isModalOpen && !isModalOpening) {
             triggerCardOpen(i);
           }
         });
