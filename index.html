@@ -6,6 +6,17 @@
   <title>WebAR - Camera Quét Thẻ AR Không Gian</title>
   <link rel="icon" href="data:,">
 
+  <!-- Xin quyền mở camera NGAY LẬP TỨC khi vừa mở trang (chống chờ lâu) -->
+  <script>
+    if (typeof navigator !== 'undefined' && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } }
+      }).then(function(s) {
+        s.getTracks().forEach(function(t) { t.stop(); });
+      }).catch(function() {});
+    }
+  </script>
+
   <!-- A-Frame (8frame 1.5.0) & Niantic 8th Wall SLAM Engine -->
   <script src="js/8frame-1.5.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@8thwall/engine-binary@1/dist/xr.js" async crossorigin="anonymous" data-preload-chunks="slam"></script>
@@ -28,12 +39,6 @@
 </head>
 <body>
 
-  <!-- Floating Toast nếu Safari cần user gesture để mở Camera -->
-  <div class="camera-prompt-toast" id="camera-toast">
-    <span>📷</span>
-    <span>Chạm vào màn hình để mở Camera</span>
-  </div>
-
   <!-- Camera View Hoàn Toàn Thuần Túy: Không khung ngắm, không text trên cùng -->
   <div class="ui-layer"></div>
 
@@ -41,7 +46,7 @@
   <div class="fullscreen-modal" id="fullscreen-modal">
     <div class="fullscreen-card" id="fullscreen-card">
       <button class="btn-close-modal" id="btn-close-modal" aria-label="Đóng">✕</button>
-      <img src="assets/card-hoian.png" class="modal-hero-img" id="modal-img" alt="Địa điểm">
+      <img src="assets/card-hoian.jpg" class="modal-hero-img" id="modal-img" alt="Địa điểm">
 
       <div class="modal-body">
         <div class="modal-content-animated">
@@ -93,7 +98,8 @@
     <canvas id="canvas-right-3" width="520" height="760"></canvas>
     <canvas id="canvas-top-4" width="960" height="220"></canvas>
     <canvas id="canvas-left-4" width="520" height="760"></canvas>
-    <canvas id="canvas-right-4" width="520" height="760"></canvas>  </div>
+    <canvas id="canvas-right-4" width="520" height="760"></canvas>
+  </div>
 
   <!-- AR Scene A-Frame (Zero-Parallax, bám chặt theo ảnh như Stories AR) -->
   <div class="ar-viewport">
@@ -105,13 +111,13 @@
       device-orientation-permission-ui="enabled: false"
       embedded
     >
-      <!-- Assets Videos (Overlay Video lên từng hình thẻ AR) -->
-      <a-assets timeout="30000">
-        <video id="video-0" src="assets/videos/HoiAn.mp4" preload="auto" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
-        <video id="video-1" src="assets/videos/DinhDocLap.mp4" preload="auto" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
-        <video id="video-2" src="assets/videos/ChoBenThanh.mp4" preload="auto" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
-        <video id="video-3" src="assets/videos/HoHoanKiem.mp4" preload="auto" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
-        <video id="video-4" src="assets/videos/VinhHaLong.mp4" preload="auto" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
+      <!-- Assets Videos: preload='none' để KHÔNG chặn nạp trang / mở Camera tức thì! -->
+      <a-assets timeout="500">
+        <video id="video-0" src="assets/videos/HoiAn.mp4" preload="none" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
+        <video id="video-1" src="assets/videos/DinhDocLap.mp4" preload="none" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
+        <video id="video-2" src="assets/videos/ChoBenThanh.mp4" preload="none" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
+        <video id="video-3" src="assets/videos/HoHoanKiem.mp4" preload="none" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
+        <video id="video-4" src="assets/videos/VinhHaLong.mp4" preload="none" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
       </a-assets>
 
       <!-- Camera -->
@@ -123,102 +129,62 @@
         raycaster="near: 0.05; far: 50; interval: 60; objects: .clickable;"
       ></a-camera>
 
-      <!-- ================= TARGET 0: PHỐ CỔ HỘI AN (640x640 - Vuông 1.0) ================= -->
+      <!-- ================= TARGET 0: PHỐ CỔ HỘI AN (16:9 - 1280x720) ================= -->
       <xrextras-named-image-target name="target-0" id="target-entity-0">
-        <a-entity id="spatial-group-0" position="0 0 0.005" rotation="0 0 0" scale="0 0 0">
-          <!-- 1. Target Frame Surface (Mặt phẳng mục tiêu quét) -->
-          <a-plane id="target-frame-0" class="clickable" position="0 0 0.001" width="1.0" height="1.0" material="opacity: 0.001; transparent: true"></a-plane>
-
-          <!-- 2. Video Overlay Plane (Đúng cùng kích thước & tỷ lệ ảnh, phủ trực tiếp lên hình thẻ) -->
-          <a-plane id="target-video-0" class="clickable" src="#video-0" position="0 0 0.002" width="1.0" height="1.0" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
-
-          <!-- 3. Thanh tiêu đề phía trên -->
-          <a-plane id="bar-top-0" class="clickable" src="#canvas-top-0" position="0 0.64 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-
-          <!-- 4. Thẻ thông tin bên trái (Tổng quan & Lịch sử) -->
+        <a-entity id="spatial-group-0" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
+          <a-plane id="target-frame-0" class="clickable" position="0 0 0.001" width="1.0" height="0.5625" material="opacity: 0.001; transparent: true"></a-plane>
+          <!-- Video tràn viền 100% che kín toàn bộ hình (1.002 x 0.5636) -->
+          <a-plane id="target-video-0" class="clickable" src="#video-0" position="0 0 0.002" width="1.002" height="0.5636" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
+          <a-plane id="bar-top-0" class="clickable" src="#canvas-top-0" position="0 0.422 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-0" class="clickable" src="#canvas-left-0" position="-0.75 0 0.004" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-
-          <!-- 5. Thẻ thông tin bên phải (Thông tin tham quan & Giờ mở cửa) -->
           <a-plane id="card-right-0" class="clickable" src="#canvas-right-0" position="0.75 0 0.004" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
         </a-entity>
       </xrextras-named-image-target>
 
-      <!-- ================= TARGET 1: DINH ĐỘC LẬP (1024x576 - Ngang 0.563) ================= -->
+      <!-- ================= TARGET 1: DINH ĐỘC LẬP (16:9 - 1280x720) ================= -->
       <xrextras-named-image-target name="target-1" id="target-entity-1">
         <a-entity id="spatial-group-1" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
-          <!-- 1. Target Frame Surface (Mặt phẳng mục tiêu quét) -->
-          <a-plane id="target-frame-1" class="clickable" position="0 0 0.001" width="1.0" height="0.563" material="opacity: 0.001; transparent: true"></a-plane>
-
-          <!-- 2. Video Overlay Plane (Đúng cùng kích thước & tỷ lệ ảnh, phủ trực tiếp lên hình thẻ) -->
-          <a-plane id="target-video-1" class="clickable" src="#video-1" position="0 0 0.002" width="1.0" height="0.563" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
-
-          <!-- 3. Thanh tiêu đề phía trên -->
+          <a-plane id="target-frame-1" class="clickable" position="0 0 0.001" width="1.0" height="0.5625" material="opacity: 0.001; transparent: true"></a-plane>
+          <!-- Video tràn viền 100% che kín toàn bộ hình (1.002 x 0.5636) -->
+          <a-plane id="target-video-1" class="clickable" src="#video-1" position="0 0 0.002" width="1.002" height="0.5636" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
           <a-plane id="bar-top-1" class="clickable" src="#canvas-top-1" position="0 0.422 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-
-          <!-- 4. Thẻ thông tin bên trái (Tổng quan & Lịch sử) -->
           <a-plane id="card-left-1" class="clickable" src="#canvas-left-1" position="-0.75 0 0.004" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-
-          <!-- 5. Thẻ thông tin bên phải (Thông tin tham quan & Giờ mở cửa) -->
           <a-plane id="card-right-1" class="clickable" src="#canvas-right-1" position="0.75 0 0.004" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
         </a-entity>
       </xrextras-named-image-target>
 
-      <!-- ================= TARGET 2: CHỢ BẾN THÀNH (1000x500 - Ngang 0.500) ================= -->
+      <!-- ================= TARGET 2: CHỢ BẾN THÀNH (16:9 - 1280x720) ================= -->
       <xrextras-named-image-target name="target-2" id="target-entity-2">
         <a-entity id="spatial-group-2" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
-          <!-- 1. Target Frame Surface (Mặt phẳng mục tiêu quét) -->
-          <a-plane id="target-frame-2" class="clickable" position="0 0 0.001" width="1.0" height="0.5" material="opacity: 0.001; transparent: true"></a-plane>
-
-          <!-- 2. Video Overlay Plane (Đúng cùng kích thước & tỷ lệ ảnh, phủ trực tiếp lên hình thẻ) -->
-          <a-plane id="target-video-2" class="clickable" src="#video-2" position="0 0 0.002" width="1.0" height="0.5" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
-
-          <!-- 3. Thanh tiêu đề phía trên -->
-          <a-plane id="bar-top-2" class="clickable" src="#canvas-top-2" position="0 0.39 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-
-          <!-- 4. Thẻ thông tin bên trái (Tổng quan & Lịch sử) -->
+          <a-plane id="target-frame-2" class="clickable" position="0 0 0.001" width="1.0" height="0.5625" material="opacity: 0.001; transparent: true"></a-plane>
+          <!-- Video tràn viền 100% che kín toàn bộ hình (1.002 x 0.5636) -->
+          <a-plane id="target-video-2" class="clickable" src="#video-2" position="0 0 0.002" width="1.002" height="0.5636" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
+          <a-plane id="bar-top-2" class="clickable" src="#canvas-top-2" position="0 0.422 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-2" class="clickable" src="#canvas-left-2" position="-0.75 0 0.004" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-
-          <!-- 5. Thẻ thông tin bên phải (Thông tin tham quan & Giờ mở cửa) -->
           <a-plane id="card-right-2" class="clickable" src="#canvas-right-2" position="0.75 0 0.004" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
         </a-entity>
       </xrextras-named-image-target>
 
-      <!-- ================= TARGET 3: HỒ HOÀN KIẾM & THÁP RÙA (1024x682 - Ngang 0.666) ================= -->
+      <!-- ================= TARGET 3: HỒ HOÀN KIẾM & THÁP RÙA (16:9 - 1280x720) ================= -->
       <xrextras-named-image-target name="target-3" id="target-entity-3">
         <a-entity id="spatial-group-3" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
-          <!-- 1. Target Frame Surface (Mặt phẳng mục tiêu quét) -->
-          <a-plane id="target-frame-3" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="opacity: 0.001; transparent: true"></a-plane>
-
-          <!-- 2. Video Overlay Plane (Đúng cùng kích thước & tỷ lệ ảnh, phủ trực tiếp lên hình thẻ) -->
-          <a-plane id="target-video-3" class="clickable" src="#video-3" position="0 0 0.002" width="1.0" height="0.666" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
-
-          <!-- 3. Thanh tiêu đề phía trên -->
-          <a-plane id="bar-top-3" class="clickable" src="#canvas-top-3" position="0 0.473 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-
-          <!-- 4. Thẻ thông tin bên trái (Tổng quan & Lịch sử) -->
+          <a-plane id="target-frame-3" class="clickable" position="0 0 0.001" width="1.0" height="0.5625" material="opacity: 0.001; transparent: true"></a-plane>
+          <!-- Video tràn viền 100% che kín toàn bộ hình (1.002 x 0.5636) -->
+          <a-plane id="target-video-3" class="clickable" src="#video-3" position="0 0 0.002" width="1.002" height="0.5636" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
+          <a-plane id="bar-top-3" class="clickable" src="#canvas-top-3" position="0 0.422 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-3" class="clickable" src="#canvas-left-3" position="-0.75 0 0.004" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-
-          <!-- 5. Thẻ thông tin bên phải (Thông tin tham quan & Giờ mở cửa) -->
           <a-plane id="card-right-3" class="clickable" src="#canvas-right-3" position="0.75 0 0.004" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
         </a-entity>
       </xrextras-named-image-target>
 
-      <!-- ================= TARGET 4: VỊNH HẠ LONG (800x533 - Ngang 0.666) ================= -->
+      <!-- ================= TARGET 4: VỊNH HẠ LONG (16:9 - 1280x720) ================= -->
       <xrextras-named-image-target name="target-4" id="target-entity-4">
         <a-entity id="spatial-group-4" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
-          <!-- 1. Target Frame Surface (Mặt phẳng mục tiêu quét) -->
-          <a-plane id="target-frame-4" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="opacity: 0.001; transparent: true"></a-plane>
-
-          <!-- 2. Video Overlay Plane (Đúng cùng kích thước & tỷ lệ ảnh, phủ trực tiếp lên hình thẻ) -->
-          <a-plane id="target-video-4" class="clickable" src="#video-4" position="0 0 0.002" width="1.0" height="0.666" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
-
-          <!-- 3. Thanh tiêu đề phía trên -->
-          <a-plane id="bar-top-4" class="clickable" src="#canvas-top-4" position="0 0.473 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-
-          <!-- 4. Thẻ thông tin bên trái (Tổng quan & Lịch sử) -->
+          <a-plane id="target-frame-4" class="clickable" position="0 0 0.001" width="1.0" height="0.5625" material="opacity: 0.001; transparent: true"></a-plane>
+          <!-- Video tràn viền 100% che kín toàn bộ hình (1.002 x 0.5636) -->
+          <a-plane id="target-video-4" class="clickable" src="#video-4" position="0 0 0.002" width="1.002" height="0.5636" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
+          <a-plane id="bar-top-4" class="clickable" src="#canvas-top-4" position="0 0.422 0.004" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
           <a-plane id="card-left-4" class="clickable" src="#canvas-left-4" position="-0.75 0 0.004" rotation="0 4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
-
-          <!-- 5. Thẻ thông tin bên phải (Thông tin tham quan & Giờ mở cửa) -->
           <a-plane id="card-right-4" class="clickable" src="#canvas-right-4" position="0.75 0 0.004" rotation="0 -4 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
         </a-entity>
       </xrextras-named-image-target>

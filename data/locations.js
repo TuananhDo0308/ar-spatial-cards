@@ -22,8 +22,8 @@ const LOCATIONS_DATA = {
     audioText: "",
     map_query: "Phố cổ Hội An, Quảng Nam",
     mapQuery: "Phố cổ Hội An, Quảng Nam",
-    image_url: "assets/card-hoian.png",
-    imageUrl: "assets/card-hoian.png",
+    image_url: "assets/card-hoian.jpg",
+    imageUrl: "assets/card-hoian.jpg",
     video_url: "assets/videos/HoiAn.mp4",
     videoUrl: "assets/videos/HoiAn.mp4"
   },

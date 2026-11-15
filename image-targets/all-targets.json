@@ -4,11 +4,11 @@
     "properties": {
       "top": 0,
       "left": 0,
-      "width": 640,
-      "height": 640,
+      "width": 1280,
+      "height": 720,
       "isRotated": false,
-      "originalWidth": 640,
-      "originalHeight": 640
+      "originalWidth": 1280,
+      "originalHeight": 720
     },
     "imagePath": "image-targets/target-0_luminance.jpg",
     "metadata": null,
@@ -19,19 +19,19 @@
       "thumbnailImage": "target-0_thumbnail.jpg",
       "luminanceImage": "target-0_luminance.jpg"
     },
-    "created": 1794766944324,
-    "updated": 1794766944324
+    "created": 1794767920303,
+    "updated": 1794767920303
   },
   {
     "type": "PLANAR",
     "properties": {
       "top": 0,
       "left": 0,
-      "width": 1024,
-      "height": 576,
+      "width": 1280,
+      "height": 720,
       "isRotated": false,
-      "originalWidth": 1024,
-      "originalHeight": 576
+      "originalWidth": 1280,
+      "originalHeight": 720
     },
     "imagePath": "image-targets/target-1_luminance.jpg",
     "metadata": null,
@@ -42,19 +42,19 @@
       "thumbnailImage": "target-1_thumbnail.jpg",
       "luminanceImage": "target-1_luminance.jpg"
     },
-    "created": 1794766944324,
-    "updated": 1794766944324
+    "created": 1794767920303,
+    "updated": 1794767920303
   },
   {
     "type": "PLANAR",
     "properties": {
       "top": 0,
       "left": 0,
-      "width": 1000,
-      "height": 500,
+      "width": 1280,
+      "height": 720,
       "isRotated": false,
-      "originalWidth": 1000,
-      "originalHeight": 500
+      "originalWidth": 1280,
+      "originalHeight": 720
     },
     "imagePath": "image-targets/target-2_luminance.jpg",
     "metadata": null,
@@ -65,19 +65,19 @@
       "thumbnailImage": "target-2_thumbnail.jpg",
       "luminanceImage": "target-2_luminance.jpg"
     },
-    "created": 1794766944324,
-    "updated": 1794766944324
+    "created": 1794767920303,
+    "updated": 1794767920303
   },
   {
     "type": "PLANAR",
     "properties": {
       "top": 0,
       "left": 0,
-      "width": 1024,
-      "height": 682,
+      "width": 1280,
+      "height": 720,
       "isRotated": false,
-      "originalWidth": 1024,
-      "originalHeight": 682
+      "originalWidth": 1280,
+      "originalHeight": 720
     },
     "imagePath": "image-targets/target-3_luminance.jpg",
     "metadata": null,
@@ -88,19 +88,19 @@
       "thumbnailImage": "target-3_thumbnail.jpg",
       "luminanceImage": "target-3_luminance.jpg"
     },
-    "created": 1794766944324,
-    "updated": 1794766944324
+    "created": 1794767920303,
+    "updated": 1794767920303
   },
   {
     "type": "PLANAR",
     "properties": {
       "top": 0,
       "left": 0,
-      "width": 800,
-      "height": 533,
+      "width": 1280,
+      "height": 720,
       "isRotated": false,
-      "originalWidth": 800,
-      "originalHeight": 533
+      "originalWidth": 1280,
+      "originalHeight": 720
     },
     "imagePath": "image-targets/target-4_luminance.jpg",
     "metadata": null,
@@ -111,7 +111,7 @@
       "thumbnailImage": "target-4_thumbnail.jpg",
       "luminanceImage": "target-4_luminance.jpg"
     },
-    "created": 1794766944324,
-    "updated": 1794766944324
+    "created": 1794767920303,
+    "updated": 1794767920303
   }
 ]

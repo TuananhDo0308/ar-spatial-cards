@@ -11,7 +11,7 @@
  */
 
 const FALLBACK_TARGET_IMAGES = {
-  0: 'assets/card-hoian.png',
+  0: 'assets/card-hoian.jpg',
   1: 'assets/card-dinhdoclap.jpg',
   2: 'assets/card-benthanh.jpg',
   3: 'assets/card-hanoi.jpg',
@@ -381,13 +381,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const group = document.getElementById(`spatial-group-${targetIdx}`);
     if (!el || !group) return;
 
-    // Ảnh ngang: 1 (Dinh Độc Lập), 2 (Chợ Bến Thành), 3 (Hồ Hoàn Kiếm), 4 (Vịnh Hạ Long)
-    // Ảnh vuông: 0 (Phố Cổ Hội An)
-    const isLandscape = [1, 2, 3, 4].includes(targetIdx);
+    // Cả 5 thẻ đều là tỷ lệ 16:9 chuẩn theo tỷ lệ video
     const is8thWall = typeof XR8 !== 'undefined' || !!document.querySelector('[xrweb]');
 
-    // Khởi tạo góc xoay ban đầu chuẩn xác cho từng loại thẻ
-    if (is8thWall && isLandscape) {
+    // Khởi tạo góc xoay bù trừ chuẩn xác cho 8th Wall landscape
+    if (is8thWall) {
       group.setAttribute('rotation', '0 0 -90');
     } else {
       group.setAttribute('rotation', '0 0 0');
@@ -398,8 +396,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (targetVisibleState[targetIdx]) return;
       targetVisibleState[targetIdx] = true;
 
-      // Đảm bảo bù góc xoay 100% khi 8th Wall nhận diện ảnh ngang (khắc phục lỗi sai chiều)
-      if (is8thWall && isLandscape) {
+      if (is8thWall) {
         group.setAttribute('rotation', '0 0 -90');
       } else {
         group.setAttribute('rotation', '0 0 0');
