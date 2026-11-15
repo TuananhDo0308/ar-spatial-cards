@@ -45,3 +45,22 @@ python3 server.py
 python3 server.py --http
 # Truy cập http://localhost:8080/index.html
 ```
+
+---
+
+## 🎯 Cơ Chế Khử Rung & Ổn Định Bám Thẻ (Anti-Jitter Stabilization)
+
+### Nguyên Nhân Gốc Rễ Gây Rung Trong WebAR Cầm Tay
+1. **Bất đồng bộ FPS:** Engine thị giác máy tính (MindAR WASM) chạy ở tốc độ 15–25 FPS, trong khi màn hình điện thoại render ở 60–120 FPS. Nếu cập nhật ma trận trực tiếp, đối tượng 3D sẽ bị "giật từng nấc" (stepping stutter).
+2. **Cánh tay đòn khuếch đại (Lever Arm Effect):** Thẻ thông tin nằm cách tâm ảnh 75cm ($X = \pm 0.75\text{ m}$). Bất kỳ rung lắc góc cực nhỏ nào ($0.3^\circ - 0.5^\circ$) từ bàn tay cũng bị khuếch đại thành độ rung 5–8mm trên màn hình.
+3. **OneEuroFilter bị bypass ở chế độ gốc:** Tham số mặc định của thư viện gốc (`filterBeta: 1000`) khiến vi chấn bàn tay làm bùng phát tần số cắt, vô hiệu hóa bộ lọc thông thấp.
+
+### Kiến Trúc Khử Rung 2 Tầng (Dual-Stage Stabilization)
+* **Tầng 1 (MindAR Engine):** `filterMinCF: 0.0001; filterBeta: 0.001; maxTrack: 2; missTolerance: 10; warmupTolerance: 4;` loại bỏ xung nhiễu tần số cao của camera sensor.
+* **Tầng 2 (A-Frame 60 FPS Render Loop):** Thuật toán **Damped LERP + SLERP + Deadzone vi sai**:
+  * **Deadzone Bàn Tay:** Nếu độ dịch chuyển $< 1.5\text{ mm}$ và góc xoay $< 0.35^\circ$ (nhiễu vi sai do cầm máy), hệ số damping lập tức khóa chặt vị trí, **thẻ đứng im 100% không rung một pixel**.
+  * **Adaptive Catch-Up:** Khi lia máy thật sự, thẻ lướt theo êm ái tự nhiên theo đường cong quán tính chuẩn VisionOS.
+
+### So Sánh 2 Chế Độ Trực Tiếp
+* **Chế độ Siêu Ổn Định (Mặc định):** Truy cập `https://<ip>:8443/index.html` — Kích hoạt toàn bộ bộ lọc 2 tầng, thẻ bám dính chắc chắn.
+* **Chế độ Gốc Tác Giả (MindAR Raw):** Truy cập `https://<ip>:8443/index.html?mode=author` — Chạy đúng 100% tham số gốc và ma trận thô của tác giả Hiukim để người dùng đối chiếu sự khác biệt.

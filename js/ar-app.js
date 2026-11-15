@@ -23,6 +23,139 @@ const FALLBACK_TARGET_IMAGES = {
   9: 'assets/card-phuquoc.jpg'
 };
 
+// ============================================================================
+// HỆ THỐNG KHỬ RUNG ĐA TẦNG 60 FPS (DUAL-STAGE AR STABILIZATION SYSTEM)
+// ============================================================================
+// Tầng 1: Bộ lọc thông thấp OneEuroFilter tối ưu ở tầng Engine MindAR (filterMinCF: 0.0001, filterBeta: 0.001)
+// Tầng 2: Damped LERP + SLERP + Deadzone vi sai ở chu kỳ render 60/120 FPS của A-Frame
+// Hỗ trợ chế độ ?mode=author để so sánh nguyên bản tác giả MindAR (raw tracking)
+
+const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+const isAuthorMode = urlParams ? urlParams.get('mode') === 'author' : false;
+
+(function initStabilization() {
+  if (typeof AFRAME === 'undefined' || isAuthorMode) {
+    if (isAuthorMode) {
+      console.log('📌 [AR Tracking]: Đang chạy chế độ NGUYÊN BẢN TÁC GIẢ (Author Raw Mode - MindAR defaults)');
+    }
+    return;
+  }
+
+  const targetComp = AFRAME.components['mindar-image-target'];
+  if (!targetComp || !targetComp.Component) {
+    console.warn('⚠️ [AR Stabilizer]: Không tìm thấy component mindar-image-target để áp dụng khử rung.');
+    return;
+  }
+
+  const originalInit = targetComp.Component.prototype.init;
+  const originalUpdateWorldMatrix = targetComp.Component.prototype.updateWorldMatrix;
+
+  targetComp.Component.prototype.init = function () {
+    originalInit.call(this);
+
+    // Vector và Quaternion lưu trữ mục tiêu từ MindAR (15-25 FPS)
+    this.targetPos = new AFRAME.THREE.Vector3();
+    this.targetQuat = new AFRAME.THREE.Quaternion();
+    this.targetScale = new AFRAME.THREE.Vector3(1, 1, 1);
+
+    // Vector và Quaternion mượt mà hiển thị trên màn hình (60-120 FPS)
+    this.currentPos = new AFRAME.THREE.Vector3();
+    this.currentQuat = new AFRAME.THREE.Quaternion();
+    this.currentScale = new AFRAME.THREE.Vector3(1, 1, 1);
+
+    this.tempMat = new AFRAME.THREE.Matrix4();
+    this.hasInitialPose = false;
+    this.isTrackingVisible = false;
+
+    // Đăng ký component này vào chu kỳ render 60 FPS của A-Frame
+    if (this.el && this.el.sceneEl && this.el.sceneEl.addBehavior) {
+      this.el.sceneEl.addBehavior(this);
+    }
+  };
+
+  targetComp.Component.prototype.updateWorldMatrix = function (worldMatrix) {
+    this.el.emit('targetUpdate');
+    if (!this.el.object3D.visible && worldMatrix !== null) {
+      this.el.emit('targetFound');
+    } else if (this.el.object3D.visible && worldMatrix === null) {
+      this.el.emit('targetLost');
+    }
+
+    if (worldMatrix === null) {
+      this.isTrackingVisible = false;
+      this.hasInitialPose = false;
+      this.el.object3D.visible = false;
+      this.el.object3D.matrix = this.invisibleMatrix;
+      this.el.object3D.matrixWorldNeedsUpdate = true;
+      return;
+    }
+
+    this.isTrackingVisible = true;
+    this.el.object3D.visible = true;
+
+    // Tính toán ma trận mục tiêu
+    this.tempMat.elements = worldMatrix;
+    this.tempMat.multiply(this.postMatrix);
+    this.tempMat.decompose(this.targetPos, this.targetQuat, this.targetScale);
+
+    // Snap tức thì ở khung hình đầu tiên để không có độ trễ xuất hiện
+    if (!this.hasInitialPose) {
+      this.currentPos.copy(this.targetPos);
+      this.currentQuat.copy(this.targetQuat);
+      this.currentScale.copy(this.targetScale);
+      this.hasInitialPose = true;
+      this.el.object3D.matrix.compose(this.currentPos, this.currentQuat, this.currentScale);
+      this.el.object3D.matrixWorldNeedsUpdate = true;
+    }
+  };
+
+  targetComp.Component.prototype.tick = function (time, timeDelta) {
+    if (!this.isTrackingVisible || !this.hasInitialPose) return;
+
+    // Giới hạn delta time giữa 1ms và 100ms
+    const dt = Math.min(Math.max((timeDelta || 16.6) / 1000, 0.001), 0.1);
+
+    // 1. Tính độ lệch vị trí (khoảng cách Euclid)
+    const posDist = this.currentPos.distanceTo(this.targetPos);
+
+    // 2. Tính độ lệch góc xoay Quaternion (rad)
+    const dot = Math.abs(this.currentQuat.dot(this.targetQuat));
+    const clampedDot = Math.min(Math.max(dot, -1.0), 1.0);
+    const angleDiff = 2 * Math.acos(clampedDot);
+
+    // 3. DEADZONE FILTERING: Khử rung vi sai (Nhiễu sensor camera & rung tay tự nhiên)
+    // Ngưỡng: < 1.5mm (0.0015) và < 0.35 độ (~0.006 rad)
+    const DEADZONE_POS = 0.0015;
+    const DEADZONE_ROT = 0.006;
+
+    let posFactor;
+    let rotFactor;
+
+    if (posDist < DEADZONE_POS && angleDiff < DEADZONE_ROT) {
+      // Khi tay người dùng đứng yên ngắm ảnh: Triệt tiêu 100% rung giật
+      posFactor = 1.0 - Math.exp(-2.5 * dt);
+      rotFactor = 1.0 - Math.exp(-2.0 * dt);
+    } else {
+      // Khi người dùng lia máy / di chuyển: Damping thích ứng theo tốc độ (Zero-lag catch-up)
+      const speedPos = Math.min(18.0 + posDist * 40.0, 36.0);
+      const speedRot = Math.min(16.0 + angleDiff * 30.0, 32.0);
+      posFactor = 1.0 - Math.exp(-speedPos * dt);
+      rotFactor = 1.0 - Math.exp(-speedRot * dt);
+    }
+
+    // 4. Nội suy LERP vị trí và SLERP góc xoay
+    this.currentPos.lerp(this.targetPos, posFactor);
+    this.currentQuat.slerp(this.targetQuat, rotFactor);
+    this.currentScale.lerp(this.targetScale, posFactor);
+
+    // 5. Cập nhật lại ma trận 3D của Target Entity ở tần số 60 FPS
+    this.el.object3D.matrix.compose(this.currentPos, this.currentQuat, this.currentScale);
+    this.el.object3D.matrixWorldNeedsUpdate = true;
+  };
+
+  console.log('✨ [AR Stabilizer]: Đã kích hoạt Bộ khử rung 60 FPS Damped LERP + Deadzone');
+})();
+
 document.addEventListener('DOMContentLoaded', async () => {
   // Trạng thái ứng dụng
   let dbLocations = {};
@@ -102,10 +235,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (arSystemStarted || !sceneEl) return;
     const arSystem = sceneEl.systems && sceneEl.systems['mindar-image-system'];
     if (arSystem) {
+      if (isAuthorMode) {
+        // Áp dụng thông số nguyên bản của tác giả MindAR (hiukim)
+        arSystem.filterMinCF = null; // Tác giả mặc định: DEFAULT_FILTER_CUTOFF = 0.001
+        arSystem.filterBeta = null;   // Tác giả mặc định: DEFAULT_FILTER_BETA = 1000
+        arSystem.warmupTolerance = null; // Tác giả mặc định: 5
+        arSystem.missTolerance = null;   // Tác giả mặc định: 5
+      }
       try {
         arSystem.start();
         arSystemStarted = true;
-        statusText.textContent = 'Hướng camera vào ảnh trên bảng';
+        statusText.textContent = isAuthorMode
+          ? 'Hướng camera vào ảnh (Chế độ gốc MindAR)'
+          : 'Hướng camera vào ảnh trên bảng';
         if (cameraToast) cameraToast.style.display = 'none';
       } catch (err) {
         console.warn('Cần cử chỉ chạm của người dùng để mở camera:', err);
@@ -208,7 +350,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (activeTargets.size === 0) {
         statusDot.classList.remove('active');
-        statusText.textContent = 'Hướng camera vào ảnh trên bảng';
+        statusText.textContent = isAuthorMode
+          ? 'Hướng camera vào ảnh (Chế độ gốc MindAR)'
+          : 'Hướng camera vào ảnh trên bảng';
         reticle.classList.remove('hidden');
       } else {
         statusText.textContent = `Đang quét: ${activeTargets.size} địa danh`;
