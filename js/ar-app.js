@@ -360,32 +360,35 @@ document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================================================
   // 4. LẮNG NGHE SỰ KIỆN QUÉT ẢNH TARGET (HỖ TRỢ CẢ 8TH WALL VÀ MINDAR)
   // ==========================================================================
-  // Quản lý video playback mượt mà, chống màn đen bằng cơ chế Living Photo Crossfade
+  // Quản lý video playback: Tuyệt đối không hiện màn hình đen che ảnh ngoài đời
+  // Chỉ khi video thực sự decode và có frame chạy mượt mà mới cho hiện plane video!
   function playTargetVideo(targetIdx) {
     const vid = document.getElementById(`video-${targetIdx}`);
     const videoPlane = document.getElementById(`target-video-${targetIdx}`);
-    if (!vid) return;
+    if (!vid || !videoPlane) return;
 
     const revealVideo = () => {
-      if (videoPlane && targetVisibleState[targetIdx]) {
+      // Chỉ hiện khi mục tiêu vẫn đang nằm trong tầm camera và video đã decode xong frame
+      if (targetVisibleState[targetIdx] && vid.currentTime > 0.08 && vid.readyState >= 2) {
+        videoPlane.setAttribute('visible', 'true');
         videoPlane.setAttribute('material', 'transparent: true; opacity: 1.0; roughness: 0.2;');
       }
     };
 
     // Nếu video đã có frame sẵn và đang chạy (ví dụ quét lại thẻ nhanh)
-    if (vid.readyState >= 2 && vid.currentTime > 0.05 && !vid.paused) {
+    if (vid.readyState >= 2 && vid.currentTime > 0.08 && !vid.paused) {
       revealVideo();
       return;
     }
 
-    const onFrameReady = () => {
-      revealVideo();
-      vid.removeEventListener('playing', onFrameReady);
-      vid.removeEventListener('timeupdate', onFrameReady);
+    const onTimeUpdate = () => {
+      if (vid.currentTime > 0.08 && vid.readyState >= 2) {
+        revealVideo();
+        vid.removeEventListener('timeupdate', onTimeUpdate);
+      }
     };
 
-    vid.addEventListener('playing', onFrameReady, { once: true });
-    vid.addEventListener('timeupdate', onFrameReady);
+    vid.addEventListener('timeupdate', onTimeUpdate);
 
     const playPromise = vid.play();
     if (playPromise !== undefined) {
@@ -400,6 +403,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       vid.pause();
     }
     if (videoPlane) {
+      // Ẩn hoàn toàn plane video lập tức khi mất dấu để không che ảnh ngoài đời
+      videoPlane.setAttribute('visible', 'false');
       videoPlane.setAttribute('material', 'transparent: true; opacity: 0.0; roughness: 0.2;');
     }
   }
@@ -413,7 +418,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           XR8.XrController.configure({
             imageTargetData: targets,
           });
-          console.log('✨ [8th Wall SLAM Engine]: Đã cấu hình thành công 10 Image Targets!');
+          console.log('✨ [8th Wall SLAM Engine]: Đã cấu hình thành công 5 Image Targets vuông 1:1!');
         })
         .catch((err) => {
           console.warn('Lỗi khi nạp all-targets.json cho 8th Wall:', err);
@@ -434,7 +439,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const group = document.getElementById(`spatial-group-${targetIdx}`);
     if (!el || !group) return;
 
-    // Cả 5 thẻ đều là tỷ lệ 16:9 chuẩn theo tỷ lệ video
+    // Cả 5 thẻ đều là tỷ lệ vuông 1:1 chuẩn theo tỷ lệ ảnh và video
     const is8thWall = typeof XR8 !== 'undefined' || !!document.querySelector('[xrweb]');
 
     // Khởi tạo góc xoay bù trừ chuẩn xác cho 8th Wall landscape

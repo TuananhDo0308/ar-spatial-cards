@@ -111,14 +111,8 @@
       device-orientation-permission-ui="enabled: false"
       embedded
     >
-      <!-- Assets Videos & Posters: preload='auto' cho video đã được nén tối ưu, posters hiển thị tức thì 0ms -->
+      <!-- Assets Videos: preload='auto', video đã được crop chuẩn vuông 1:1 (720x720) -->
       <a-assets timeout="2000">
-        <img id="poster-0" src="assets/card-hoian.jpg" crossorigin="anonymous">
-        <img id="poster-1" src="assets/card-dinhdoclap.jpg" crossorigin="anonymous">
-        <img id="poster-2" src="assets/card-benthanh.jpg" crossorigin="anonymous">
-        <img id="poster-3" src="assets/card-hanoi.jpg" crossorigin="anonymous">
-        <img id="poster-4" src="assets/card-halong.jpg" crossorigin="anonymous">
-
         <video id="video-0" src="assets/videos/HoiAn.mp4" preload="auto" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
         <video id="video-1" src="assets/videos/DinhDocLap.mp4" preload="auto" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
         <video id="video-2" src="assets/videos/ChoBenThanh.mp4" preload="auto" loop crossorigin="anonymous" playsinline webkit-playsinline muted></video>
@@ -135,16 +129,14 @@
         raycaster="near: 0.05; far: 50; interval: 60; objects: .clickable;"
       ></a-camera>
 
-      <!-- ================= TARGET 0: PHỐ CỔ HỘI AN (16:9 - 1280x720) ================= -->
+      <!-- ================= TARGET 0: PHỐ CỔ HỘI AN (VUÔNG 1:1 - 720x720) ================= -->
       <xrextras-named-image-target name="target-0" id="target-entity-0">
         <a-entity id="spatial-group-0" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
-          <a-plane id="target-frame-0" class="clickable" position="0 0 0.001" width="1.0" height="0.5625" material="opacity: 0.001; transparent: true"></a-plane>
-          <!-- Poster hiển thị tức thì 0ms, chống hoàn toàn màn đen WebGL -->
-          <a-plane id="target-poster-0" class="clickable" src="#poster-0" position="0 0 0.0015" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
-          <!-- Video tràn viền 100% che kín toàn bộ hình, ban đầu opacity=0 mượt mà crossfade khi play -->
-          <a-plane id="target-video-0" class="clickable" src="#video-0" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
-          <!-- Thanh Top Bar: Thả nổi 3D phía trước (Z=0.035), nghiêng nhẹ 6 độ về người dùng -->
-          <a-plane id="bar-top-0" class="clickable" src="#canvas-top-0" position="0 0.45 0.035" rotation="6 0 0" width="0.96" height="0.22" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
+          <a-plane id="target-frame-0" class="clickable" position="0 0 0.001" width="1.0" height="1.0" material="opacity: 0.001; transparent: true"></a-plane>
+          <!-- Video vuông 1:1 tràn viền, ban đầu visible=false để KHÔNG BAO GIỜ hiện màn đen che hình ngoài đời -->
+          <a-plane id="target-video-0" class="clickable" src="#video-0" position="0 0 0.002" width="1.02" height="1.02" visible="false" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
+          <!-- Thanh Top Bar: Thả nổi 3D phía trên (Y=0.65, Z=0.035), nghiêng nhẹ 6 độ -->
+          <a-plane id="bar-top-0" class="clickable" src="#canvas-top-0" position="0 0.65 0.035" rotation="6 0 0" width="0.96" height="0.22" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
           <!-- Thẻ Trái: Cánh cong 3D VisionOS góc 14 độ, nổi hẳn phía trước (Z=0.045) -->
           <a-plane id="card-left-0" class="clickable" src="#canvas-left-0" position="-0.78 0 0.045" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
           <!-- Thẻ Phải: Cánh cong 3D VisionOS góc -14 độ, ôm trọn không gian thẻ AR -->
@@ -152,16 +144,14 @@
         </a-entity>
       </xrextras-named-image-target>
 
-      <!-- ================= TARGET 1: DINH ĐỘC LẬP (16:9 - 1280x720) ================= -->
+      <!-- ================= TARGET 1: DINH ĐỘC LẬP (VUÔNG 1:1 - 720x720) ================= -->
       <xrextras-named-image-target name="target-1" id="target-entity-1">
         <a-entity id="spatial-group-1" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
-          <a-plane id="target-frame-1" class="clickable" position="0 0 0.001" width="1.0" height="0.5625" material="opacity: 0.001; transparent: true"></a-plane>
-          <!-- Poster hiển thị tức thì 0ms, chống hoàn toàn màn đen WebGL -->
-          <a-plane id="target-poster-1" class="clickable" src="#poster-1" position="0 0 0.0015" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
-          <!-- Video tràn viền 100% che kín toàn bộ hình, ban đầu opacity=0 mượt mà crossfade khi play -->
-          <a-plane id="target-video-1" class="clickable" src="#video-1" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
-          <!-- Thanh Top Bar: Thả nổi 3D phía trước (Z=0.035), nghiêng nhẹ 6 độ về người dùng -->
-          <a-plane id="bar-top-1" class="clickable" src="#canvas-top-1" position="0 0.45 0.035" rotation="6 0 0" width="0.96" height="0.22" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
+          <a-plane id="target-frame-1" class="clickable" position="0 0 0.001" width="1.0" height="1.0" material="opacity: 0.001; transparent: true"></a-plane>
+          <!-- Video vuông 1:1 tràn viền, ban đầu visible=false để KHÔNG BAO GIỜ hiện màn đen che hình ngoài đời -->
+          <a-plane id="target-video-1" class="clickable" src="#video-1" position="0 0 0.002" width="1.02" height="1.02" visible="false" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
+          <!-- Thanh Top Bar: Thả nổi 3D phía trên (Y=0.65, Z=0.035), nghiêng nhẹ 6 độ -->
+          <a-plane id="bar-top-1" class="clickable" src="#canvas-top-1" position="0 0.65 0.035" rotation="6 0 0" width="0.96" height="0.22" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
           <!-- Thẻ Trái: Cánh cong 3D VisionOS góc 14 độ, nổi hẳn phía trước (Z=0.045) -->
           <a-plane id="card-left-1" class="clickable" src="#canvas-left-1" position="-0.78 0 0.045" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
           <!-- Thẻ Phải: Cánh cong 3D VisionOS góc -14 độ, ôm trọn không gian thẻ AR -->
@@ -169,16 +159,14 @@
         </a-entity>
       </xrextras-named-image-target>
 
-      <!-- ================= TARGET 2: CHỢ BẾN THÀNH (16:9 - 1280x720) ================= -->
+      <!-- ================= TARGET 2: CHỢ BẾN THÀNH (VUÔNG 1:1 - 720x720) ================= -->
       <xrextras-named-image-target name="target-2" id="target-entity-2">
         <a-entity id="spatial-group-2" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
-          <a-plane id="target-frame-2" class="clickable" position="0 0 0.001" width="1.0" height="0.5625" material="opacity: 0.001; transparent: true"></a-plane>
-          <!-- Poster hiển thị tức thì 0ms, chống hoàn toàn màn đen WebGL -->
-          <a-plane id="target-poster-2" class="clickable" src="#poster-2" position="0 0 0.0015" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
-          <!-- Video tràn viền 100% che kín toàn bộ hình, ban đầu opacity=0 mượt mà crossfade khi play -->
-          <a-plane id="target-video-2" class="clickable" src="#video-2" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
-          <!-- Thanh Top Bar: Thả nổi 3D phía trước (Z=0.035), nghiêng nhẹ 6 độ về người dùng -->
-          <a-plane id="bar-top-2" class="clickable" src="#canvas-top-2" position="0 0.45 0.035" rotation="6 0 0" width="0.96" height="0.22" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
+          <a-plane id="target-frame-2" class="clickable" position="0 0 0.001" width="1.0" height="1.0" material="opacity: 0.001; transparent: true"></a-plane>
+          <!-- Video vuông 1:1 tràn viền, ban đầu visible=false để KHÔNG BAO GIỜ hiện màn đen che hình ngoài đời -->
+          <a-plane id="target-video-2" class="clickable" src="#video-2" position="0 0 0.002" width="1.02" height="1.02" visible="false" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
+          <!-- Thanh Top Bar: Thả nổi 3D phía trên (Y=0.65, Z=0.035), nghiêng nhẹ 6 độ -->
+          <a-plane id="bar-top-2" class="clickable" src="#canvas-top-2" position="0 0.65 0.035" rotation="6 0 0" width="0.96" height="0.22" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
           <!-- Thẻ Trái: Cánh cong 3D VisionOS góc 14 độ, nổi hẳn phía trước (Z=0.045) -->
           <a-plane id="card-left-2" class="clickable" src="#canvas-left-2" position="-0.78 0 0.045" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
           <!-- Thẻ Phải: Cánh cong 3D VisionOS góc -14 độ, ôm trọn không gian thẻ AR -->
@@ -186,16 +174,14 @@
         </a-entity>
       </xrextras-named-image-target>
 
-      <!-- ================= TARGET 3: HỒ HOÀN KIẾM & THÁP RÙA (16:9 - 1280x720) ================= -->
+      <!-- ================= TARGET 3: HỒ HOÀN KIẾM & THÁP RÙA (VUÔNG 1:1 - 720x720) ================= -->
       <xrextras-named-image-target name="target-3" id="target-entity-3">
         <a-entity id="spatial-group-3" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
-          <a-plane id="target-frame-3" class="clickable" position="0 0 0.001" width="1.0" height="0.5625" material="opacity: 0.001; transparent: true"></a-plane>
-          <!-- Poster hiển thị tức thì 0ms, chống hoàn toàn màn đen WebGL -->
-          <a-plane id="target-poster-3" class="clickable" src="#poster-3" position="0 0 0.0015" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
-          <!-- Video tràn viền 100% che kín toàn bộ hình, ban đầu opacity=0 mượt mà crossfade khi play -->
-          <a-plane id="target-video-3" class="clickable" src="#video-3" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
-          <!-- Thanh Top Bar: Thả nổi 3D phía trước (Z=0.035), nghiêng nhẹ 6 độ về người dùng -->
-          <a-plane id="bar-top-3" class="clickable" src="#canvas-top-3" position="0 0.45 0.035" rotation="6 0 0" width="0.96" height="0.22" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
+          <a-plane id="target-frame-3" class="clickable" position="0 0 0.001" width="1.0" height="1.0" material="opacity: 0.001; transparent: true"></a-plane>
+          <!-- Video vuông 1:1 tràn viền, ban đầu visible=false để KHÔNG BAO GIỜ hiện màn đen che hình ngoài đời -->
+          <a-plane id="target-video-3" class="clickable" src="#video-3" position="0 0 0.002" width="1.02" height="1.02" visible="false" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
+          <!-- Thanh Top Bar: Thả nổi 3D phía trên (Y=0.65, Z=0.035), nghiêng nhẹ 6 độ -->
+          <a-plane id="bar-top-3" class="clickable" src="#canvas-top-3" position="0 0.65 0.035" rotation="6 0 0" width="0.96" height="0.22" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
           <!-- Thẻ Trái: Cánh cong 3D VisionOS góc 14 độ, nổi hẳn phía trước (Z=0.045) -->
           <a-plane id="card-left-3" class="clickable" src="#canvas-left-3" position="-0.78 0 0.045" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
           <!-- Thẻ Phải: Cánh cong 3D VisionOS góc -14 độ, ôm trọn không gian thẻ AR -->
@@ -203,16 +189,14 @@
         </a-entity>
       </xrextras-named-image-target>
 
-      <!-- ================= TARGET 4: VỊNH HẠ LONG (16:9 - 1280x720) ================= -->
+      <!-- ================= TARGET 4: VỊNH HẠ LONG (VUÔNG 1:1 - 720x720) ================= -->
       <xrextras-named-image-target name="target-4" id="target-entity-4">
         <a-entity id="spatial-group-4" position="0 0 0.005" rotation="0 0 -90" scale="0 0 0">
-          <a-plane id="target-frame-4" class="clickable" position="0 0 0.001" width="1.0" height="0.5625" material="opacity: 0.001; transparent: true"></a-plane>
-          <!-- Poster hiển thị tức thì 0ms, chống hoàn toàn màn đen WebGL -->
-          <a-plane id="target-poster-4" class="clickable" src="#poster-4" position="0 0 0.0015" width="1.02" height="0.5738" material="transparent: true; opacity: 1.0; roughness: 0.2;"></a-plane>
-          <!-- Video tràn viền 100% che kín toàn bộ hình, ban đầu opacity=0 mượt mà crossfade khi play -->
-          <a-plane id="target-video-4" class="clickable" src="#video-4" position="0 0 0.002" width="1.02" height="0.5738" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
-          <!-- Thanh Top Bar: Thả nổi 3D phía trước (Z=0.035), nghiêng nhẹ 6 độ về người dùng -->
-          <a-plane id="bar-top-4" class="clickable" src="#canvas-top-4" position="0 0.45 0.035" rotation="6 0 0" width="0.96" height="0.22" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
+          <a-plane id="target-frame-4" class="clickable" position="0 0 0.001" width="1.0" height="1.0" material="opacity: 0.001; transparent: true"></a-plane>
+          <!-- Video vuông 1:1 tràn viền, ban đầu visible=false để KHÔNG BAO GIỜ hiện màn đen che hình ngoài đời -->
+          <a-plane id="target-video-4" class="clickable" src="#video-4" position="0 0 0.002" width="1.02" height="1.02" visible="false" material="transparent: true; opacity: 0.0; roughness: 0.2;"></a-plane>
+          <!-- Thanh Top Bar: Thả nổi 3D phía trên (Y=0.65, Z=0.035), nghiêng nhẹ 6 độ -->
+          <a-plane id="bar-top-4" class="clickable" src="#canvas-top-4" position="0 0.65 0.035" rotation="6 0 0" width="0.96" height="0.22" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
           <!-- Thẻ Trái: Cánh cong 3D VisionOS góc 14 độ, nổi hẳn phía trước (Z=0.045) -->
           <a-plane id="card-left-4" class="clickable" src="#canvas-left-4" position="-0.78 0 0.045" rotation="0 14 0" width="0.44" height="0.64" material="transparent: true; opacity: 0.96; depthWrite: false; roughness: 0.12; metalness: 0.1;"></a-plane>
           <!-- Thẻ Phải: Cánh cong 3D VisionOS góc -14 độ, ôm trọn không gian thẻ AR -->
