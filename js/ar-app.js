@@ -10,7 +10,6 @@
  * - Tối ưu hoá triệt để: Chống rò rỉ bộ nhớ, chống giật modal, bám dính siêu mượt 60 FPS
  */
 
-// Bảng ảnh fallback chính xác cho từng target
 const FALLBACK_TARGET_IMAGES = {
   0: 'assets/target-0.png',
   1: 'assets/target-1.png',

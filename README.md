@@ -1,37 +1,47 @@
-# Ứng Dụng WebAR 1 Ảnh Hiện 3 Thẻ AR Không Gian (TP. Hồ Chí Minh) 📍📸
+# Ứng Dụng WebAR Không Gian 10 Địa Danh Việt Nam (Shadcn Clean) 🇻🇳📸
 
-Ứng dụng WebAR chạy trực tiếp trên trình duyệt web điện thoại (iOS Safari, Android Chrome, Máy tính), thiết kế theo phong cách **Minimalism Shadcn Dark UI**, nhận diện ảnh mục tiêu và hiển thị đồng thời **3 thẻ thông tin AR 3D nổi trong không gian** cùng hiệu ứng **Morphing phóng to từ góc thẻ 3D** mượt mà.
-
----
-
-## 🌟 Tính Năng Nổi Bật
-
-1. **1 Ảnh Quét ➜ Hiện Đồng Thời 3 Thẻ AR 3D:**
-   * **Thẻ 1 (Trái - Amber):** “Biểu tượng Sài Gòn” – Chợ Bến Thành hơn 100 năm tuổi.
-   * **Thẻ 2 (Giữa - Emerald):** “Dấu mốc Thống nhất” – Dinh Độc Lập ngày 30/4/1975.
-   * **Thẻ 3 (Phải - Cyan):** “Nhịp sống Giao thoa” – Ẩm thực đường phố, cà phê bệt và phố đêm không ngủ.
-2. **Chạm Vào Thẻ AR Trên Màn Hình Để Phóng To (Shared-Element Morphing):**
-   * Tính toán toạ độ 2D của thẻ 3D trong không gian thực tế để tạo hiệu ứng phóng to mượt mà ra toàn màn hình.
-3. **Cố Định AR Vững Chắc:**
-   * Thẻ AR được neo trực tiếp trên mặt phẳng ảnh thực tế, không bị xoay theo camera khi xoay điện thoại.
-4. **Giao Diện Minimalist Shadcn Dark:**
-   * Tone màu Zinc Dark (`#09090b`, `#18181b`, `#27272a`), Plus Jakarta Sans font, typography sắc nét.
-5. **Sẵn Sàng Deploy Trên Vercel & GitHub:**
-   * Cấu hình sẵn `vercel.json` và Serverless Function `api/locations.js`.
+Hệ thống WebAR không gian 3D chạy trực tiếp trên trình duyệt web điện thoại và máy tính, thiết kế chuẩn **Shadcn Clean Dark Zinc**, tối ưu hóa 60 FPS bám dính mục tiêu.
 
 ---
 
-## 🚀 Hướng Dẫn Deploy Lên Vercel
+## 🏛️ Kiến Trúc 3 Giao Diện (3 UIs Clean)
 
-### Cách 1: Tự động qua GitHub
-1. Push mã nguồn lên GitHub repository.
-2. Truy cập [vercel.com](https://vercel.com) ➔ Chọn **Add New Project**.
-3. Import repository từ GitHub ➔ Bấm **Deploy**.
-4. Vercel tự động build và cấp chứng chỉ HTTPS chính thức (rất thuận tiện mở Camera trên mọi điện thoại mà không bị cảnh báo SSL).
+Hệ thống được chuẩn hóa thành đúng 3 giao diện chuyên biệt, loại bỏ tất cả các tính năng dư thừa:
 
-### Cách 2: Chạy Local
+1. **UI 1: Camera WebAR Scanner (`index.html`)**
+   * Mở camera AR toàn màn hình, **hoàn toàn không có nút bấm điều hướng vướng víu**.
+   * Chỉ có một status capsule tinh tế hiển thị trạng thái phát hiện ảnh mục tiêu.
+   * Khi camera bắt trúng ảnh, **Khung định vị quang học 3D (AR Target Frame)** cùng 4 góc L-bracket khóa chặt vào bức ảnh thật.
+   * 3 thẻ không gian nổi bao gồm: Thanh tiêu đề trên, thẻ điểm nổi bật bên trái (kèm nút `⤢ CHẠM ĐỂ MỞ RỘNG`), và thẻ thông tin tham quan bên phải.
+   * Chạm vào thẻ hoặc bức ảnh sẽ mở Modal chi tiết địa danh kèm chỉ đường Google Maps.
+
+2. **UI 2: Thư Viện Ảnh Quét AR Trên Desktop (`gallery.html`)**
+   * Dành riêng để mở trên máy tính (Desktop/Laptop) để người dùng lấy điện thoại giơ vào quét.
+   * Mỗi ảnh được đặt trong **Khung Nhận Diện Quang Học AR (Optical Registration Frame)**:
+     * Viền đen kép tương phản cao giúp camera điện thoại phân biệt rõ ràng ảnh và nền màn hình.
+     * 4 góc L-Bracket quang học `┏ ┓ ┗ ┛` tăng cường điểm đặc trưng góc (corner keypoints) giúp MindAR khóa mục tiêu nhanh gấp đôi.
+     * Tỉ lệ ảnh giữ chuẩn 100% (không méo hình).
+   * 2 chế độ hiển thị: **Trình chiếu đơn (Focus Presentation Mode)** với phím tắt `←`, `→`, `F`, `Space` và **Lưới 10 Thẻ Tổng Quan (Grid Mode)**.
+
+3. **UI 3: Quản Trị Cơ Sở Dữ Liệu CMS (`admin.html`)**
+   * Quản lý dữ liệu 10 địa danh lưu trữ trong SQLite (`database.sqlite`).
+   * Bảng dữ liệu chuẩn Shadcn Data Table với thumbnail, badge danh mục, rating, giờ mở cửa, giá vé.
+   * Form chỉnh sửa Dialog mượt mà: cập nhật mô tả AR 3D, mô tả chi tiết, màu sắc badge, tọa độ Google Maps.
+   * Hỗ trợ xuất file JSON backup.
+
+---
+
+## 🚀 Khởi Chạy Nhanh
+
+### Chạy Local (Máy tính & Điện thoại cùng Wi-Fi)
 ```bash
 python3 server.py
-# Mở https://localhost:8443 trên máy tính
-# Mở https://<IP_máy_tính>:8443 trên điện thoại
+# Mở https://localhost:8443/gallery.html trên máy tính
+# Mở https://<IP_MÁY_TÍNH>:8443/index.html trên điện thoại để quét
+```
+
+### Chạy chế độ HTTP (Test nhanh trên máy tính)
+```bash
+python3 server.py --http
+# Truy cập http://localhost:8080/index.html
 ```

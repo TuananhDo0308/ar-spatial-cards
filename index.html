@@ -33,39 +33,27 @@
     <span>Chạm vào màn hình để mở Camera</span>
   </div>
 
-  <!-- Minimalist Floating Overlay -->
+  <!-- Minimalist Floating Overlay (Clean UI 1: Chỉ mở Camera, hoàn toàn không có button nào) -->
   <div class="ui-layer">
-    <!-- Top HUD Bar -->
-    <div class="top-bar" style="display:flex; flex-direction:column; align-items:center; gap:8px;">
-      <div style="display:inline-flex; background:rgba(24,24,27,0.90); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border:1px solid var(--border); border-radius:999px; padding:4px; gap:4px; box-shadow:0 8px 24px rgba(0,0,0,0.4); pointer-events:auto;">
-        <button style="padding:6px 14px; border-radius:999px; font-size:0.76rem; font-weight:700; color:#18181b; background:#fafafa; border:none; display:flex; align-items:center; gap:6px; cursor:pointer;">
-          <span>📷</span> <span>Quét Thẻ Ảnh</span>
-        </button>
-        <a href="world.html" style="padding:6px 14px; border-radius:999px; font-size:0.76rem; font-weight:700; color:var(--text-muted); text-decoration:none; display:flex; align-items:center; gap:6px;">
-          <span>🪐</span> <span>Đặt Không Gian 3D</span>
-        </a>
-        <a href="gallery.html" style="padding:6px 14px; border-radius:999px; font-size:0.76rem; font-weight:700; color:var(--text-muted); text-decoration:none; display:flex; align-items:center; gap:6px;">
-          <span>🖼️</span> <span>Thư Viện</span>
-        </a>
-      </div>
-
-      <div class="status-badge">
-        <div class="status-dot" id="status-dot"></div>
-        <span class="status-text" id="status-text">Đang kết nối camera...</span>
+    <!-- Clean Shadcn Status Pill: Chỉ hiển thị trạng thái quét, không chứa nút bấm -->
+    <div class="top-hud">
+      <div class="status-pill">
+        <span class="status-dot" id="status-dot"></span>
+        <span class="status-text" id="status-text">Hướng camera vào ảnh trên bảng</span>
       </div>
     </div>
 
-    <!-- Center Reticle Laser -->
+    <!-- Center Reticle Laser Guide -->
     <div class="scanning-reticle" id="reticle">
       <div class="reticle-corner tl"></div>
       <div class="reticle-corner tr"></div>
       <div class="reticle-corner bl"></div>
       <div class="reticle-corner br"></div>
       <div class="laser-scan"></div>
-      <div class="reticle-hint">Hướng camera vào ảnh để quét</div>
+      <div class="reticle-hint">Căn chỉnh khung ảnh vào giữa màn hình</div>
     </div>
 
-    <div></div>
+    <div class="bottom-hud"></div>
   </div>
 
   <!-- Fullscreen Modal Phóng To (VisionOS Shared-Element Spring Curve) -->
@@ -155,7 +143,7 @@
   <!-- AR Scene A-Frame (Khử rung triệt để, cố định vững chắc, bám chuẩn theo 3 mép ảnh) -->
   <div class="ar-viewport">
     <a-scene
-      mindar-image="imageTargetSrc: ./assets/targets.mind?v=20261114_10all; maxTrack: 2; filterMinCF: 0.0005; filterBeta: 0.01; warmupTolerance: 4; missTolerance: 10; uiScanning: no; uiLoading: no; autoStart: false"
+      mindar-image="imageTargetSrc: ./assets/targets.mind?v=20261115_clean; maxTrack: 2; filterMinCF: 0.001; filterBeta: 1.0; warmupTolerance: 4; missTolerance: 8; uiScanning: no; uiLoading: no; autoStart: false"
       color-space="sRGB"
       renderer="colorManagement: true, physicallyCorrectLights"
       vr-mode-ui="enabled: false"
@@ -173,9 +161,18 @@
 
       <!-- ================= TARGET 0: DINH ĐỘC LẬP (640x640 - Vuông 1.0) ================= -->
       <a-entity id="target-entity-0" mindar-image-target="targetIndex: 0">
-        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
-        <a-plane position="0 0 0.002" width="1.0" height="1.0" material="color: #10b981; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane id="target-frame-0" class="clickable" position="0 0 0.001" width="1.0" height="1.0" material="color: #10b981; opacity: 0.05; transparent: true"></a-plane>
+        <!-- Khung viền nhận diện quang học AR & 4 góc định vị bám dính -->
+        <a-plane position="0 0 0.002" width="1.0" height="1.0" material="color: #10b981; wireframe: true; wireframeLinewidth: 2; opacity: 0.55"></a-plane>
+        <a-plane id="target-frame-0" class="clickable" position="0 0 0.001" width="1.0" height="1.0" material="color: #10b981; opacity: 0.04; transparent: true"></a-plane>
+        <a-cylinder position="-0.465 0.5 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 0.465 0.003" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 0.5 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 0.465 0.003" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.465 -0.5 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 -0.465 0.003" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 -0.5 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 -0.465 0.003" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+
         <a-entity id="spatial-group-0" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-0" class="clickable" src="#canvas-top-0" position="0 0.64 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -191,9 +188,18 @@
 
       <!-- ================= TARGET 1: PHỐ CỔ HỘI AN (640x640 - Vuông 1.0) ================= -->
       <a-entity id="target-entity-1" mindar-image-target="targetIndex: 1">
-        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
-        <a-plane position="0 0 0.002" width="1.0" height="1.0" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane id="target-frame-1" class="clickable" position="0 0 0.001" width="1.0" height="1.0" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
+        <!-- Khung viền nhận diện quang học AR & 4 góc định vị bám dính -->
+        <a-plane position="0 0 0.002" width="1.0" height="1.0" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.55"></a-plane>
+        <a-plane id="target-frame-1" class="clickable" position="0 0 0.001" width="1.0" height="1.0" material="color: #f59e0b; opacity: 0.04; transparent: true"></a-plane>
+        <a-cylinder position="-0.465 0.5 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 0.465 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 0.5 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 0.465 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.465 -0.5 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 -0.465 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 -0.5 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 -0.465 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+
         <a-entity id="spatial-group-1" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-1" class="clickable" src="#canvas-top-1" position="0 0.64 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -209,9 +215,18 @@
 
       <!-- ================= TARGET 2: CHỢ BẾN THÀNH (800x534 - Ngang 0.667) ================= -->
       <a-entity id="target-entity-2" mindar-image-target="targetIndex: 2">
-        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
-        <a-plane position="0 0 0.002" width="1.0" height="0.667" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane id="target-frame-2" class="clickable" position="0 0 0.001" width="1.0" height="0.667" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
+        <!-- Khung viền nhận diện quang học AR & 4 góc định vị bám dính -->
+        <a-plane position="0 0 0.002" width="1.0" height="0.667" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.55"></a-plane>
+        <a-plane id="target-frame-2" class="clickable" position="0 0 0.001" width="1.0" height="0.667" material="color: #f59e0b; opacity: 0.04; transparent: true"></a-plane>
+        <a-cylinder position="-0.465 0.334 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 0.299 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 0.334 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 0.299 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.465 -0.334 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 -0.299 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 -0.334 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 -0.299 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+
         <a-entity id="spatial-group-2" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-2" class="clickable" src="#canvas-top-2" position="0 0.474 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -227,9 +242,18 @@
 
       <!-- ================= TARGET 3: HỒ HOÀN KIẾM (800x459 - Ngang 0.574) ================= -->
       <a-entity id="target-entity-3" mindar-image-target="targetIndex: 3">
-        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
-        <a-plane position="0 0 0.002" width="1.0" height="0.574" material="color: #06b6d4; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane id="target-frame-3" class="clickable" position="0 0 0.001" width="1.0" height="0.574" material="color: #06b6d4; opacity: 0.05; transparent: true"></a-plane>
+        <!-- Khung viền nhận diện quang học AR & 4 góc định vị bám dính -->
+        <a-plane position="0 0 0.002" width="1.0" height="0.574" material="color: #06b6d4; wireframe: true; wireframeLinewidth: 2; opacity: 0.55"></a-plane>
+        <a-plane id="target-frame-3" class="clickable" position="0 0 0.001" width="1.0" height="0.574" material="color: #06b6d4; opacity: 0.04; transparent: true"></a-plane>
+        <a-cylinder position="-0.465 0.287 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #06b6d4; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 0.252 0.003" radius="0.0025" height="0.07" material="color: #06b6d4; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 0.287 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #06b6d4; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 0.252 0.003" radius="0.0025" height="0.07" material="color: #06b6d4; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.465 -0.287 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #06b6d4; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 -0.252 0.003" radius="0.0025" height="0.07" material="color: #06b6d4; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 -0.287 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #06b6d4; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 -0.252 0.003" radius="0.0025" height="0.07" material="color: #06b6d4; opacity: 0.9"></a-cylinder>
+
         <a-entity id="spatial-group-3" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-3" class="clickable" src="#canvas-top-3" position="0 0.427 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -245,9 +269,18 @@
 
       <!-- ================= TARGET 4: CẦU VÀNG BÀ NÀ (800x500 - Ngang 0.625) ================= -->
       <a-entity id="target-entity-4" mindar-image-target="targetIndex: 4">
-        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
-        <a-plane position="0 0 0.002" width="1.0" height="0.625" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane id="target-frame-4" class="clickable" position="0 0 0.001" width="1.0" height="0.625" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
+        <!-- Khung viền nhận diện quang học AR & 4 góc định vị bám dính -->
+        <a-plane position="0 0 0.002" width="1.0" height="0.625" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.55"></a-plane>
+        <a-plane id="target-frame-4" class="clickable" position="0 0 0.001" width="1.0" height="0.625" material="color: #f59e0b; opacity: 0.04; transparent: true"></a-plane>
+        <a-cylinder position="-0.465 0.313 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 0.278 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 0.313 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 0.278 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.465 -0.313 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 -0.278 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 -0.313 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 -0.278 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+
         <a-entity id="spatial-group-4" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-4" class="clickable" src="#canvas-top-4" position="0 0.453 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -263,9 +296,18 @@
 
       <!-- ================= TARGET 5: VỊNH HẠ LONG (800x533 - Ngang 0.666) ================= -->
       <a-entity id="target-entity-5" mindar-image-target="targetIndex: 5">
-        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
-        <a-plane position="0 0 0.002" width="1.0" height="0.666" material="color: #10b981; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane id="target-frame-5" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="color: #10b981; opacity: 0.05; transparent: true"></a-plane>
+        <!-- Khung viền nhận diện quang học AR & 4 góc định vị bám dính -->
+        <a-plane position="0 0 0.002" width="1.0" height="0.666" material="color: #10b981; wireframe: true; wireframeLinewidth: 2; opacity: 0.55"></a-plane>
+        <a-plane id="target-frame-5" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="color: #10b981; opacity: 0.04; transparent: true"></a-plane>
+        <a-cylinder position="-0.465 0.333 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 0.298 0.003" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 0.333 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 0.298 0.003" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.465 -0.333 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 -0.298 0.003" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 -0.333 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 -0.298 0.003" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+
         <a-entity id="spatial-group-5" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-5" class="clickable" src="#canvas-top-5" position="0 0.473 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -281,9 +323,18 @@
 
       <!-- ================= TARGET 6: ĐẠI NỘI HUẾ (800x533 - Ngang 0.666) ================= -->
       <a-entity id="target-entity-6" mindar-image-target="targetIndex: 6">
-        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
-        <a-plane position="0 0 0.002" width="1.0" height="0.666" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane id="target-frame-6" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
+        <!-- Khung viền nhận diện quang học AR & 4 góc định vị bám dính -->
+        <a-plane position="0 0 0.002" width="1.0" height="0.666" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.55"></a-plane>
+        <a-plane id="target-frame-6" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="color: #f59e0b; opacity: 0.04; transparent: true"></a-plane>
+        <a-cylinder position="-0.465 0.333 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 0.298 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 0.333 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 0.298 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.465 -0.333 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 -0.298 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 -0.333 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 -0.298 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+
         <a-entity id="spatial-group-6" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-6" class="clickable" src="#canvas-top-6" position="0 0.473 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -299,9 +350,18 @@
 
       <!-- ================= TARGET 7: TRÀNG AN NINH BÌNH (800x1200 - Dọc 1.500) ================= -->
       <a-entity id="target-entity-7" mindar-image-target="targetIndex: 7">
-        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
-        <a-plane position="0 0 0.002" width="1.0" height="1.500" material="color: #10b981; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane id="target-frame-7" class="clickable" position="0 0 0.001" width="1.0" height="1.500" material="color: #10b981; opacity: 0.05; transparent: true"></a-plane>
+        <!-- Khung viền nhận diện quang học AR & 4 góc định vị bám dính -->
+        <a-plane position="0 0 0.002" width="1.0" height="1.500" material="color: #10b981; wireframe: true; wireframeLinewidth: 2; opacity: 0.55"></a-plane>
+        <a-plane id="target-frame-7" class="clickable" position="0 0 0.001" width="1.0" height="1.500" material="color: #10b981; opacity: 0.04; transparent: true"></a-plane>
+        <a-cylinder position="-0.465 0.750 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 0.715 0.003" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 0.750 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 0.715 0.003" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.465 -0.750 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 -0.715 0.003" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 -0.750 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 -0.715 0.003" radius="0.0025" height="0.07" material="color: #10b981; opacity: 0.9"></a-cylinder>
+
         <a-entity id="spatial-group-7" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-7" class="clickable" src="#canvas-top-7" position="0 0.89 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -317,9 +377,18 @@
 
       <!-- ================= TARGET 8: NHÀ THỜ ĐỨC BÀ (800x533 - Ngang 0.666) ================= -->
       <a-entity id="target-entity-8" mindar-image-target="targetIndex: 8">
-        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
-        <a-plane position="0 0 0.002" width="1.0" height="0.666" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane id="target-frame-8" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="color: #f59e0b; opacity: 0.05; transparent: true"></a-plane>
+        <!-- Khung viền nhận diện quang học AR & 4 góc định vị bám dính -->
+        <a-plane position="0 0 0.002" width="1.0" height="0.666" material="color: #f59e0b; wireframe: true; wireframeLinewidth: 2; opacity: 0.55"></a-plane>
+        <a-plane id="target-frame-8" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="color: #f59e0b; opacity: 0.04; transparent: true"></a-plane>
+        <a-cylinder position="-0.465 0.333 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 0.298 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 0.333 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 0.298 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.465 -0.333 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 -0.298 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 -0.333 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 -0.298 0.003" radius="0.0025" height="0.07" material="color: #f59e0b; opacity: 0.9"></a-cylinder>
+
         <a-entity id="spatial-group-8" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-8" class="clickable" src="#canvas-top-8" position="0 0.473 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>
@@ -335,9 +404,18 @@
 
       <!-- ================= TARGET 9: ĐẢO NGỌC PHÚ QUỐC (800x533 - Ngang 0.666) ================= -->
       <a-entity id="target-entity-9" mindar-image-target="targetIndex: 9">
-        <!-- Khung viền nhận diện khớp chính xác ảnh thực tế -->
-        <a-plane position="0 0 0.002" width="1.0" height="0.666" material="color: #06b6d4; wireframe: true; wireframeLinewidth: 2.5; opacity: 0.45"></a-plane>
-        <a-plane id="target-frame-9" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="color: #06b6d4; opacity: 0.05; transparent: true"></a-plane>
+        <!-- Khung viền nhận diện quang học AR & 4 góc định vị bám dính -->
+        <a-plane position="0 0 0.002" width="1.0" height="0.666" material="color: #06b6d4; wireframe: true; wireframeLinewidth: 2; opacity: 0.55"></a-plane>
+        <a-plane id="target-frame-9" class="clickable" position="0 0 0.001" width="1.0" height="0.666" material="color: #06b6d4; opacity: 0.04; transparent: true"></a-plane>
+        <a-cylinder position="-0.465 0.333 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #06b6d4; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 0.298 0.003" radius="0.0025" height="0.07" material="color: #06b6d4; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 0.333 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #06b6d4; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 0.298 0.003" radius="0.0025" height="0.07" material="color: #06b6d4; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.465 -0.333 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #06b6d4; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="-0.5 -0.298 0.003" radius="0.0025" height="0.07" material="color: #06b6d4; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.465 -0.333 0.003" rotation="0 0 90" radius="0.0025" height="0.07" material="color: #06b6d4; opacity: 0.9"></a-cylinder>
+        <a-cylinder position="0.5 -0.298 0.003" radius="0.0025" height="0.07" material="color: #06b6d4; opacity: 0.9"></a-cylinder>
+
         <a-entity id="spatial-group-9" position="0 0 0.04" scale="0 0 0">
           <!-- Thanh trên nằm sát mép trên ảnh -->
           <a-plane id="bar-top-9" class="clickable" src="#canvas-top-9" position="0 0.473 0.02" width="0.96" height="0.22" material="transparent: true; opacity: 0.98; alphaTest: 0.05; roughness: 0.25;"></a-plane>

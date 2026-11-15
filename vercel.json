@@ -19,6 +19,7 @@
   ],
   "rewrites": [
     { "source": "/gallery", "destination": "/gallery.html" },
+    { "source": "/admin", "destination": "/admin.html" },
     { "source": "/api/locations/:id", "destination": "/api/locations.js?id=:id" },
     { "source": "/api/locations", "destination": "/api/locations.js" }
   ]

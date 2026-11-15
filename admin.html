@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Database CMS - Quản Lý 10 Địa Điểm WebAR</title>
+  <title>Database CMS - Quản Trị Địa Danh WebAR</title>
+  <link rel="icon" href="data:,">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,12 +12,16 @@
     :root {
       --bg: #09090b;
       --card: #18181b;
+      --card-hover: #202024;
       --border: #27272a;
+      --border-subtle: #1f1f23;
       --text: #f4f4f5;
       --text-muted: #a1a1aa;
       --primary: #fafafa;
       --primary-foreground: #18181b;
       --emerald: #10b981;
+      --amber: #f59e0b;
+      --cyan: #06b6d4;
       --danger: #ef4444;
     }
 
@@ -32,34 +37,37 @@
       background-color: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      padding: 32px 24px;
+      padding: 32px 24px 60px 24px;
     }
 
     .container {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
     }
 
-    /* Shadcn Top Nav */
+    /* Top Bar Header */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
       padding-bottom: 20px;
       border-bottom: 1px solid var(--border);
       flex-wrap: wrap;
       gap: 16px;
     }
 
-    header h1 {
-      font-size: 1.4rem;
-      font-weight: 700;
+    .brand-group h1 {
+      font-size: 1.45rem;
+      font-weight: 800;
       letter-spacing: -0.02em;
       color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    header p {
+    .brand-group p {
       color: var(--text-muted);
       font-size: 0.85rem;
       margin-top: 4px;
@@ -68,40 +76,40 @@
     .header-actions {
       display: flex;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
+    /* Shadcn Buttons */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      font-size: 0.85rem;
-      font-weight: 500;
+      font-size: 0.82rem;
+      font-weight: 600;
       padding: 8px 14px;
       border-radius: 8px;
       cursor: pointer;
       text-decoration: none;
       transition: all 0.15s ease;
-      border: none;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
     }
 
-    .btn-default {
+    .btn:hover {
+      background: var(--border);
+      border-color: #3f3f46;
+    }
+
+    .btn-primary {
       background: var(--primary);
       color: var(--primary-foreground);
+      border-color: var(--primary);
     }
 
-    .btn-default:hover {
+    .btn-primary:hover {
       background: #e4e4e7;
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    .btn-outline:hover {
-      background: rgba(255, 255, 255, 0.05);
     }
 
     .btn-danger {
@@ -114,110 +122,242 @@
       background: rgba(239, 68, 68, 0.2);
     }
 
-    .grid-layout {
+    /* KPI Stats Bar */
+    .stats-row {
       display: grid;
-      grid-template-columns: 1fr 380px;
-      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
     }
 
-    @media (max-width: 900px) {
-      .grid-layout {
-        grid-template-columns: 1fr;
-      }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
     }
 
-    .card {
-      background-color: var(--card);
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .stat-value {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+    }
+
+    .badge-emerald {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--emerald);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-amber {
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--amber);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-cyan {
+      background: rgba(6, 182, 212, 0.12);
+      color: var(--cyan);
+      border-color: rgba(6, 182, 212, 0.3);
+    }
+
+    /* Shadcn Data Table Container */
+    .table-container {
+      background: var(--card);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 22px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
     }
 
-    .card-title {
+    .table-header-bar {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .table-title {
       font-size: 1.05rem;
       font-weight: 700;
-      margin-bottom: 16px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    th {
+      padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .thumb-cell {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #000;
+      border: 1px solid var(--border);
+      display: block;
+    }
+
+    /* Modal Sửa Địa Danh (Shadcn Dialog) */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(9, 9, 11, 0.88);
+      backdrop-filter: blur(16px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-dialog {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 680px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
+      position: relative;
+      overflow: hidden;
+      animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.96) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .location-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .location-item {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px;
-      display: flex;
-      gap: 16px;
-      align-items: flex-start;
-      transition: border-color 0.15s;
-    }
-
-    .location-item:hover {
-      border-color: #3f3f46;
-    }
-
-    .location-thumb {
-      width: 90px;
-      height: 90px;
-      border-radius: 8px;
-      object-fit: cover;
-      background: #000;
-      border: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-
-    .location-info {
-      flex: 1;
-    }
-
-    .pill-badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-
-    .location-title {
-      font-size: 1.05rem;
+    .modal-header h3 {
+      font-size: 1.15rem;
       font-weight: 700;
       color: #fff;
     }
 
-    .location-city {
-      font-size: 0.8rem;
+    .btn-close-dialog {
+      background: transparent;
+      border: none;
       color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .location-desc {
-      font-size: 0.82rem;
-      color: #d4d4d8;
-      margin-top: 6px;
-      line-height: 1.45;
-    }
-
-    .location-actions {
+      font-size: 18px;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
       display: flex;
-      gap: 6px;
-      margin-top: 10px;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
     }
 
-    /* Form */
+    .btn-close-dialog:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
     .form-group {
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     label {
@@ -228,7 +368,7 @@
       color: var(--text-muted);
     }
 
-    input, textarea {
+    input, textarea, select {
       width: 100%;
       background: var(--bg);
       border: 1px solid var(--border);
@@ -237,214 +377,349 @@
       color: var(--text);
       font-size: 0.85rem;
       outline: none;
-      transition: border-color 0.15s;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
 
-    input:focus, textarea:focus {
+    input:focus, textarea:focus, select:focus {
       border-color: #52525b;
+      box-shadow: 0 0 0 1px #52525b;
     }
 
     textarea {
       resize: vertical;
-      min-height: 70px;
+      min-height: 75px;
     }
 
-    .status-box {
-      margin-top: 20px;
-      background: rgba(255, 255, 255, 0.02);
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      background: rgba(24, 24, 27, 0.5);
+    }
+
+    /* Toast Notification (Sonner style) */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: #18181b;
       border: 1px solid var(--border);
-      padding: 12px 16px;
       border-radius: 10px;
-      font-size: 0.8rem;
-      color: var(--text-muted);
+      padding: 12px 18px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 600;
       display: flex;
       align-items: center;
       gap: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: auto;
+    }
+
+    .toast.active {
+      transform: translateY(0);
+      opacity: 1;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
+
+    <!-- Header CMS -->
     <header>
-      <div>
-        <h1>Database Quản Lý 10 Địa Điểm WebAR</h1>
-        <p>Cơ sở dữ liệu SQLite: <code>database.sqlite</code> kết nối với camera WebAR</p>
+      <div class="brand-group">
+        <h1><span>⚙️</span> <span>Quản Trị Cơ Sở Dữ Liệu WebAR</span></h1>
+        <p>Quản lý dữ liệu 10 mục tiêu AR • SQLite: <code>database.sqlite</code> kết nối trực tiếp camera</p>
       </div>
+
       <div class="header-actions">
-        <a href="index.html" class="btn btn-default">📱 Mở Quét Camera</a>
-        <a href="gallery.html" class="btn btn-outline">🖼️ Thư Viện 10 Ảnh Quét</a>
+        <a href="index.html" class="btn btn-primary">
+          <span>📷</span> <span>Mở Camera Quét</span>
+        </a>
+        <a href="gallery.html" class="btn">
+          <span>🖼️</span> <span>Thư Viện Desktop</span>
+        </a>
+        <button class="btn" onclick="exportJSON()">
+          <span>📥</span> <span>Xuất JSON</span>
+        </button>
       </div>
     </header>
 
-    <div class="grid-layout">
-      <!-- Cột Trái -->
-      <div>
-        <div class="card">
-          <div class="card-title">
-            <span>📚 Danh Sách Địa Điểm Du Lịch</span>
-            <span style="font-size: 0.8rem; color: var(--emerald);" id="count-badge">10 bản ghi</span>
-          </div>
-          
-          <div class="location-list" id="location-list">
-            <div style="text-align: center; padding: 30px; color: var(--text-muted);">Đang nạp dữ liệu...</div>
-          </div>
-        </div>
+    <!-- KPI Metrics -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Tổng Mục Tiêu AR</div>
+        <div class="stat-value">10 <span class="badge badge-emerald">Đang hoạt động</span></div>
+        <div class="stat-desc">Khớp 100% với file targets.mind</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Cơ Sở Dữ Liệu</div>
+        <div class="stat-value">SQLite 3</div>
+        <div class="stat-desc">API: <code>/api/locations</code></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Độ Phủ Tỉnh Thành</div>
+        <div class="stat-value">8 Tỉnh / TP</div>
+        <div class="stat-desc">Bắc - Trung - Nam toàn diện</div>
+      </div>
+    </div>
 
-        <div class="status-box">
-          <span style="color:var(--emerald);">●</span>
-          <span>Khi camera WebAR nhận diện được bức ảnh nào, hệ thống sẽ tự động gọi API <code>/api/locations/{id}</code>, sau đó <strong>khóa cố định toạ độ AR</strong> tại đó.</span>
+    <!-- Data Table -->
+    <div class="table-container">
+      <div class="table-header-bar">
+        <div class="table-title">
+          <span>📚 Danh Sách 10 Địa Danh Không Gian</span>
+          <span class="badge" id="table-count-badge">10 bản ghi</span>
         </div>
       </div>
 
-      <!-- Cột Phải: Form Sửa -->
-      <div>
-        <div class="card">
-          <div class="card-title">
-            <span id="form-title">✏️ Chỉnh Sửa Thông Tin Địa Điểm</span>
-          </div>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Target</th>
+              <th>Ảnh</th>
+              <th>Địa Danh</th>
+              <th>Thành Phố</th>
+              <th>Phân Loại</th>
+              <th>Đánh Giá</th>
+              <th>Giờ / Giá Vé</th>
+              <th style="text-align: right;">Hành Động</th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+            <tr>
+              <td colspan="8" style="text-align: center; padding: 40px; color: var(--text-muted);">Đang kết nối database...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-          <form id="location-form">
-            <div class="form-group">
-              <label>Thứ tự mục tiêu (target_index)</label>
-              <input type="number" id="field-index" readonly style="opacity:0.6; cursor:not-allowed;">
-            </div>
+  </div>
 
+  <!-- Modal Edit Dialog -->
+  <div class="modal-backdrop" id="edit-modal" onclick="closeEditModal(event)">
+    <div class="modal-dialog" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="modal-title">✏️ Chỉnh Sửa Địa Danh</h3>
+        <button class="btn-close-dialog" onclick="closeEditModal()">✕</button>
+      </div>
+
+      <form id="edit-form">
+        <div class="modal-body">
+          <input type="hidden" id="edit-id">
+
+          <div class="form-grid-2">
             <div class="form-group">
               <label>Tên địa điểm *</label>
-              <input type="text" id="field-name" required>
+              <input type="text" id="edit-name" required placeholder="Ví dụ: Dinh Độc Lập">
             </div>
+            <div class="form-group">
+              <label>Thành phố *</label>
+              <input type="text" id="edit-city" required placeholder="Ví dụ: TP. Hồ Chí Minh">
+            </div>
+          </div>
 
+          <div class="form-grid-2">
             <div class="form-group">
               <label>Phân loại (Tag)</label>
-              <input type="text" id="field-tag">
+              <input type="text" id="edit-tag" placeholder="Di tích Quốc gia Đặc biệt">
             </div>
-
             <div class="form-group">
-              <label>Thành phố</label>
-              <input type="text" id="field-city">
+              <label>Màu sắc Huy hiệu</label>
+              <select id="edit-color">
+                <option value="#10b981">Xanh Ngọc (Emerald #10b981)</option>
+                <option value="#f59e0b">Vàng Hổ Phách (Amber #f59e0b)</option>
+                <option value="#06b6d4">Xanh Cyan (Cyan #06b6d4)</option>
+              </select>
             </div>
+          </div>
 
+          <div class="form-grid-2">
             <div class="form-group">
-              <label>Mô tả ngắn (Hiển thị thẻ AR 3D) *</label>
-              <textarea id="field-short-desc" required></textarea>
+              <label>Đánh giá & Lượt review</label>
+              <input type="text" id="edit-rating" placeholder="4.8 ★ (35.2K đánh giá)">
             </div>
-
             <div class="form-group">
-              <label>Mô tả chi tiết</label>
-              <textarea id="field-full-desc" rows="4"></textarea>
+              <label>Giờ mở cửa</label>
+              <input type="text" id="edit-hours" placeholder="08:00 - 16:30 hàng ngày">
             </div>
+          </div>
 
-            <div class="form-group">
-              <label>Bài thuyết minh giọng nói</label>
-              <textarea id="field-audio"></textarea>
-            </div>
+          <div class="form-group">
+            <label>Giá vé tham quan</label>
+            <input type="text" id="edit-ticket" placeholder="65.000 VNĐ / người lớn">
+          </div>
 
-            <div class="form-group">
-              <label>Từ khóa bản đồ (Google Maps)</label>
-              <input type="text" id="field-map">
-            </div>
+          <div class="form-group">
+            <label>Mô tả ngắn (Hiển thị trực tiếp trên thẻ AR 3D) *</label>
+            <textarea id="edit-short-desc" required></textarea>
+          </div>
 
-            <div style="display: flex; gap: 8px; margin-top: 16px;">
-              <button type="submit" class="btn btn-default" style="flex: 1;">💾 Cập Nhật Vào Database</button>
-              <button type="button" class="btn btn-outline" id="btn-reset-form">Hủy</button>
-            </div>
-          </form>
+          <div class="form-group">
+            <label>Mô tả chi tiết (Hiển thị khi mở rộng Modal)</label>
+            <textarea id="edit-full-desc" rows="4"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Từ khóa chỉ đường Google Maps</label>
+            <input type="text" id="edit-map" placeholder="Tên hoặc địa chỉ đầy đủ để tìm kiếm trên Maps">
+          </div>
         </div>
-      </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn" onclick="closeEditModal()">Hủy</button>
+          <button type="submit" class="btn btn-primary">💾 Lưu Thay Đổi</button>
+        </div>
+      </form>
     </div>
   </div>
 
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
   <script>
-    const locationList = document.getElementById("location-list");
-    const countBadge = document.getElementById("count-badge");
-    const locationForm = document.getElementById("location-form");
-    const formTitle = document.getElementById("form-title");
-    const btnResetForm = document.getElementById("btn-reset-form");
-
     let locationsData = {};
+    const tableBody = document.getElementById("table-body");
+    const countBadge = document.getElementById("table-count-badge");
+    const editModal = document.getElementById("edit-modal");
+    const editForm = document.getElementById("edit-form");
+    const modalTitle = document.getElementById("modal-title");
 
+    // Toast Function
+    function showToast(message, icon = "✅") {
+      const container = document.getElementById("toast-container");
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => toast.classList.add("active"));
+      setTimeout(() => {
+        toast.classList.remove("active");
+        setTimeout(() => toast.remove(), 250);
+      }, 3000);
+    }
+
+    // Nạp dữ liệu từ API
     async function loadLocations() {
       try {
         const res = await fetch("/api/locations");
-        if (!res.ok) throw new Error("Không thể nạp dữ liệu");
+        if (!res.ok) throw new Error("Không thể kết nối API /api/locations");
         locationsData = await res.json();
-        renderList();
+        renderTable();
       } catch (err) {
-        locationList.innerHTML = `<div style="color:var(--danger);padding:20px;text-align:center;">Lỗi kết nối: ${err.message}</div>`;
+        tableBody.innerHTML = `<tr><td colspan="8" style="color:var(--danger);text-align:center;padding:30px;">Lỗi: ${err.message}</td></tr>`;
       }
     }
 
-    function renderList() {
+    // Render bảng danh sách
+    function renderTable() {
       const keys = Object.keys(locationsData).sort((a, b) => Number(a) - Number(b));
       countBadge.textContent = `${keys.length} bản ghi`;
 
-      locationList.innerHTML = "";
+      tableBody.innerHTML = "";
       keys.forEach(key => {
         const item = locationsData[key];
-        const div = document.createElement("div");
-        div.className = "location-item";
+        const tr = document.createElement("tr");
+
+        let badgeClass = "badge-emerald";
+        if (item.badge_color === "#f59e0b" || item.badgeColor === "#f59e0b") badgeClass = "badge-amber";
+        else if (item.badge_color === "#06b6d4" || item.badgeColor === "#06b6d4") badgeClass = "badge-cyan";
+
         const imgUrl = item.image_url || `assets/target-${item.target_index}.png`;
 
-        div.innerHTML = `
-          <img src="${imgUrl}" class="location-thumb">
-          <div class="location-info">
-            <span class="pill-badge">Card ID: ${item.id} • Target #${item.target_index}</span>
-            <div class="location-title">${item.name}</div>
-            <div class="location-city">📍 ${item.city} • ${item.tag}</div>
-            <div class="location-desc">${item.short_desc}</div>
-            <div class="location-actions">
-              <button class="btn btn-outline" style="padding:4px 10px;font-size:0.75rem;" onclick="editLocation(${item.id})">✏️ Chỉnh sửa</button>
-            </div>
-          </div>
+        tr.innerHTML = `
+          <td><span class="badge ${badgeClass}">#${item.target_index}</span></td>
+          <td><img src="${imgUrl}" class="thumb-cell" alt="${item.name}"></td>
+          <td>
+            <div style="font-weight:700; color:#fff;">${item.name}</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">ID: ${item.id}</div>
+          </td>
+          <td>📍 ${item.city || 'Việt Nam'}</td>
+          <td><span class="badge ${badgeClass}">${item.tag || 'Di tích'}</span></td>
+          <td><span style="color:#fbbf24; font-weight:700;">${item.rating || '4.8 ★'}</span></td>
+          <td>
+            <div style="font-size:0.78rem;">⏰ ${item.hours || 'Mở cửa cả ngày'}</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">🎟️ ${item.ticket || 'Miễn phí'}</div>
+          </td>
+          <td style="text-align: right;">
+            <button class="btn" style="padding:6px 12px; font-size:0.75rem;" onclick="openEditModal(${item.id})">
+              <span>✏️</span> <span>Sửa</span>
+            </button>
+          </td>
         `;
-        locationList.appendChild(div);
+        tableBody.appendChild(tr);
       });
-
-      // Mặc định chọn mục tiêu 0 để chỉnh sửa
-      if (keys.length > 0 && !document.getElementById("field-name").value) {
-        editLocation(0);
-      }
     }
 
-    window.editLocation = function(id) {
+    // Mở Modal Sửa
+    window.openEditModal = function(id) {
       const item = locationsData[String(id)];
       if (!item) return;
 
-      formTitle.textContent = `✏️ Chỉnh Sửa: ${item.name}`;
-      document.getElementById("field-index").value = item.id;
-      document.getElementById("field-name").value = item.name || '';
-      document.getElementById("field-tag").value = item.tag || '';
-      document.getElementById("field-city").value = item.city || '';
-      document.getElementById("field-short-desc").value = item.short_desc || '';
-      document.getElementById("field-full-desc").value = item.full_desc || '';
-      document.getElementById("field-audio").value = item.audio_text || '';
-      document.getElementById("field-map").value = item.map_query || '';
+      modalTitle.textContent = `✏️ Chỉnh Sửa Target #${item.target_index}: ${item.name}`;
+      document.getElementById("edit-id").value = item.id;
+      document.getElementById("edit-name").value = item.name || '';
+      document.getElementById("edit-city").value = item.city || '';
+      document.getElementById("edit-tag").value = item.tag || '';
+      document.getElementById("edit-color").value = item.badge_color || item.badgeColor || '#10b981';
+      document.getElementById("edit-rating").value = item.rating || '';
+      document.getElementById("edit-hours").value = item.hours || '';
+      document.getElementById("edit-ticket").value = item.ticket || '';
+      document.getElementById("edit-short-desc").value = item.short_desc || item.shortDesc || '';
+      document.getElementById("edit-full-desc").value = item.full_desc || item.fullDesc || '';
+      document.getElementById("edit-map").value = item.map_query || item.mapQuery || '';
+
+      editModal.classList.add("active");
     };
 
-    function resetForm() {
-      if (locationsData["0"]) editLocation(0);
+    function closeEditModal(e) {
+      if (!e || e.target === editModal || e.target.classList.contains("btn-close-dialog") || e.target.tagName === 'BUTTON') {
+        editModal.classList.remove("active");
+      }
     }
 
-    btnResetForm.addEventListener("click", resetForm);
-
-    locationForm.addEventListener("submit", async (e) => {
+    // Submit lưu dữ liệu
+    editForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const targetIdx = parseInt(document.getElementById("field-index").value);
-      const existing = locationsData[String(targetIdx)] || {};
+      const id = parseInt(document.getElementById("edit-id").value);
+      const existing = locationsData[String(id)] || {};
 
       const payload = {
         ...existing,
-        id: targetIdx,
-        target_index: targetIdx,
-        name: document.getElementById("field-name").value,
-        tag: document.getElementById("field-tag").value,
-        city: document.getElementById("field-city").value,
-        short_desc: document.getElementById("field-short-desc").value,
-        full_desc: document.getElementById("field-full-desc").value,
-        audio_text: document.getElementById("field-audio").value,
-        map_query: document.getElementById("field-map").value,
+        id: id,
+        target_index: id,
+        name: document.getElementById("edit-name").value,
+        city: document.getElementById("edit-city").value,
+        tag: document.getElementById("edit-tag").value,
+        badge_color: document.getElementById("edit-color").value,
+        badgeColor: document.getElementById("edit-color").value,
+        rating: document.getElementById("edit-rating").value,
+        hours: document.getElementById("edit-hours").value,
+        ticket: document.getElementById("edit-ticket").value,
+        short_desc: document.getElementById("edit-short-desc").value,
+        shortDesc: document.getElementById("edit-short-desc").value,
+        full_desc: document.getElementById("edit-full-desc").value,
+        fullDesc: document.getElementById("edit-full-desc").value,
+        map_query: document.getElementById("edit-map").value,
+        mapQuery: document.getElementById("edit-map").value
       };
 
       try {
@@ -454,11 +729,30 @@
           body: JSON.stringify(payload)
         });
 
-        if (!res.ok) throw new Error("Không thể lưu");
-        alert("✅ Đã cập nhật thành công!");
+        if (!res.ok) throw new Error("Máy chủ phản hồi lỗi khi lưu");
+        closeEditModal();
+        showToast(`Đã cập nhật thành công "${payload.name}"!`);
         await loadLocations();
       } catch (err) {
-        alert("Lỗi khi lưu: " + err.message);
+        showToast("Lỗi khi lưu: " + err.message, "⚠️");
+      }
+    });
+
+    // Xuất JSON
+    function exportJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(locationsData, null, 2));
+      const downloadAnchor = document.createElement("a");
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", "webar_locations_backup.json");
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("Đã xuất file JSON backup thành công!");
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && editModal.classList.contains("active")) {
+        closeEditModal();
       }
     });
 
