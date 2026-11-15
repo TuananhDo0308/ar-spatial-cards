@@ -253,7 +253,7 @@ body {
   font-size: 0.82rem;
   font-weight: 700;
   color: #fff;
-  display: none;
+  display: none !important;
   align-items: center;
   gap: 8px;
   z-index: 50;
@@ -263,6 +263,28 @@ body {
 
 .camera-prompt-toast:active {
   transform: translateX(-50%) scale(0.96);
+}
+
+/* ==========================================================================
+   4.5. OFFSCREEN CANVAS CONTAINER (Triệt để ẩn khỏi màn hình, chống rò rỉ UI)
+   ========================================================================== */
+
+.offscreen-canvas-container {
+  display: none !important;
+  position: fixed !important;
+  top: -99999px !important;
+  left: -99999px !important;
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  overflow: hidden !important;
+  z-index: -9999 !important;
+}
+
+.modal-backdrop, .detail-modal {
+  display: none !important;
 }
 
 /* ==========================================================================

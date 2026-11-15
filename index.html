@@ -38,47 +38,47 @@
   <div class="ui-layer"></div>
 
   <!-- Fullscreen Modal Phóng To (VisionOS Shared-Element Spring Curve) -->
-  <div class="modal-backdrop" id="modal-backdrop">
-    <div class="detail-modal" id="detail-modal">
-      <div class="modal-header">
-        <div class="modal-header-text">
-          <span class="modal-tag" id="modal-tag">Di tích</span>
+  <div class="fullscreen-modal" id="fullscreen-modal">
+    <div class="fullscreen-card" id="fullscreen-card">
+      <button class="btn-close-modal" id="btn-close-modal" aria-label="Đóng">✕</button>
+      <img src="assets/card-hoian.png" class="modal-hero-img" id="modal-img" alt="Địa điểm">
+
+      <div class="modal-body">
+        <div class="modal-content-animated">
+          <div class="modal-top-meta">
+            <span class="badge-pill badge-emerald" id="modal-badge">
+              <span style="font-size:9px;">●</span> Di tích
+            </span>
+            <span style="font-size:0.85rem; color:#fbbf24; font-weight:700;" id="modal-rating">4.8 ★</span>
+          </div>
+
           <h2 class="modal-title" id="modal-title">Tên địa danh</h2>
-        </div>
-        <button class="btn-close-modal" id="btn-close-modal" aria-label="Đóng modal">✕</button>
-      </div>
+          <div class="modal-city" id="modal-city">📍 Thành phố</div>
 
-      <div class="modal-meta-row">
-        <div class="meta-chip" id="modal-rating">4.8 ★</div>
-        <div class="meta-chip" id="modal-city">📍 TP. Hồ Chí Minh</div>
-      </div>
+          <p class="modal-desc" id="modal-desc">
+            Mô tả chi tiết địa điểm...
+          </p>
 
-      <div class="modal-content">
-        <p class="modal-desc" id="modal-desc">Mô tả chi tiết...</p>
+          <div style="font-size:0.85rem; font-weight:700; color:#fff; margin-bottom:8px;">Điểm nổi bật:</div>
+          <div id="modal-highlights"></div>
 
-        <div class="modal-section-title">Điểm nổi bật</div>
-        <div class="modal-highlights" id="modal-highlights"></div>
-
-        <div class="modal-info-grid">
-          <div class="modal-info-card">
-            <div class="info-card-label">Giờ mở cửa</div>
-            <div class="info-card-value" id="modal-hours">08:00 - 16:30</div>
+          <div class="meta-box">
+            <div>⏰ <strong>Giờ mở cửa:</strong> <span id="modal-hours">08:00 - 16:30</span></div>
+            <div>🎟️ <strong>Giá vé:</strong> <span id="modal-ticket">65.000 VNĐ</span></div>
           </div>
-          <div class="modal-info-card">
-            <div class="info-card-label">Vé tham quan</div>
-            <div class="info-card-value" id="modal-ticket">65.000 VNĐ</div>
+
+          <div style="margin-top: 20px;">
+            <a class="btn btn-default" style="width: 100%;" id="btn-modal-map" target="_blank" rel="noopener noreferrer">
+              <span>🗺️</span> <span>Chỉ Đường Google Maps</span>
+            </a>
           </div>
         </div>
-      </div>
-
-      <div class="modal-actions">
-        <button class="btn-action btn-map" id="btn-modal-map">📍 Chỉ đường Google Maps</button>
       </div>
     </div>
   </div>
 
-  <!-- 15 Dynamic Off-screen Texture Canvases (5 địa danh x 3 thẻ) -->
-  <div class="offscreen-canvas-container">
+  <!-- 15 Dynamic Off-screen Texture Canvases (5 địa danh x 3 thẻ - Tuyệt đối ẩn khỏi DOM) -->
+  <div class="offscreen-canvas-container" style="display: none !important;">
     <canvas id="canvas-top-0" width="960" height="220"></canvas>
     <canvas id="canvas-left-0" width="520" height="760"></canvas>
     <canvas id="canvas-right-0" width="520" height="760"></canvas>

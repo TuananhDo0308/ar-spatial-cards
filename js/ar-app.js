@@ -507,67 +507,84 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
-      // Điền dữ liệu vào Modal
-      modalImg.src = data.image_url || data.imageUrl || FALLBACK_TARGET_IMAGES[targetIdx] || 'assets/target-0.png';
-      modalTitle.textContent = data.name || `Địa điểm #${targetIdx + 1}`;
-      modalBadge.textContent = data.tag || 'Di tích';
+      // Điền dữ liệu vào Modal an toàn (Null-check đầy đủ, chống crash)
+      if (modalImg) modalImg.src = data.image_url || data.imageUrl || FALLBACK_TARGET_IMAGES[targetIdx] || 'assets/card-hoian.png';
+      if (modalTitle) modalTitle.textContent = data.name || `Địa điểm #${targetIdx + 1}`;
+      if (modalBadge) {
+        modalBadge.textContent = data.tag || 'Di tích';
+        const accent = data.badgeColor || data.badge_color || '#10b981';
+        let badgeClass = 'badge-emerald';
+        if (accent === '#f59e0b') badgeClass = 'badge-amber';
+        else if (accent === '#06b6d4') badgeClass = 'badge-cyan';
+        modalBadge.className = `badge-pill ${badgeClass}`;
+      }
 
-      const accent = data.badgeColor || data.badge_color || '#10b981';
-      let badgeClass = 'badge-emerald';
-      if (accent === '#f59e0b') badgeClass = 'badge-amber';
-      else if (accent === '#06b6d4') badgeClass = 'badge-cyan';
-      modalBadge.className = `badge-pill ${badgeClass}`;
-
-      const rawRating = String(data.rating || '4.8');
-      modalRating.textContent = rawRating.includes('★') ? rawRating : rawRating + ' ★';
-      modalCity.textContent = '📍 ' + (data.city || 'Việt Nam');
-      modalDesc.textContent =
-        data.full_desc || data.fullDesc || data.short_desc || data.shortDesc || 'Đang cập nhật mô tả chi tiết...';
-      modalHours.textContent = data.hours || '08:00 - 16:30';
-      modalTicket.textContent = data.ticket || 'Miễn phí';
+      if (modalRating) {
+        const rawRating = String(data.rating || '4.8');
+        modalRating.textContent = rawRating.includes('★') ? rawRating : rawRating + ' ★';
+      }
+      if (modalCity) modalCity.textContent = '📍 ' + (data.city || 'Việt Nam');
+      if (modalDesc) {
+        modalDesc.textContent =
+          data.full_desc || data.fullDesc || data.short_desc || data.shortDesc || 'Đang cập nhật mô tả chi tiết...';
+      }
+      if (modalHours) modalHours.textContent = data.hours || '08:00 - 16:30';
+      if (modalTicket) modalTicket.textContent = data.ticket || 'Miễn phí';
 
       // Highlights
-      modalHighlights.innerHTML = '';
-      let highlights = data.highlights || [];
-      if (typeof highlights === 'string') {
-        try {
-          highlights = JSON.parse(highlights);
-        } catch (e) {
-          highlights = [];
+      if (modalHighlights) {
+        modalHighlights.innerHTML = '';
+        let highlights = data.highlights || [];
+        if (typeof highlights === 'string') {
+          try {
+            highlights = JSON.parse(highlights);
+          } catch (e) {
+            highlights = [];
+          }
+        }
+        if (Array.isArray(highlights)) {
+          highlights.forEach((item) => {
+            const div = document.createElement('div');
+            div.className = 'highlight-card';
+            div.innerHTML = `<span>✦</span><span>${item}</span>`;
+            modalHighlights.appendChild(div);
+          });
         }
       }
-      if (Array.isArray(highlights)) {
-        highlights.forEach((item) => {
-          const div = document.createElement('div');
-          div.className = 'highlight-card';
-          div.innerHTML = `<span>✦</span><span>${item}</span>`;
-          modalHighlights.appendChild(div);
-        });
+
+      // Map Query & Click
+      const mapQuery = data.map_query || data.mapQuery || data.name;
+      if (btnModalMap) {
+        btnModalMap.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
+        btnModalMap.onclick = (e) => {
+          e.stopPropagation();
+          window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`, '_blank');
+        };
       }
 
-      // Map Query
-      const mapQuery = data.map_query || data.mapQuery || data.name;
-      btnModalMap.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
-
       // Hiển thị modal với hiệu ứng Scale & Fade mượt mà chuẩn 60 FPS
-      fullscreenCard.classList.remove('active');
-      fullscreenCard.style.transition = 'none';
-      fullscreenCard.style.transform = 'translateY(16px) scale(0.96)';
-      fullscreenCard.style.opacity = '0';
+      if (fullscreenCard && fullscreenModal) {
+        fullscreenCard.classList.remove('active');
+        fullscreenCard.style.transition = 'none';
+        fullscreenCard.style.transform = 'translateY(16px) scale(0.96)';
+        fullscreenCard.style.opacity = '0';
 
-      fullscreenModal.classList.add('active');
-      fullscreenCard.offsetHeight; // Kích hoạt reflow
+        fullscreenModal.classList.add('active');
+        fullscreenCard.offsetHeight; // Kích hoạt reflow
 
-      requestAnimationFrame(() => {
-        fullscreenCard.style.transition = 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.26s ease';
-        fullscreenCard.style.transform = 'translateY(0) scale(1)';
-        fullscreenCard.style.opacity = '1';
-        fullscreenCard.classList.add('active');
+        requestAnimationFrame(() => {
+          fullscreenCard.style.transition = 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.26s ease';
+          fullscreenCard.style.transform = 'translateY(0) scale(1)';
+          fullscreenCard.style.opacity = '1';
+          fullscreenCard.classList.add('active');
 
-        setTimeout(() => {
-          isModalOpening = false;
-        }, 340);
-      });
+          setTimeout(() => {
+            isModalOpening = false;
+          }, 340);
+        });
+      } else {
+        isModalOpening = false;
+      }
     } catch (err) {
       console.error('Lỗi khi mở modal chi tiết:', err);
       isModalOpening = false;
@@ -754,16 +771,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // Giữ sự kiện click A-Frame làm lớp bảo hiểm thứ 2
-  for (let i = 0; i < 10; i++) {
-    ['bar-top-', 'card-left-', 'card-right-', 'target-frame-'].forEach((prefix) => {
+  for (let i = 0; i < 5; i++) {
+    ['bar-top-', 'card-left-', 'card-right-', 'target-frame-', 'target-video-'].forEach((prefix) => {
       const el = document.getElementById(prefix + i);
       if (el) {
-        el.addEventListener('click', () => {
+        el.addEventListener('click', (e) => {
           if (!isModalOpen && !isModalOpening) {
             triggerCardOpen(i);
           }
         });
       }
     });
+
+    const groupEl = document.getElementById(`spatial-group-${i}`);
+    if (groupEl) {
+      groupEl.addEventListener('click', (e) => {
+        if (!isModalOpen && !isModalOpening) {
+          triggerCardOpen(i);
+        }
+      });
+    }
   }
 });
